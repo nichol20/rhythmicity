@@ -5,6 +5,7 @@ const { getLyrics } = require('genius-lyrics-api');
 
 require('dotenv').config()
 
+const dbPath = './data/app'
 const spotifyApiBaseUrl = 'https://api.spotify.com/v1'
 const youtubeApiBaseUrl = 'https://youtube.googleapis.com/youtube/v3'
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY
@@ -56,7 +57,7 @@ const getGeniusAccessToken = async () => {
 
 const getPopularTracks = async () => {
     const params = {
-        limit: 100,
+        limit: 99, // on track 100, YouTube API returns 403 due to quota exceeded
         seed_genres: 'hip-hop,electronic',
         min_popularity: 75
     }
@@ -254,9 +255,9 @@ const saveDb = async () => {
     const artistsStr = JSON.stringify(database.artists)
     const tracksStr = JSON.stringify(database.tracks)
 
-    await fs.writeFile('./data/albums.json', albumsStr)
-    await fs.writeFile('./data/artists.json', artistsStr)
-    await fs.writeFile('./data/tracks.json', tracksStr)
+    await fs.writeFile(`${dbPath}/albums.json`, albumsStr)
+    await fs.writeFile(`${dbPath}/artists.json`, artistsStr)
+    await fs.writeFile(`${dbPath}/tracks.json`, tracksStr)
 }
 
 const fetchAndCreateData = async track => {

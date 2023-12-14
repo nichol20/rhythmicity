@@ -36,6 +36,7 @@ interface Artist {
 interface Track {
   id: string;
   artistIds: string[];
+  albumId: string;
   genres: string[];
   explicit: boolean;
   playCount: number;
