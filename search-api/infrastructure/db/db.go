@@ -1,19 +1,28 @@
 package db
 
 import (
+	"io/ioutil"
+	"os"
+
 	"github.com/elastic/go-elasticsearch/v8"
 )
 
 func ConnectWithElasticsearch() *elasticsearch.Client {
-	newClient, err := elasticsearch.NewClient(elasticsearch.Config{
+	cert, _ := ioutil.ReadFile("./ca.crt")
+	cfg := elasticsearch.Config{
 		Addresses: []string{
-			"http://localhost:9200",
+			"https://localhost:9200",
 		},
-	})
+		Username: os.Getenv("ELASTIC_USER"),
+		Password: os.Getenv("ELASTIC_PASSWORD"),
+		CACert:   cert,
+	}
+
+	es, err := elasticsearch.NewClient(cfg)
 
 	if err != nil {
 		panic(err)
 	}
 
-	return newClient
+	return es
 }
