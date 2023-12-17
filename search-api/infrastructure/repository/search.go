@@ -22,7 +22,7 @@ func (r *SearchRepository) Search(ctx context.Context, search *model.Search) ([]
 			"multi_match": map[string]interface{}{
 				"query": search.Query,
 				"fields": []string{
-					"artistName",
+					"artistNames",
 					"trackName",
 					"lyrics",
 				},
@@ -52,8 +52,6 @@ func (r *SearchRepository) Search(ctx context.Context, search *model.Search) ([]
 	if err = json.NewDecoder(res.Body).Decode(&searchResponse); err != nil {
 		return nil, fmt.Errorf("error parsing the response body: %s", err)
 	}
-
-	fmt.Printf("%+vn\n", searchResponse)
 
 	return searchResponse.Hits.Hits, nil
 }

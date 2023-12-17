@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option go_package = "github.com/nichol20/rhythmicity/search-api/application/grpc/pb";
+
+message Track {
+    string id = 1;
+    string trackName = 2;
+    repeated string artistNames = 3;
+    string albumName = 4;
+    string lyrics = 5;
+    bool explicit = 6;
+    int64 playCount = 7;
+    repeated string genres = 8;
+    string  imageUrl = 9;
+}
+
+message SearchRequest {
+    string query = 1;
+}
+
+message SearchResponse {
+    repeated Track tracks = 1;
+}
+
+service Search {
+    rpc Search(SearchRequest) returns (SearchResponse) {};
+}

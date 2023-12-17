@@ -1,14 +1,20 @@
 package db
 
 import (
+	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 
 	"github.com/elastic/go-elasticsearch/v8"
 )
 
 func ConnectWithElasticsearch() *elasticsearch.Client {
-	cert, _ := ioutil.ReadFile("./ca.crt")
+	cert, err := ioutil.ReadFile("./ca.crt")
+	if err != nil {
+		log.Fatalf("Error reading cert: %s", err)
+	}
+
 	cfg := elasticsearch.Config{
 		Addresses: []string{
 			"https://localhost:9200",
@@ -21,8 +27,9 @@ func ConnectWithElasticsearch() *elasticsearch.Client {
 	es, err := elasticsearch.NewClient(cfg)
 
 	if err != nil {
-		panic(err)
+		log.Fatalf("Error when connecting with elastic: %s", err)
 	}
 
+	fmt.Println("connected with elastic")
 	return es
 }

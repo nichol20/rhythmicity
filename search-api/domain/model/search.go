@@ -1,5 +1,7 @@
 package model
 
+import "context"
+
 type Search struct {
 	Query string `json:"query"`
 }
@@ -15,4 +17,8 @@ type SearchResponse struct {
 		} `json:"total"`
 		Hits []*Hit `json:"hits"`
 	} `json:"hits"`
+}
+
+type SearchRepositoryInterface interface {
+	Search(ctx context.Context, search *Search) ([]*Hit, error)
 }
