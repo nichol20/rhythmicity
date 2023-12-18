@@ -2,7 +2,6 @@ package db
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 
@@ -10,7 +9,7 @@ import (
 )
 
 func ConnectWithElasticsearch() *elasticsearch.Client {
-	cert, err := ioutil.ReadFile("./ca.crt")
+	cert, err := os.ReadFile("./ca.crt")
 	if err != nil {
 		log.Fatalf("Error reading cert: %s", err)
 	}
