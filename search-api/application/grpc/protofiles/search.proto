@@ -11,7 +11,8 @@ message Track {
     bool explicit = 6;
     int64 playCount = 7;
     repeated string genres = 8;
-    string  imageUrl = 9;
+    string  youtubeId = 9;
+    string  imageUrl = 10;
 }
 
 message SearchRequest {
