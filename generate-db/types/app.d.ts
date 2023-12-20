@@ -4,6 +4,7 @@ interface Album {
   artistIds: string[];
   trackIds: string[];
   genres: string[];
+  styles: string[];
   spotify: {
     id: string;
     popularity: number;
@@ -38,6 +39,7 @@ interface Track {
   artistIds: string[];
   albumId: string;
   genres: string[];
+  styles: string[];
   explicit: boolean;
   playCount: number;
   lyrics: string;
