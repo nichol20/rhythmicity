@@ -1,20 +1,18 @@
 const fs = require("node:fs/promises")
 const { v4: uuidv4 } = require('uuid')
 const { default: axios } = require("axios")
-const { getLyrics } = require('genius-lyrics-api');
+const cheerio = require('cheerio')
 
 require('dotenv').config()
 
 const dbPath = './data/app'
 const spotifyApiBaseUrl = 'https://api.spotify.com/v1'
 const youtubeApiBaseUrl = 'https://youtube.googleapis.com/youtube/v3'
-const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY
+const customsearchApiBaseUrl = 'https://www.googleapis.com/customsearch/v1'
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY
 const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID
 const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET
-const GENIUS_CLIENT_ID = process.env.GENIUS_CLIENT_ID
-const GENIUS_CLIENT_SECRET = process.env.GENIUS_CLIENT_SECRET
 let SPOTIFY_ACCESS_TOKEN = ''
-let GENIUS_ACCESS_TOKEN = ''
 
 const database = {
     artists: [],
@@ -38,20 +36,6 @@ const getSpotifyAccessToken = async () => {
     })
 
     // 1 hour access token
-    return data.access_token
-}
-
-const getGeniusAccessToken = async () => {
-    const { data } = await axios.request({
-        method: 'POST',
-        url: 'https://api.genius.com/oauth/token',
-        data:{
-            grant_type: 'client_credentials',
-            client_id: GENIUS_CLIENT_ID,
-            client_secret: GENIUS_CLIENT_SECRET
-        }
-    })
-
     return data.access_token
 }
 
@@ -99,12 +83,31 @@ const getArtistData = async (artistId) => {
     return data
 }
 
-const getTrackLyrics = ({ title, artist }) => getLyrics({
-    apiKey: GENIUS_ACCESS_TOKEN,
-    title,
-    artist,
-    optimizeQuery: true
-})
+const getLyrics = async ({ title, artist }) => {
+    const query = `${artist} ${title} lyrics`
+    const searchEngineId = '81d84266074974c52'; // search only on the genius website
+    const url = `${customsearchApiBaseUrl}?q=${encodeURIComponent(query)}&key=${process.env.GOOGLE_API_KEY}&cx=${searchEngineId}`;
+
+    const { data: customSearchData } = await axios.get(url)
+    const { data: html } = await axios.get(customSearchData.items[0].link)
+
+    // extract lyrics
+    const $ = cheerio.load(html);
+    let lyrics = $('div[class="lyrics"]').text().trim();
+    if (!lyrics) {
+        lyrics = ''
+        $('div[class^="Lyrics__Container"]').each((_, elem) => {
+            if($(elem).text().length !== 0) {
+                let snippet = $(elem).html()
+                  .replace(/<br>/g, '\n')
+                  .replace(/<(?!\s*br\s*\/?)[^>]+>/gi, '')
+                lyrics += $('<textarea/>').html(snippet).text().trim() + '\n\n'
+            }
+        })
+    }
+    if (!lyrics) return null
+    return lyrics.trim()
+}
 
 // convert ISO 8601 to milliseconds
 const durationToMilliseconds = durationString => {
@@ -128,7 +131,7 @@ const getYoutubeVideoData = async videoId => {
     const parts = ['contentDetails', 'snippet', 'statistics'].map(part => `part=${part}`).join('&')
     const params = {
         id: videoId,
-        key: YOUTUBE_API_KEY
+        key: GOOGLE_API_KEY
     }
 
     const { data } = await axios.get(`${youtubeApiBaseUrl}/videos?${parts}`, { params })
@@ -141,7 +144,7 @@ const searchYoutubeVideo = async query => {
         part: 'snippet',
         maxResults: 1,
         q: query,
-        key: YOUTUBE_API_KEY
+        key: GOOGLE_API_KEY
     }
 
     const { data } = await axios.get(`${youtubeApiBaseUrl}/search`, { params })
@@ -176,7 +179,7 @@ const fetchData = async track => {
     const videoData = await getYoutubeVideoData(foundVideo.id.videoId)
 
     // fetch lyrics
-    const lyrics = await getTrackLyrics({ title: track.name,  artist: artistNames.join(', ') })
+    const lyrics = await getLyrics({ title: track.name,  artist: artistNames[0] })
 
     return {
         albumData,
@@ -316,10 +319,6 @@ const generateData = async () => {
         SPOTIFY_ACCESS_TOKEN = await getSpotifyAccessToken()
         console.log('spotify access token: ', SPOTIFY_ACCESS_TOKEN)
         if(!SPOTIFY_ACCESS_TOKEN) throw new Error('No spotify access token received')
-
-        GENIUS_ACCESS_TOKEN = await getGeniusAccessToken()
-        console.log('genius access token: ', GENIUS_ACCESS_TOKEN)
-        if(!GENIUS_ACCESS_TOKEN) throw new Error('No genius access token received')
         
         console.log('Searching for popular tracks...')
         const popularTracks = await getPopularTracks()    
@@ -331,16 +330,15 @@ const generateData = async () => {
         for(const track of popularTracks.tracks) {
             await fetchAndCreateData(track)
             console.log(`${++pos}: track '${track.name}' created successfully`)
+            await saveDb()
         }
         console.log('-'.repeat(20))
-        
-        console.log('Writing...')
-        await saveDb()
+
         console.log('Done!')
     } catch (error) {
         console.error(error)
-        console.error(error.response.data)
-        console.error(error.response.data?.error?.errors)
+        console.error(error.response?.data)
+        console.error(error.response?.data?.error?.errors)
     }
 }
 
