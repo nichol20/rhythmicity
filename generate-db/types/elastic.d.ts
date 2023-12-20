@@ -6,6 +6,7 @@ interface TrackDocument {
   explict: boolean;
   playCount: number;
   genres: string[];
+  youtubeId: string;
   imageUrl: string;
   lyrics: string;
 }
