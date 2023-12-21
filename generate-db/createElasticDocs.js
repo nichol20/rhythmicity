@@ -12,7 +12,7 @@ const createTrackDocuments = async () => {
             explicit: track.explicit,
             playCount: track.playCount,
             genres: track.genres,
-            youtubeId: track.youtube.id,
+            styles: track.styles,
             imageUrl: track.spotify.albumImages[0].url,
             lyrics: track.lyrics
     }))

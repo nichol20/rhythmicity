@@ -21,23 +21,4 @@ func main() {
 	godotenv.Load()
 	Client := db.ConnectWithElasticsearch()
 	grpc.StartGrpcServer(Client, 50051)
-	// fmt.Println("Connected with elastic")
-	// ctx := context.Background()
-
-	// searchRepository := repository.SearchRepository{
-	// 	ESClient: Client,
-	// }
-
-	// search := model.Search{
-	// 	Query: "Tyler",
-	// }
-
-	// hits, err := searchRepository.Search(ctx, &search)
-	// if err != nil {
-	// 	panic(err)
-	// }
-
-	// for _, hit := range hits {
-	// 	fmt.Printf("%+v\n", hit.Source)
-	// }
 }

@@ -8,7 +8,7 @@ type Track struct {
 	Lyrics      string   `json:"lyrics"`
 	Explicit    bool     `json:"explicit"`
 	PlayCount   int64    `json:"playCount"`
-	YoutubeID   string   `json:"youtubeId"`
 	Genres      []string `json:"genres"`
+	Styles      []string `json:"styles"`
 	ImageUrl    string   `json:"imageUrl"`
 }

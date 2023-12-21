@@ -35,7 +35,7 @@ func (s *SearchGrpcService) Search(ctx context.Context, searchRequest *pb.Search
 			Explicit:    hit.Source.Explicit,
 			PlayCount:   hit.Source.PlayCount,
 			Genres:      hit.Source.Genres,
-			YoutubeId:   hit.Source.YoutubeID,
+			Styles:      hit.Source.Styles,
 			ImageUrl:    hit.Source.ImageUrl,
 		})
 	}
