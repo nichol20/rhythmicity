@@ -42,7 +42,7 @@ const getSpotifyAccessToken = async () => {
 
 const getPopularTracks = async () => {
     const params = {
-        limit: 99, // on track 100, YouTube API returns 403 due to quota exceeded
+        limit: 100,
         seed_genres: 'hip-hop,electronic',
         min_popularity: 75
     }
@@ -118,10 +118,14 @@ const getGenresAndStyles = async ({ albumName, artist }) => {
 
     const { data: googleSearchData } = await axios.get(url)
     // link example: https://www.discogs.com/master/1291018-Lil-Peep-Live-Forever
-    const masterId = googleSearchData.items[0].link.split('master/')[1].split('-')[0]
-    const { data: discogsMasterData } = await axios.get(`${discogsApiBaseUrl}/masters/${masterId}`)
+    const masterId = googleSearchData.items[0].link.split('master/')[1]?.split('-')[0]
+    if(masterId) {
+        const { data: discogsMasterData } = await axios.get(`${discogsApiBaseUrl}/masters/${masterId}`)
+    
+        return { genres: discogsMasterData.genres, styles: discogsMasterData.styles }
+    }
 
-    return { genres: discogsMasterData.genres, styles: discogsMasterData.styles }
+    return { genres: [], styles: [] }
 }
 
 // convert ISO 8601 to milliseconds
@@ -209,8 +213,8 @@ const fetchData = async track => {
 }
 
 const findAlbumBySpotifyId = albumSpotifyId => database.albums.find(album => album.spotify.id === albumSpotifyId)
-
 const findArtistBySpotifyId = artistSpotifyId => database.artists.find(artist => artist.spotify.id === artistSpotifyId)
+const findTrackBySpotifyId = trackSpotifyId => database.tracks.find(track => track.spotify.id === trackSpotifyId)
 
 const createAlbumRecord = ({ album, albumId, trackId, artistIds, genres, styles }) => {
     database.albums.push({
@@ -337,6 +341,15 @@ const fetchAndCreateData = async track => {
 }
 
 const generateData = async () => {
+    const tracksBuf = await fs.readFile(`${dbPath}/tracks.json`)
+    const artistsBuf = await fs. readFile(`${dbPath}/artists.json`)
+    const albumsBuf = await fs. readFile(`${dbPath}/albums.json`)
+
+    database.tracks = await JSON.parse(tracksBuf)
+    database.artists = await JSON.parse(artistsBuf)
+    database.albums = await JSON.parse(albumsBuf)
+
+    let tracksCounter = 0
     try {
         SPOTIFY_ACCESS_TOKEN = await getSpotifyAccessToken()
         console.log('spotify access token: ', SPOTIFY_ACCESS_TOKEN)
@@ -348,11 +361,14 @@ const generateData = async () => {
 
         console.log('Fetching and creating data...')
         console.log('-'.repeat(20))
-        let pos = 0
         for(const track of popularTracks.tracks) {
-            await fetchAndCreateData(track)
-            console.log(`${++pos}: track '${track.name}' created successfully`)
-            await saveDb()
+            if(findTrackBySpotifyId(track.id)) {
+                console.log(`track '${track.name}' already exist`)
+            } else {
+                await fetchAndCreateData(track)
+                await saveDb()
+                console.log(`${++tracksCounter}: track '${track.name}' created successfully`)
+            }
         }
         console.log('-'.repeat(20))
 
@@ -361,6 +377,8 @@ const generateData = async () => {
         console.error(error)
         console.error(error.response?.data)
         console.error(error.response?.data?.error?.errors)
+    } finally {
+        console.log(`${tracksCounter} track(s) was added.`)
     }
 }
 
