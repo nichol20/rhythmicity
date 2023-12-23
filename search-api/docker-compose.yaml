@@ -144,3 +144,14 @@ services:
       interval: 10s
       timeout: 10s
       retries: 120
+
+  search-api:
+    build: .
+    depends_on:
+      es01:
+        condition: service_healthy
+    ports:
+      - "50051:50051"
+    volumes:
+      - certs:/go/src/certs
+      - .:/go/src

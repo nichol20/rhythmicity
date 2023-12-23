@@ -9,14 +9,15 @@ import (
 )
 
 func ConnectWithElasticsearch() *elasticsearch.Client {
-	cert, err := os.ReadFile("./ca.crt")
+	cert, err := os.ReadFile("./certs/ca/ca.crt")
+
 	if err != nil {
 		log.Fatalf("Error reading cert: %s", err)
 	}
 
 	cfg := elasticsearch.Config{
 		Addresses: []string{
-			"https://localhost:9200",
+			"https://es01:9200",
 		},
 		Username: os.Getenv("ELASTIC_USER"),
 		Password: os.Getenv("ELASTIC_PASSWORD"),

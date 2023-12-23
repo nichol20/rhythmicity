@@ -1,0 +1,27 @@
+# Builder stage
+FROM golang:1.21.5 as builder
+
+WORKDIR /go/src
+ENV PATH="/go/bin:${PATH}"
+ENV GO111MODULE=on
+ENV CGO_ENABLED=1
+
+RUN apt-get update && \
+    apt-get install build-essential protobuf-compiler -y && \
+    go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.3.0 && \
+    go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.31.0
+
+COPY . .
+
+RUN GOOS=linux go build -ldflags="-s -w" -o search-api ./cmd/main.go
+
+# Final image
+FROM alpine:latest
+
+WORKDIR /
+
+COPY --from=builder /go/src/search-api .
+
+EXPOSE 50051
+
+CMD ["./search-api"]
