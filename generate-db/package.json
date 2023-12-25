@@ -5,7 +5,9 @@
   "main": "createDb.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "create": "node createDb.js"
+    "create-data": "node createDb.js",
+    "create-documents": "node createElasticDocs.js",
+    "fill-albums": "node fillAlbums.js"
   },
   "keywords": [],
   "author": "",

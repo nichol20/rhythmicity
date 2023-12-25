@@ -8,12 +8,7 @@ const spotify = new Spotify({ clientId: process.env.SPOTIFY_CLIENT_ID, clientSec
 const youtube = new Youtube({ apiKey: process.env.GOOGLE_API_KEY })
 const googleCustomSearch = new GoogleCustomSearch({ apiKey: process.env.GOOGLE_API_KEY })
 
-const fetchData = async track => {
-    // checks if the album already exists in the database using spotify id, if not, search for it in the spotify api
-    const existingAlbum = db.findAlbumBySpotifyId(track.album.id)
-    // variable can be two types of object
-    const albumData = existingAlbum ? {...existingAlbum, _exists: true} : await spotify.getAlbum(track.album.id) 
-
+const fetchData = async ({ track, album }) => {
     const artistNames = []
     // checks if the artist already exists in the database using spotify id, if not, search for it in the spotify api
     // array with two types of objects
@@ -39,7 +34,7 @@ const fetchData = async track => {
     const lyrics = await googleCustomSearch.getLyrics({ title: track.name,  artist: artistNames[0] })
 
     // fetch genres and styles
-    const { genres, styles } = await googleCustomSearch.getGenresAndStyles({ albumName: albumData.name, artist: artistNames[0]})
+    const { genres, styles } = await googleCustomSearch.getGenresAndStyles({ albumName: album.name, artist: artistNames[0]})
 
     const extraData = {
         lyrics,
@@ -48,16 +43,14 @@ const fetchData = async track => {
     }
 
     return {
-        albumData,
         artistsData,
         videoData,
         extraData
     }
 }
 
-const createData = ({ albumData, artistsData, videoData, extraData, track }) => {
+const createData = ({ artistsData, videoData, extraData, album, track }) => {
     const trackId = uuidv4()
-    let albumId = albumData.id
 
     const artistIds = artistsData.map((artist) => {
         // if the artist contains the '_exists' property it means it already exists
@@ -69,28 +62,21 @@ const createData = ({ albumData, artistsData, videoData, extraData, track }) => 
         return artistId
     })  
 
-    if('_exists' in albumData) {
-        // If the album data already exists, update it
-        db.albums = db.albums.map(album => {
-            if(album.id === albumData.id) {
-                // add trackId
-                album.trackIds.push(trackId)
+    db.albums = db.albums.map(alb => {
+        if(alb.id === album.id) {
+            // add trackId
+            alb.trackIds.push(trackId)
 
-                // check if there are already artists in the album data and adds them if not
-                artistIds.forEach(id => {
-                    if(!album.artistIds.includes(id)) {
-                        album.artistIds.push(id)
-                    }
-                })
-            }
+            // check if there are already artists in the album data and adds them if not
+            artistIds.forEach(id => {
+                if(!alb.artistIds.includes(id)) {
+                    alb.artistIds.push(id)
+                }
+            })
+        }
 
-            return album
-        })
-    } else {
-        // create album record
-        albumId = uuidv4()
-        db.addAlbum({ album: albumData, albumId, trackId, artistIds, genres: extraData.genres, styles: extraData.styles })
-    }
+        return alb
+    })
 
     // create track record
     db.addTrack({ 
@@ -99,43 +85,47 @@ const createData = ({ albumData, artistsData, videoData, extraData, track }) => 
         videoData, 
         trackId, 
         artistIds,
-        albumId,
+        albumId: album.id,
         genres: extraData.genres,
         styles: extraData.styles,
-        albumImages: '_exists' in albumData ? albumData.spotify.images : albumData.images 
-    })   
+        albumImages: album.spotify.images 
+    })  
 }
 
-const generateData = async () => {
+const fillAlbums = async () => {
     await db.init()
 
     try {
         await spotify.getAccessToken()
         console.log('spotify access token: ', spotify.accessToken)
-        
-        console.log('Searching for popular tracks...')
-        const popularTracks = await spotify.getPopularTracks({
-            limit: 100,
-            seedGenres: "hip-hop,electronic",
-            minPopularity: 75
-        })    
-        console.log(`${popularTracks.tracks.length} track(s) found.`)
 
-        console.log('Fetching and creating data...')
-        console.log('-'.repeat(20))
-        for(const track of popularTracks.tracks) {
-            if(db.findTrackBySpotifyId(track.id)) {
-                console.log(`track '${track.name}' already exist`)
-            } else {
-                const data = await fetchData(track)
-                createData({...data, track })
-                await db.save()
-                console.log(`${db.getCurrentRunDataCount().tracks}: track '${track.name}' created successfully`)
+        for(const album of db.albums) {
+            const spotifyAlbum = await spotify.getAlbum(album.spotify.id)
+
+            // -------------------------- //
+            db.albums = db.albums.map(a => {
+                if(a.id === album.id) {
+                    a.totalTracks = spotifyAlbum.total_tracks
+                }
+
+                return a
+            })
+            // -------------------------- //
+
+            console.log(`album ${spotifyAlbum.name}: `)
+            for(const track of spotifyAlbum.tracks.items) {
+                if(db.findTrackBySpotifyId(track.id)) {
+                    console.log(`track '${track.name}' already exist`)
+                } else {
+                    const data = await fetchData({track, album})
+                    createData({...data, track, album })
+                    await db.save()
+                    console.log(`${db.getCurrentRunDataCount().tracks}: track '${track.name}' created successfully`)
+                }
             }
-        }
-        console.log('-'.repeat(20))
+            console.log(`-`.repeat(20))
 
-        console.log('Done!')
+        }
     } catch (error) {
         console.error(error)
     } finally {
@@ -144,4 +134,4 @@ const generateData = async () => {
     }
 }
 
-generateData()
+fillAlbums()

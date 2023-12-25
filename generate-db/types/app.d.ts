@@ -5,6 +5,7 @@ interface Album {
   trackIds: string[];
   genres: string[];
   styles: string[];
+  totalTracks: number;
   spotify: {
     id: string;
     popularity: number;
