@@ -107,8 +107,6 @@ const createData = ({ albumData, artistsData, videoData, extraData, track }) => 
 }
 
 const generateData = async () => {
-    await db.init()
-
     try {
         await spotify.getAccessToken()
         console.log('spotify access token: ', spotify.accessToken)

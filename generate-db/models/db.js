@@ -1,44 +1,22 @@
 const fs = require("node:fs/promises")
 const { durationToMilliseconds } = require("../utils/conversion")
+const tracks = require('./data/app/tracks.json')
+const artists = require('./data/app/artists.json')
+const albums = require('./data/app/albums.json')
 
 class Database {
-    #initialized = false
     #addedArtistsLen = 0
     #addedAlbumsLen = 0
     #addedTracksLen = 0
 
     constructor() {
         this.dbPath = './data/app'
-        this.tracks = []
-        this.artists = []
-        this.albums = []
-    }
-
-    #requireDbInitialization = () => {
-        if(!this.#initialized) throw new Error('Initialize the Database!')
-    }
-
-    async init() {
-        try {
-            const [tracksBuf, artistsBuf, albumsBuf] = await Promise.all([
-                fs.readFile(`${this.dbPath}/tracks.json`),
-                fs.readFile(`${this.dbPath}/artists.json`),
-                fs.readFile(`${this.dbPath}/albums.json`)
-            ])
-
-            this.tracks = JSON.parse(tracksBuf)
-            this.artists = JSON.parse(artistsBuf)
-            this.albums = JSON.parse(albumsBuf)
-
-            this.#initialized = true
-        } catch (error) {
-            console.error(error.message)
-            throw new Error('Error initializing database.')
-        }
+        this.tracks = tracks
+        this.artists = artists
+        this.albums = albums
     }
 
     save = async () => {
-        this.#requireDbInitialization()
         try {
             const albumsStr = JSON.stringify(this.albums)
             const artistsStr = JSON.stringify(this.artists)

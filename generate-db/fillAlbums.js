@@ -93,8 +93,6 @@ const createData = ({ artistsData, videoData, extraData, album, track }) => {
 }
 
 const fillAlbums = async () => {
-    await db.init()
-
     try {
         await spotify.getAccessToken()
         console.log('spotify access token: ', spotify.accessToken)
