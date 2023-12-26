@@ -19,12 +19,15 @@ func (r *SearchRepository) Search(ctx context.Context, search *model.Search) ([]
 
 	searchStructure := map[string]interface{}{
 		"query": map[string]interface{}{
-			"multi_match": map[string]interface{}{
-				"query": search.Query,
-				"fields": []string{
-					"artistNames",
-					"trackName",
-					"lyrics",
+			"function_score": map[string]interface{}{
+				"multi_match": map[string]interface{}{
+					"query":  search.Query,
+					"fields": []string{"artistNames", "trackName", "lyrics"},
+				},
+				"field_value_factor": map[string]interface{}{
+					"field":   "playCount",
+					"factor":  1.2,
+					"missing": 1,
 				},
 			},
 		},
