@@ -1,0 +1,46 @@
+{
+  "mappings": {
+    "properties": {
+      "id": {
+        "type": "keyword"
+      },
+      "trackName": {
+        "type": "text"
+      },
+      "artistNames": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword"
+          }
+        }
+      },
+      "albumName": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword"
+          }
+        }
+      },
+      "lyrics": {
+        "type": "text"
+      },
+      "explicit": {
+        "type": "boolean"
+      },
+      "play_count": {
+        "type": "integer"
+      },
+      "genres": {
+        "type": "keyword"
+      },
+      "styles": {
+        "type": "keyword"
+      },
+      "image_url": {
+        "type": "keyword"
+      }
+    }
+  }
+}
