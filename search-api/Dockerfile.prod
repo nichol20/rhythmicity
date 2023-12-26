@@ -13,7 +13,7 @@ RUN apt-get update && \
 
 COPY . .
 
-RUN GOOS=linux go build -ldflags="-s -w" -o search-api ./cmd/main.go
+RUN GOOS=linux go build -ldflags="-s -w" -o search-api ./cmd/search-api/main.go
 
 # Final image
 FROM alpine:latest

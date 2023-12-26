@@ -8,6 +8,6 @@ import (
 
 func main() {
 	godotenv.Load()
-	Client := db.ConnectWithElasticsearch()
-	grpc.StartGrpcServer(Client, 50051)
+	client := db.ConnectWithElasticsearch()
+	grpc.StartGrpcServer(client, 50051)
 }
