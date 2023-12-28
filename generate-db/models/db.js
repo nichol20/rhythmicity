@@ -1,8 +1,8 @@
 const fs = require("node:fs/promises")
 const { durationToMilliseconds } = require("../utils/conversion")
-const tracks = require('./data/app/tracks.json')
-const artists = require('./data/app/artists.json')
-const albums = require('./data/app/albums.json')
+const tracks = require('../data/app/tracks.json')
+const artists = require('../data/app/artists.json')
+const albums = require('../data/app/albums.json')
 
 class Database {
     #addedArtistsLen = 0
