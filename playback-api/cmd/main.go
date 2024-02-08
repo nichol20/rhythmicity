@@ -9,21 +9,11 @@ import (
 
 func main() {
 	db := database.ConnectToDb()
-	rows, err := db.Query("SELECT * FROM categorias")
+	rows, err := db.Query("SELECT * FROM tabela")
 	if err != nil {
 		panic(err)
 	}
 	defer rows.Close()
-
-	// if rows.Next() {
-	// 	var (
-	// 		id        int
-	// 		categoria string
-	// 	)
-	// 	rows.Scan(&id, &categoria)
-
-	// 	fmt.Printf("ID: %d, categoria: %s", id, categoria)
-	// }
 
 	// Iterate over the rows
 	for rows.Next() {
@@ -32,7 +22,7 @@ func main() {
 			name string
 		)
 		// Scan the values from the current row into variables
-		err := rows.Scan(&id, &name)
+		err := rows.Scan(&name, &id)
 		if err != nil {
 			panic(err)
 		}
