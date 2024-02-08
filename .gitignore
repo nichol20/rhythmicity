@@ -4,3 +4,4 @@ ca.crt
 
 /generate-db/data
 /search-api/data
+certs/
