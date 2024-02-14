@@ -23,17 +23,11 @@ const fetchData = async ({ track, album }) => {
         })
     )
 
-    // find the video on youtube of this track
     const foundVideo = await youtube.searchVideo(`${track.name} by ${artistNames.join(', ')}`)
     if(!foundVideo) throw new Error('No youtube video found')
 
-    // fetch complete data from this video 
     const videoData = await youtube.getVideo(foundVideo.id.videoId)
-
-    // fetch lyrics
     const lyrics = await googleCustomSearch.getLyrics({ title: track.name,  artist: artistNames[0] })
-
-    // fetch genres and styles
     const { genres, styles } = await googleCustomSearch.getGenresAndStyles({ albumName: album.name, artist: artistNames[0]})
 
     const extraData = {
@@ -54,26 +48,29 @@ const createData = ({ artistsData, videoData, extraData, album, track }) => {
 
     const artistIds = artistsData.map((artist) => {
         // if the artist contains the '_exists' property it means it already exists
-        if('_exists' in artist) return artist.id
+        if('_exists' in artist) {
+            db.updateArtist(artist.id, () => {
+                const { _exists, ...art } = artist
+                art.genres = [...new Set(art.genres.concat(extraData.genres ? extraData.genres : []))]
+                art.styles = [...new Set(art.styles.concat(extraData.styles ? extraData.styles : []))]
+                return art
+            })
+            return artist.id
+        }
 
         const artistId = uuidv4()
-        db.addArtist({ artist, artistId })
+        db.addArtist({ artist, artistId, genres: extraData.genres, styles: extraData.styles })
 
         return artistId
     })  
 
-    db.albums = db.albums.map(alb => {
-        if(alb.id === album.id) {
-            // add trackId
-            alb.trackIds.push(trackId)
-
-            // check if there are already artists in the album data and adds them if not
-            artistIds.forEach(id => {
-                if(!alb.artistIds.includes(id)) {
-                    alb.artistIds.push(id)
-                }
-            })
-        }
+    db.updateAlbum(album.id, alb => {
+        alb.trackIds.push(trackId)
+        artistIds.forEach(artId => {
+            if(!alb.artistIds.includes(artId)) {
+                alb.artistIds.push(artId)
+            }
+        })
 
         return alb
     })
@@ -127,6 +124,7 @@ const fillAlbums = async () => {
     } catch (error) {
         console.error(error)
     } finally {
+        console.log(`\n${'-'.repeat(10)} STATISTICS ${'-'.repeat(10)}`)
         console.log("Data stored in the current run:\n", db.getCurrentRunDataCount())
         console.log("Total data stored:\n", db.getDataCount())
     }

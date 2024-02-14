@@ -55,27 +55,32 @@ const createData = ({ albumData, artistsData, videoData, extraData, track }) => 
 
     const artistIds = artistsData.map((artist) => {
         // if the artist contains the '_exists' property it means it already exists
-        if('_exists' in artist) return artist.id
+        if('_exists' in artist) {
+            db.updateArtist(artist.id, () => {
+                const { _exists, ...art } = artist
+                art.genres = [...new Set(art.genres.concat(extraData.genres ? extraData.genres : []))]
+                art.styles = [...new Set(art.styles.concat(extraData.styles ? extraData.styles : []))]
+                return art
+            })
+            return artist.id
+        }
 
         const artistId = uuidv4()
-        db.addArtist({ artist, artistId })
+        db.addArtist({ artist, artistId, genres: extraData.genres, styles: extraData.styles })
 
         return artistId
     })  
 
     if('_exists' in albumData) {
-        // If the album data already exists, update it
-        db.albums = db.albums.map(album => {
-            if(album.id === albumData.id) {
-                album.trackIds.push(trackId)
+        db.updateAlbum(albumData.id, album => {
+            album.trackIds.push(trackId)
 
-                // check if there are already artists in the album data and adds them if not
-                artistIds.forEach(id => {
-                    if(!album.artistIds.includes(id)) {
-                        album.artistIds.push(id)
-                    }
-                })
-            }
+            // check if there are already artists in the album data and adds them if not
+            artistIds.forEach(id => {
+                if(!album.artistIds.includes(id)) {
+                    album.artistIds.push(id)
+                }
+            })
 
             return album
         })
