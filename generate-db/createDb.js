@@ -28,17 +28,11 @@ const fetchData = async track => {
         })
     )
 
-    // find the video on youtube of this track
     const foundVideo = await youtube.searchVideo(`${track.name} by ${artistNames.join(', ')}`)
     if(!foundVideo) throw new Error('No youtube video found')
 
-    // fetch complete data from this video 
     const videoData = await youtube.getVideo(foundVideo.id.videoId)
-
-    // fetch lyrics
     const lyrics = await googleCustomSearch.getLyrics({ title: track.name,  artist: artistNames[0] })
-
-    // fetch genres and styles
     const { genres, styles } = await googleCustomSearch.getGenresAndStyles({ albumName: albumData.name, artist: artistNames[0]})
 
     const extraData = {
@@ -73,7 +67,6 @@ const createData = ({ albumData, artistsData, videoData, extraData, track }) => 
         // If the album data already exists, update it
         db.albums = db.albums.map(album => {
             if(album.id === albumData.id) {
-                // add trackId
                 album.trackIds.push(trackId)
 
                 // check if there are already artists in the album data and adds them if not
@@ -87,12 +80,10 @@ const createData = ({ albumData, artistsData, videoData, extraData, track }) => 
             return album
         })
     } else {
-        // create album record
         albumId = uuidv4()
         db.addAlbum({ album: albumData, albumId, trackId, artistIds, genres: extraData.genres, styles: extraData.styles })
     }
 
-    // create track record
     db.addTrack({ 
         track, 
         lyrics: extraData.lyrics,
@@ -107,6 +98,8 @@ const createData = ({ albumData, artistsData, videoData, extraData, track }) => 
 }
 
 const generateData = async () => {
+    let currentTrack
+
     try {
         await spotify.getAccessToken()
         console.log('spotify access token: ', spotify.accessToken)
@@ -122,6 +115,7 @@ const generateData = async () => {
         console.log('Fetching and creating data...')
         console.log('-'.repeat(20))
         for(const track of popularTracks.tracks) {
+            currentTrack = track.name
             if(db.findTrackBySpotifyId(track.id)) {
                 console.log(`track '${track.name}' already exist`)
             } else {
@@ -135,8 +129,10 @@ const generateData = async () => {
 
         console.log('Done!')
     } catch (error) {
+        console.error("Error when trying to process the track: " + currentTrack)
         console.error(error)
     } finally {
+        console.log(`\n${'-'.repeat(10)} STATISTICS ${'-'.repeat(10)}`)
         console.log("Data stored in the current run:\n", db.getCurrentRunDataCount())
         console.log("Total data stored:\n", db.getDataCount())
     }
