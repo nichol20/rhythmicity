@@ -4,7 +4,7 @@ CREATE DATABASE IF NOT EXISTS rhythmicity;
 
 CREATE TABLE IF NOT EXISTS artist_genres (
     id SERIAL PRIMARY KEY NOT NULL,
-    genre TEXT NOT NULL,
+    genre TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS artist_images_spotify (
@@ -16,14 +16,16 @@ CREATE TABLE IF NOT EXISTS artist_images_spotify (
 
 CREATE TABLE IF NOT EXISTS artist_data_spotify (
     id TEXT PRIMARY KEY NOT NULL,
-    popularity INT NOT NULL
-    artistImagesId INT FOREIGN KEY REFERENCES artist_images_spotify(id)
+    popularity INT NOT NULL,
+    artistImagesId INT,
+    FOREIGN KEY (artistImagesId) REFERENCES artist_images_spotify(id)
 );
 
 CREATE TABLE IF NOT EXISTS artists (
     id UUID PRIMARY KEY NOT NULL,
     name TEXT NOT NULL,
-    spotifyId TEXT FOREIGN KEY REFERENCES artist_data_spotify(id)
+    spotifyId TEXT,
+    FOREIGN KEY (spotifyId) REFERENCES artist_data_spotify(id)
 );
 
 CREATE TABLE IF NOT EXISTS artists_artist_genres (
@@ -59,14 +61,16 @@ CREATE TABLE IF NOT EXISTS album_data_spotify (
     id TEXT PRIMARY KEY NOT NULL,
     popularity INT NOT NULL,
     releaseDate DATE NOT NULL,
-    albumImagesId INT FOREIGN KEY REFERENCES album_images_spotify(id)
+    albumImagesId INT,
+    FOREIGN KEY (albumImagesId) REFERENCES album_images_spotify(id) 
 );
 
 CREATE TABLE IF NOT EXISTS albums (
     id UUID PRIMARY KEY NOT NULL,
     name TEXT NOT NULL,
     totalTracks INT NOT NULL,
-    spotifyId TEXT FOREIGN KEY REFERENCES album_data_spotify(id)
+    spotifyId TEXT,
+    FOREIGN KEY (spotifyId) REFERENCES album_data_spotify(id)
 );
 
 CREATE TABLE IF NOT EXISTS albums_genres (
@@ -108,30 +112,34 @@ CREATE TABLE IF NOT EXISTS track_data_youtube (
     title TEXT NOT NULL,
     durationMs INT NOT NULL,
     publishedAt DATE NOT NULL,
-    statisticsId INT FOREIGN KEY REFERENCES track_statistics_youtube(id),
-    thumbnailsId INT FOREIGN KEY REFERENCES track_thumbnails_youtube(id)
+    statisticsId INT,
+    thumbnailsId INT,
+    FOREIGN KEY (statisticsId) REFERENCES track_statistics_youtube(id),
+    FOREIGN KEY (thumbnailsId) REFERENCES track_thumbnails_youtube(id)
 );
 
 
 CREATE TABLE IF NOT EXISTS track_data_spotify (
-    id PRIMARY KEY NOT NULL,
+    id TEXT PRIMARY KEY NOT NULL,
     title TEXT NOT NULL,
     durationMs INT NOT NULL,
-    albumSpotifyId TEXT FOREIGN KEY REFERENCES album_data_spotify(id)
+    albumImagesId INT,
+    FOREIGN KEY (albumImagesId) REFERENCES album_images_spotify(id)
 );
 
 CREATE TABLE IF NOT EXISTS tracks (
     id UUID PRIMARY KEY NOT NULL,
-    albumId UUID PRIMARY KEY, 
+    albumId UUID, 
     explicit BOOLEAN NOT NULL,
     playCount INT NOT NULL,
-    lyrics TEXT
+    lyrics TEXT,
+    FOREIGN KEY (albumId) REFERENCES albums(id)
 );
 
 CREATE TABLE IF NOT EXISTS artists_tracks (
     track_id UUID NOT NULL,
     artist_id UUID NOT NULL,
     FOREIGN KEY (track_id) REFERENCES tracks(id),
-    FOREIGN KEY (artist_id) REFERENCES artists(artist_id),
+    FOREIGN KEY (artist_id) REFERENCES artists(id),
     PRIMARY KEY (track_id, artist_id)
 );
