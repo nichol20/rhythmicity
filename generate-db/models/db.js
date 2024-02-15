@@ -3,6 +3,8 @@ const { durationToMilliseconds } = require("../utils/conversion")
 const tracks = require('../data/app/tracks.json')
 const artists = require('../data/app/artists.json')
 const albums = require('../data/app/albums.json')
+const genres = require('../data/app/genres.json')
+const styles = require('../data/app/styles.json')
 
 class Database {
     #addedArtistsLen = 0
@@ -14,6 +16,8 @@ class Database {
         this.tracks = tracks
         this.artists = artists
         this.albums = albums
+        this.genres = genres
+        this.styles = styles
     }
 
     save = async () => {
@@ -21,11 +25,15 @@ class Database {
             const albumsStr = JSON.stringify(this.albums)
             const artistsStr = JSON.stringify(this.artists)
             const tracksStr = JSON.stringify(this.tracks)
+            const genresStr = JSON.stringify(this.genres)
+            const stylesStr = JSON.stringify(this.styles)
         
             await Promise.all([
                 fs.writeFile(`${this.dbPath}/tracks.json`, tracksStr),
                 fs.writeFile(`${this.dbPath}/artists.json`, artistsStr),
                 fs.writeFile(`${this.dbPath}/albums.json`, albumsStr),
+                fs.writeFile(`${this.dbPath}/genres.json`, genresStr),
+                fs.writeFile(`${this.dbPath}/styles.json`, stylesStr),
             ])
 
         } catch (error) {
@@ -105,6 +113,14 @@ class Database {
         })
 
         this.#addedAlbumsLen++
+    }
+
+    addGenres = (newGenres) => {
+        this.genres = [...new Set(this.genres.concat(newGenres))]
+    }
+
+    addStyles = (newStyles) => {
+        this.styles = [...new Set(this.styles.concat(newStyles))]
     }
 
     #updateItem = (itemId, itemList, update) => {

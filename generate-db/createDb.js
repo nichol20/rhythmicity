@@ -53,6 +53,9 @@ const createData = ({ albumData, artistsData, videoData, extraData, track }) => 
     const trackId = uuidv4()
     let albumId = albumData.id
 
+    db.addGenres(extraData.genres ? extraData.genres : [])
+    db.addStyles(extraData.styles ? extraData.styles : [])
+
     const artistIds = artistsData.map((artist) => {
         // if the artist contains the '_exists' property it means it already exists
         if('_exists' in artist) {
