@@ -1,12 +1,17 @@
 CREATE DATABASE IF NOT EXISTS rhythmicity;
 
------- ARTISTS ------
-
-CREATE TABLE IF NOT EXISTS artist_genres (
+------ GENRES AND STYLES ------
+CREATE TABLE IF NOT EXISTS genres (
     id SERIAL PRIMARY KEY NOT NULL,
     genre TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS styles (
+    id SERIAL PRIMARY KEY NOT NULL,
+    style TEXT NOT NULL
+);
+
+------ ARTISTS ------
 CREATE TABLE IF NOT EXISTS artist_images_spotify (
     id SERIAL PRIMARY KEY NOT NULL,
     url TEXT NOT NULL,
@@ -28,24 +33,20 @@ CREATE TABLE IF NOT EXISTS artists (
     FOREIGN KEY (spotifyId) REFERENCES artist_data_spotify(id)
 );
 
-CREATE TABLE IF NOT EXISTS artists_artist_genres (
+CREATE TABLE IF NOT EXISTS artists_genres (
     artistId UUID NOT NULL,
     genreId INT NOT NULL,
     FOREIGN KEY (artistId) REFERENCES artists(id),
-    FOREIGN KEY (genreId) REFERENCES artist_genres(id),
+    FOREIGN KEY (genreId) REFERENCES genres(id),
     PRIMARY KEY (artistId, genreId)
 );
 
------- GENRES AND STYLES ------
-
-CREATE TABLE IF NOT EXISTS genres (
-    id SERIAL PRIMARY KEY NOT NULL,
-    genre TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS styles (
-    id SERIAL PRIMARY KEY NOT NULL,
-    style TEXT NOT NULL
+CREATE TABLE IF NOT EXISTS artists_styles (
+    artistId UUID NOT NULL,
+    styleId INT NOT NULL,
+    FOREIGN KEY (artistId) REFERENCES artists(id),
+    FOREIGN KEY (styleId) REFERENCES styles(id),
+    PRIMARY KEY (artistId, styleId)
 );
 
 ------ ALBUMS ------
