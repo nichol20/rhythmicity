@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS styles (
 CREATE TABLE IF NOT EXISTS artist_images_spotify (
     id SERIAL PRIMARY KEY NOT NULL,
     url TEXT NOT NULL,
-    height INT NOT NULL,
-    width INT NOT NULL
+    width INT NOT NULL,
+    height INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS artist_data_spotify (
@@ -50,7 +50,6 @@ CREATE TABLE IF NOT EXISTS artists_styles (
 );
 
 ------ ALBUMS ------
-
 CREATE TABLE IF NOT EXISTS album_images_spotify (
     id SERIAL PRIMARY KEY NOT NULL,
     url TEXT NOT NULL,
@@ -91,7 +90,6 @@ CREATE TABLE IF NOT EXISTS albums_styles (
 );
 
 ------ TRACKS ------
-
 CREATE TABLE IF NOT EXISTS track_statistics_youtube (
     id SERIAL PRIMARY KEY NOT NULL,
     viewCount TEXT NOT NULL,
@@ -119,7 +117,6 @@ CREATE TABLE IF NOT EXISTS track_data_youtube (
     FOREIGN KEY (thumbnailsId) REFERENCES track_thumbnails_youtube(id)
 );
 
-
 CREATE TABLE IF NOT EXISTS track_data_spotify (
     id TEXT PRIMARY KEY NOT NULL,
     title TEXT NOT NULL,
@@ -138,9 +135,9 @@ CREATE TABLE IF NOT EXISTS tracks (
 );
 
 CREATE TABLE IF NOT EXISTS artists_tracks (
-    track_id UUID NOT NULL,
-    artist_id UUID NOT NULL,
-    FOREIGN KEY (track_id) REFERENCES tracks(id),
-    FOREIGN KEY (artist_id) REFERENCES artists(id),
-    PRIMARY KEY (track_id, artist_id)
+    trackId UUID NOT NULL,
+    artistId UUID NOT NULL,
+    FOREIGN KEY (trackId) REFERENCES tracks(id),
+    FOREIGN KEY (artistId) REFERENCES artists(id),
+    PRIMARY KEY (trackId, artistId)
 );
