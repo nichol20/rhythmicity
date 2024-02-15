@@ -28,22 +28,15 @@ const fetchData = async ({ track, album }) => {
 
     const videoData = await youtube.getVideo(foundVideo.id.videoId)
     const lyrics = await googleCustomSearch.getLyrics({ title: track.name,  artist: artistNames[0] })
-    const { genres, styles } = await googleCustomSearch.getGenresAndStyles({ albumName: album.name, artist: artistNames[0]})
-
-    const extraData = {
-        lyrics,
-        genres,
-        styles
-    }
 
     return {
         artistsData,
         videoData,
-        extraData
+        lyrics
     }
 }
 
-const createData = ({ artistsData, videoData, extraData, album, track }) => {
+const createData = ({ artistsData, videoData, lyrics, album, track }) => {
     const trackId = uuidv4()
 
     const artistIds = artistsData.map((artist) => {
@@ -51,15 +44,15 @@ const createData = ({ artistsData, videoData, extraData, album, track }) => {
         if('_exists' in artist) {
             db.updateArtist(artist.id, () => {
                 const { _exists, ...art } = artist
-                art.genres = [...new Set(art.genres.concat(extraData.genres ? extraData.genres : []))]
-                art.styles = [...new Set(art.styles.concat(extraData.styles ? extraData.styles : []))]
+                art.genres = [...new Set(art.genres.concat(album.genres ? album.genres : []))]
+                art.styles = [...new Set(art.styles.concat(album.styles ? album.styles : []))]
                 return art
             })
             return artist.id
         }
 
         const artistId = uuidv4()
-        db.addArtist({ artist, artistId, genres: extraData.genres, styles: extraData.styles })
+        db.addArtist({ artist, artistId, genres: album.genres, styles: album.styles })
 
         return artistId
     })  
@@ -78,13 +71,13 @@ const createData = ({ artistsData, videoData, extraData, album, track }) => {
     // create track record
     db.addTrack({ 
         track, 
-        lyrics: extraData.lyrics,
+        lyrics,
         videoData, 
         trackId, 
         artistIds,
         albumId: album.id,
-        genres: extraData.genres,
-        styles: extraData.styles,
+        genres: album.genres,
+        styles: album.styles,
         albumImages: album.spotify.images 
     })  
 }
