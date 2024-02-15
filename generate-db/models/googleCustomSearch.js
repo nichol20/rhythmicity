@@ -60,7 +60,10 @@ class GoogleCustomSearch {
             if(masterId) {
                 const { data: discogsMasterData } = await axios.get(`${this.discogsApiBaseUrl}/masters/${masterId}`)
             
-                return { genres: discogsMasterData.genres, styles: discogsMasterData.styles }
+                return { 
+                    genres: discogsMasterData.genres ? discogsMasterData.genres : [], 
+                    styles: discogsMasterData.styles ? discogsMasterData.styles : []
+                }
             }
         
             return { genres: [], styles: [] }
