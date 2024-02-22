@@ -78,7 +78,7 @@ services:
       - -c
       - listen_addresses=*
       - -c
-      - hba_file=/var/lib/postgresql/data/pg_hba.conf
+      - hba_file=/var/lib/postgresql/pg_hba.conf
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -88,7 +88,7 @@ services:
     volumes:
       - postgres-db:/var/lib/postgresql/data
       - certs:/etc/ssl/certs
-      - ./infrastructure/db/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
+      - ./infrastructure/db/pg_hba.conf:/var/lib/postgresql/pg_hba.conf
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
       interval: 10s
