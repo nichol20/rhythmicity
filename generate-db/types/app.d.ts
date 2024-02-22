@@ -43,7 +43,7 @@ interface Track {
   styles: string[];
   explicit: boolean;
   playCount: number;
-  lyrics: string;
+  lyrics: string | null;
   spotify: {
     id: string;
     title: string;
