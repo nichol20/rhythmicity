@@ -2,7 +2,7 @@
 .env
 node_modules
 ca.crt
+dump.sql
 
-/generate-db/data
-/search-api/data
+data/
 certs/
