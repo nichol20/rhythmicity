@@ -10,12 +10,18 @@ const durationToMilliseconds = durationString => {
     const minutes = matches[1] ? parseInt(matches[1], 10) : 0
     const seconds = matches[2] ? parseInt(matches[2], 10) : 0
     
-    // Calculate the total duration in milliseconds
     const totalMilliseconds = (minutes * 60 + seconds) * 1000
     
     return totalMilliseconds
 }
 
+const handleSpotifyMalformedDate = str => {
+  const time = new Date(str)
+  return `${time.getFullYear()}-${time.getMonth()}-${time.getDate()}`
+}
+
+
 module.exports = {
-    durationToMilliseconds
+    durationToMilliseconds,
+    handleSpotifyMalformedDate
 }
