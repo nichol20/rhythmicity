@@ -3,6 +3,7 @@
 node_modules
 ca.crt
 dump.sql
+test.*
 
 data/
 certs/
