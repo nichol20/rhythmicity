@@ -91,16 +91,6 @@ const fillAlbums = async () => {
         for(const album of db.albums) {
             const spotifyAlbum = await spotify.getAlbum(album.spotify.id)
 
-            // -------------------------- //
-            db.albums = db.albums.map(a => {
-                if(a.id === album.id) {
-                    a.totalTracks = spotifyAlbum.total_tracks
-                }
-
-                return a
-            })
-            // -------------------------- //
-
             console.log(`album ${spotifyAlbum.name}: `)
             for(const track of spotifyAlbum.tracks.items) {
                 currentTrack = track.name
