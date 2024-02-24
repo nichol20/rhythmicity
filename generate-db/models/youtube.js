@@ -4,6 +4,7 @@ class Youtube {
     apiBaseUrl = 'https://youtube.googleapis.com/youtube/v3'
     #apiKey = ''
     #currentQuery = ''
+    #currentVideo = null
 
     constructor({ apiKey }) {
         this.#apiKey = apiKey
@@ -22,6 +23,7 @@ class Youtube {
             }
         
             const { data } = await axios.get(`${this.apiBaseUrl}/search`, { params })
+            this.#currentVideo = data.items[0]
             return data.items[0]
         } catch (error) {
             console.error(error)
@@ -41,7 +43,8 @@ class Youtube {
             return data.items[0]
         } catch (error) {
             console.error(error)
-            throw new Error(`Failed to get video from Youtube. Youtube id: ${videoId}, query used: ${this.#currentQuery} `)
+            throw new Error("Failed to get video from Youtube.\n",
+            `youtube id: ${videoId}, query used: ${this.#currentQuery}, found video: ${this.#currentVideo} `)
         }
     }
 }
