@@ -83,6 +83,7 @@ const createData = ({ artistsData, videoData, lyrics, album, track }) => {
 }
 
 const fillAlbums = async () => {
+    let currentTrack = ""
     try {
         await spotify.getAccessToken()
         console.log('spotify access token: ', spotify.accessToken)
@@ -102,6 +103,7 @@ const fillAlbums = async () => {
 
             console.log(`album ${spotifyAlbum.name}: `)
             for(const track of spotifyAlbum.tracks.items) {
+                currentTrack = track.name
                 if(db.findTrackBySpotifyId(track.id)) {
                     console.log(`track '${track.name}' already exist`)
                 } else {
@@ -116,6 +118,7 @@ const fillAlbums = async () => {
         }
     } catch (error) {
         console.error(error)
+        console.error("Error when trying to process the track: " + currentTrack)
     } finally {
         console.log(`\n${'-'.repeat(10)} STATISTICS ${'-'.repeat(10)}`)
         console.log("Data stored in the current run:\n", db.getCurrentRunDataCount())

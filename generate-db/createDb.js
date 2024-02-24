@@ -106,7 +106,7 @@ const createData = ({ albumData, artistsData, videoData, extraData, track }) => 
 }
 
 const generateData = async () => {
-    let currentTrack
+    let currentTrack = ""
 
     try {
         await spotify.getAccessToken()
@@ -137,8 +137,8 @@ const generateData = async () => {
 
         console.log('Done!')
     } catch (error) {
-        console.error("Error when trying to process the track: " + currentTrack)
         console.error(error)
+        console.error("Error when trying to process the track: " + currentTrack)
     } finally {
         console.log(`\n${'-'.repeat(10)} STATISTICS ${'-'.repeat(10)}`)
         console.log("Data stored in the current run:\n", db.getCurrentRunDataCount())

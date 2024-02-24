@@ -3,12 +3,14 @@ const { default: axios } = require("axios")
 class Youtube {
     apiBaseUrl = 'https://youtube.googleapis.com/youtube/v3'
     #apiKey = ''
+    #currentQuery = ''
 
     constructor({ apiKey }) {
         this.#apiKey = apiKey
     }
 
     searchVideo = async query => {
+        this.#currentQuery = query
         try {
             const params = {
                 part: 'snippet',
@@ -21,7 +23,7 @@ class Youtube {
             return data.items[0]
         } catch (error) {
             console.error(error)
-            throw new Error('Failed to search video from Youtube.')
+            throw new Error('Failed to search video from Youtube. Query: ', query)
         }
     }
 
@@ -37,7 +39,7 @@ class Youtube {
             return data.items[0]
         } catch (error) {
             console.error(error)
-            throw new Error('Failed to search video from Youtube.')
+            throw new Error(`Failed to get video from Youtube. Youtube id: ${videoId}, query used: ${this.#currentQuery} `)
         }
     }
 }
