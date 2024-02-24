@@ -16,6 +16,8 @@ class Youtube {
                 part: 'snippet',
                 maxResults: 1,
                 q: query,
+                topicId: '/m/04rlf', // Music (parent topic)
+                type: 'video',
                 key: this.#apiKey
             }
         
