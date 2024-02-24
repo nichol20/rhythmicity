@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "create-data": "node createDb.js",
     "create-documents": "node createElasticDocs.js",
-    "fill-albums": "node fillAlbums.js"
+    "fill-albums": "node fillAlbums.js --index=0"
   },
   "keywords": [],
   "author": "",

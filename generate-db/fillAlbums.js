@@ -2,13 +2,23 @@ const { v4: uuidv4 } = require('uuid')
 const { Database, GoogleCustomSearch, Spotify, Youtube } = require('./models')
 
 require('dotenv').config()
+const args = function() {
+    const args = require('./utils/args').getArgs()
+    if(args.index) {
+        const value = parseInt(args.index)
+        if(isNaN(value)) throw new Error("index flag must be a number.")
+        args.index = value
+    }
+
+    return args
+}()
 
 const db = new Database()
 const spotify = new Spotify({ clientId: process.env.SPOTIFY_CLIENT_ID, clientSecret: process.env.SPOTIFY_CLIENT_SECRET })
 const youtube = new Youtube({ apiKey: process.env.GOOGLE_API_KEY })
 const googleCustomSearch = new GoogleCustomSearch({ apiKey: process.env.GOOGLE_API_KEY })
 
-const fetchData = async ({ track, album }) => {
+const fetchData = async track => {
     const artistNames = []
     // checks if the artist already exists in the database using spotify id, if not, search for it in the spotify api
     // array with two types of objects
@@ -84,20 +94,26 @@ const createData = ({ artistsData, videoData, lyrics, album, track }) => {
 
 const fillAlbums = async () => {
     let currentTrack = ""
+    let startIndex = args.index ? args.index : 0
+    let currentIndex = 0
     try {
         await spotify.getAccessToken()
         console.log('spotify access token: ', spotify.accessToken)
 
         for(const album of db.albums) {
-            const spotifyAlbum = await spotify.getAlbum(album.spotify.id)
+            currentIndex++
+            if(currentIndex < startIndex) continue
 
+            const spotifyAlbum = await spotify.getAlbum(album.spotify.id)
             console.log(`album ${spotifyAlbum.name}: `)
+
             for(const track of spotifyAlbum.tracks.items) {
+
                 currentTrack = track.name
                 if(db.findTrackBySpotifyId(track.id)) {
                     console.log(`track '${track.name}' already exist`)
                 } else {
-                    const data = await fetchData({track, album})
+                    const data = await fetchData(track)
                     createData({...data, track, album })
                     await db.save()
                     console.log(`${db.getCurrentRunDataCount().tracks}: track '${track.name}' created successfully`)
