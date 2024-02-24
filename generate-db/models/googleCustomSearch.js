@@ -1,8 +1,6 @@
 const { default: axios } = require("axios")
 const cheerio = require('cheerio')
 
-const apiBaseUrl = 'https://www.googleapis.com/customsearch/v1'
-
 class GoogleCustomSearch {
     apiBaseUrl = 'https://www.googleapis.com/customsearch/v1'
     discogsApiBaseUrl = 'https://api.discogs.com'
