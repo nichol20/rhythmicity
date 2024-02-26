@@ -7,7 +7,7 @@ services:
       - certs:/etc/ssl/certs
     command: >
       bash -c '
-        if [ ! -f /etc/ssl/certs/ca.key ]; then
+        if [ ! -f /etc/ssl/certs/root.key ]; then
           echo "Downloading openssl";
           apk add --no-cache openssl;
 
@@ -46,9 +46,10 @@ services:
           openssl genrsa -out client.key 2048;
           openssl req -new -key client.key -subj "/CN=postgres" -out client.csr;
           openssl x509 -req -in client.csr -CA root.crt -CAkey root.key -CAcreateserial -days 365 -text -out client.crt;
+          
+          chown -R postgres:postgres /etc/ssl/certs;
         fi;
 
-        chown -R postgres:postgres /etc/ssl/certs;
         echo "All done!";
         sleep 100;
       '
