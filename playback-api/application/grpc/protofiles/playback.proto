@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option go_package = "github.com/nichol20/rhythmicity/playback-api/application/grpc/pb";
+
+message PlaybackRequest {
+    string id = 1;
+}
+
+message PlaybackResponse {
+    string youtubeId = 1;
+}
+
+service Playback {
+    rpc Playback(PlaybackRequest) returns (PlaybackResponse) {};
+}
