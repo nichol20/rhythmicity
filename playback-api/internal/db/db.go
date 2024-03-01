@@ -16,9 +16,9 @@ func ConnectToDb() *sql.DB {
 		" password=postgres", // unecessary
 		" dbname=postgres",
 		" sslmode=verify-full",
-		" sslrootcert=/app/infrastructure/db/certs/root.crt",
-		" sslkey=/app/infrastructure/db/certs/client.key",
-		" sslcert=/app/infrastructure/db/certs/client.crt",
+		" sslrootcert=/app/internal/db/certs/root.crt",
+		" sslkey=/app/internal/db/certs/client.key",
+		" sslcert=/app/internal/db/certs/client.crt",
 	)
 
 	db, err := sql.Open("postgres", connection)
