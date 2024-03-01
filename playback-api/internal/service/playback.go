@@ -1,12 +1,12 @@
-package grpc
+package service
 
 import (
 	"context"
 	"fmt"
 	"log"
 
-	"github.com/nichol20/rhythmicity/playback-api/application/grpc/pb"
-	"github.com/nichol20/rhythmicity/playback-api/domain/model"
+	"github.com/nichol20/rhythmicity/playback-api/internal/model"
+	"github.com/nichol20/rhythmicity/playback-api/internal/pb"
 )
 
 type PlaybackGrpcService struct {

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/nichol20/rhythmicity/playback-api/infrastructure/db"
-	"github.com/nichol20/rhythmicity/playback-api/infrastructure/repository"
+	"github.com/nichol20/rhythmicity/playback-api/internal/db"
+	"github.com/nichol20/rhythmicity/playback-api/internal/repository"
 )
 
 func main() {

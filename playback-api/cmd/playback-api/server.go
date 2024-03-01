@@ -1,23 +1,26 @@
-package grpc
+package main
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"net"
 
-	"github.com/nichol20/rhythmicity/playback-api/application/grpc/pb"
-	"github.com/nichol20/rhythmicity/playback-api/infrastructure/repository"
+	database "github.com/nichol20/rhythmicity/playback-api/internal/db"
+	"github.com/nichol20/rhythmicity/playback-api/internal/pb"
+	"github.com/nichol20/rhythmicity/playback-api/internal/repository"
+	"github.com/nichol20/rhythmicity/playback-api/internal/service"
 	"google.golang.org/grpc"
 )
 
-func StartGRPCServer(db *sql.DB, port int) {
+func main() {
+	db := database.ConnectToDb()
+	port := 50051
 	grpcServer := grpc.NewServer()
 
 	playbackRepository := repository.PlaybackRepository{
 		DB: db,
 	}
-	playbackGRPCService := &PlaybackGrpcService{
+	playbackGRPCService := &service.PlaybackGrpcService{
 		PlaybackRepository: &playbackRepository,
 	}
 	pb.RegisterPlaybackServer(grpcServer, playbackGRPCService)
