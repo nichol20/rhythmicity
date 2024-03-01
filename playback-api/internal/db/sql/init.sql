@@ -104,8 +104,8 @@ CREATE TABLE IF NOT EXISTS track_statistics_youtube (
     likeCount TEXT NOT NULL,
     favoriteCount TEXT NOT NULL,
     commentCount TEXT NOT NULL,
-    trackDataYoutubeId UUID,
-    FOREIGN KEY (trackDataYoutubeId) REFERENCES track_data_youtube(id)
+    youtubeDataId UUID,
+    FOREIGN KEY (youtubeDataId) REFERENCES track_data_youtube(id)
 );
 
 CREATE TABLE IF NOT EXISTS track_thumbnails_youtube (
@@ -114,8 +114,8 @@ CREATE TABLE IF NOT EXISTS track_thumbnails_youtube (
     width INT NOT NULL,
     height INT NOT NULL,
     type TEXT NOT NULL,
-    trackDataYoutubeId UUID,
-    FOREIGN KEY (trackDataYoutubeId) REFERENCES track_data_youtube(id)
+    youtubeDataId UUID,
+    FOREIGN KEY (youtubeDataId) REFERENCES track_data_youtube(id)
 );
 
 CREATE TABLE IF NOT EXISTS track_data_spotify (
