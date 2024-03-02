@@ -5,10 +5,10 @@ import (
 	"log"
 	"net"
 
-	database "github.com/nichol20/rhythmicity/playback-api/internal/db"
-	"github.com/nichol20/rhythmicity/playback-api/internal/pb"
-	"github.com/nichol20/rhythmicity/playback-api/internal/repository"
-	"github.com/nichol20/rhythmicity/playback-api/internal/service"
+	database "github.com/nichol20/rhythmicity/data-api/internal/db"
+	"github.com/nichol20/rhythmicity/data-api/internal/pb"
+	"github.com/nichol20/rhythmicity/data-api/internal/repository"
+	"github.com/nichol20/rhythmicity/data-api/internal/service"
 	"google.golang.org/grpc"
 )
 
@@ -17,13 +17,11 @@ func main() {
 	port := 50051
 	grpcServer := grpc.NewServer()
 
-	playbackRepository := repository.PlaybackRepository{
-		DB: db,
+	trackRepository := repository.NewTrackRepository(db)
+	trackGRPCService := &service.TrackGRPCService{
+		TrackRepository: trackRepository,
 	}
-	playbackGRPCService := &service.PlaybackGrpcService{
-		PlaybackRepository: &playbackRepository,
-	}
-	pb.RegisterPlaybackServer(grpcServer, playbackGRPCService)
+	pb.RegisterTrackServer(grpcServer, trackGRPCService)
 
 	address := fmt.Sprintf("0.0.0.0:%d", port)
 	listener, err := net.Listen("tcp", address)

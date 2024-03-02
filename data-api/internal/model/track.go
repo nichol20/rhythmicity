@@ -1,5 +1,7 @@
 package model
 
+import "github.com/google/uuid"
+
 type SpotifyTrack struct {
 	Spotify
 	DurationMS  int     `json:"durationMs"`
@@ -31,7 +33,7 @@ type YouTube struct {
 }
 
 type Track struct {
-	ID        string       `json:"id"`
+	ID        uuid.UUID    `json:"id"`
 	ArtistIds []string     `json:"artistIds"`
 	AlbumId   string       `json:"albumId"`
 	Genres    []string     `json:"genres"`

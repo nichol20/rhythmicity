@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS artist_images_spotify (
     url TEXT NOT NULL,
     width INT NOT NULL,
     height INT NOT NULL,
-    spotifyId TEXT,
+    spotifyId TEXT NOT NULL,
     FOREIGN KEY (spotifyId) REFERENCES artist_data_spotify(id)
 );
 
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS album_images_spotify (
     url TEXT NOT NULL,
     width INT NOT NULL,
     height INT NOT NULL,
-    spotifyId TEXT,
+    spotifyId TEXT NOT NULL,
     FOREIGN KEY (spotifyId) REFERENCES album_data_spotify(id)
 );
 
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS albums (
     id UUID PRIMARY KEY NOT NULL,
     name TEXT NOT NULL,
     totalTracks INT NOT NULL,
-    spotifyId TEXT,
+    spotifyId TEXT NOT NULL,
     FOREIGN KEY (spotifyId) REFERENCES album_data_spotify(id)
 );
 
@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS track_statistics_youtube (
     likeCount TEXT NOT NULL,
     favoriteCount TEXT NOT NULL,
     commentCount TEXT NOT NULL,
-    youtubeDataId UUID,
+    youtubeDataId UUID NOT NULL,
     FOREIGN KEY (youtubeDataId) REFERENCES track_data_youtube(id)
 );
 
@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS track_thumbnails_youtube (
     width INT NOT NULL,
     height INT NOT NULL,
     type TEXT NOT NULL,
-    youtubeDataId UUID,
+    youtubeDataId UUID NOT NULL,
     FOREIGN KEY (youtubeDataId) REFERENCES track_data_youtube(id)
 );
 
@@ -129,8 +129,8 @@ CREATE TABLE IF NOT EXISTS tracks (
     albumId UUID, 
     explicit BOOLEAN NOT NULL,
     playCount INT NOT NULL,
-    spotifyId TEXT,
-    youtubeDataId UUID,
+    spotifyId TEXT NOT NULL,
+    youtubeDataId UUID NOT NULL,
     lyrics TEXT,
     FOREIGN KEY (albumId) REFERENCES albums(id),
     FOREIGN KEY (spotifyId) REFERENCES track_data_spotify(id),

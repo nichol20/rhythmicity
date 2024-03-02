@@ -97,7 +97,7 @@ services:
       timeout: 5s
       retries: 5
 
-  playback-api:
+  data-api:
     build: .
     depends_on:
       db:

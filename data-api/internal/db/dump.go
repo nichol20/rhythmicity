@@ -13,8 +13,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/nichol20/rhythmicity/playback-api/internal/model"
-	"github.com/nichol20/rhythmicity/playback-api/internal/repository"
+	"github.com/nichol20/rhythmicity/data-api/internal/model"
+	"github.com/nichol20/rhythmicity/data-api/internal/repository"
 )
 
 func GenerateDump(ds *repository.DataStructure, db *sql.DB) {

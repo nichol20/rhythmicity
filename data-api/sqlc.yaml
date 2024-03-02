@@ -3,7 +3,6 @@ sql:
   - engine: "postgresql"
     queries:
       - "internal/db/sql/track_query.sql"
-      - "internal/db/sql/query.sql"
     schema: "internal/db/sql/init.sql"
     gen:
       go:

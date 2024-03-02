@@ -1,8 +1,9 @@
-module github.com/nichol20/rhythmicity/playback-api
+module github.com/nichol20/rhythmicity/data-api
 
 go 1.21.5
 
 require (
+	github.com/google/uuid v1.6.0
 	github.com/lib/pq v1.10.9
 	google.golang.org/grpc v1.62.0
 	google.golang.org/protobuf v1.32.0

@@ -1,5 +1,7 @@
 package model
 
+import "github.com/google/uuid"
+
 type SpotifyAlbum struct {
 	Spotify
 	Images      []Image `json:"images"`
@@ -7,7 +9,7 @@ type SpotifyAlbum struct {
 }
 
 type Album struct {
-	ID          string       `json:"id"`
+	ID          uuid.UUID    `json:"id"`
 	Name        string       `json:"name"`
 	ArtistIds   []string     `json:"artistIds"`
 	TrackIds    []string     `json:"trackIds"`

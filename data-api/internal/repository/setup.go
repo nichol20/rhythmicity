@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/nichol20/rhythmicity/playback-api/internal/model"
+	"github.com/nichol20/rhythmicity/data-api/internal/model"
 )
 
 type DataStructure struct {
