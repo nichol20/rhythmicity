@@ -7,14 +7,14 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/nichol20/rhythmicity/data-api/internal/model"
+	"github.com/nichol20/rhythmicity/data-api/internal/domain"
 )
 
 type DataStructure struct {
 	dataPath string
-	Tracks   []model.Track  `json:"tracks"`
-	Artists  []model.Artist `json:"artists"`
-	Albums   []model.Album  `json:"albums"`
+	Tracks   []domain.Track  `json:"tracks"`
+	Artists  []domain.Artist `json:"artists"`
+	Albums   []domain.Album  `json:"albums"`
 	Genres   []string       `json:"genres"`
 	Styles   []string       `json:"styles"`
 }

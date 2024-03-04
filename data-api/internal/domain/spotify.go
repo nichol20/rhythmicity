@@ -1,4 +1,4 @@
-package model
+package domain
 
 type Spotify struct {
 	ID         string `json:"id"`

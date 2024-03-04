@@ -2,9 +2,9 @@ package service
 
 import (
 	"context"
-	"fmt"
-	"log"
+	"errors"
 
+	"github.com/nichol20/rhythmicity/data-api/internal/domain"
 	"github.com/nichol20/rhythmicity/data-api/internal/pb"
 )
 
@@ -20,8 +20,11 @@ type TrackGRPCService struct {
 func (s *TrackGRPCService) Playback(ctx context.Context, playbackRequest *pb.PlaybackRequest) (*pb.PlaybackResponse, error) {
 	youtubeId, err := s.TrackRepository.GetYoutubeId(ctx, playbackRequest.Id)
 	if err != nil {
-		log.Printf("error when trying to playback: %v", err)
-		return nil, fmt.Errorf("error when trying to playback: %w", err)
+		if errors.Is(err, domain.ErrNotFound) {
+			return nil, errors.New("track not found")
+		}
+
+		return nil, domain.ErrInternalServerError
 	}
 
 	return &pb.PlaybackResponse{

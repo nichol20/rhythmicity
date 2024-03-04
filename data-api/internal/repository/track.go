@@ -3,10 +3,10 @@ package repository
 import (
 	"context"
 	"database/sql"
-	"log"
 
 	"github.com/google/uuid"
 	db "github.com/nichol20/rhythmicity/data-api/internal/db/gen"
+	"github.com/nichol20/rhythmicity/data-api/internal/domain"
 )
 
 type TrackRepository struct {
@@ -24,9 +24,11 @@ func NewTrackRepository(dbconn *sql.DB) *TrackRepository {
 func (r *TrackRepository) GetYoutubeId(ctx context.Context, id string) (string, error) {
 	uuid, err := uuid.Parse(id)
 	if err != nil {
-		log.Println(err)
-		return "", err
+		return "", domain.ErrNotFound
 	}
 	youtebeId, err := r.queries.GetYoutubeId(ctx, uuid)
+	if err == sql.ErrNoRows {
+		return youtebeId, domain.ErrNotFound
+	}
 	return youtebeId, err
 }

@@ -13,7 +13,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/nichol20/rhythmicity/data-api/internal/model"
+	"github.com/nichol20/rhythmicity/data-api/internal/domain"
 	"github.com/nichol20/rhythmicity/data-api/internal/repository"
 )
 
@@ -207,7 +207,7 @@ func GenerateDump(ds *repository.DataStructure, db *sql.DB) {
 				end = ",\n"
 			}
 
-			fieldValue := values.Field(j).Interface().(model.Image)
+			fieldValue := values.Field(j).Interface().(domain.Image)
 			tableInsertions["track_thumbnails_youtube"] += fmt.Sprintf(
 				"('%s', %d, %d, '%s', '%s')",
 				fieldValue.Url,

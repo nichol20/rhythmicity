@@ -1,4 +1,4 @@
-package model
+package domain
 
 type Image struct {
 	Height int    `json:"height"`
