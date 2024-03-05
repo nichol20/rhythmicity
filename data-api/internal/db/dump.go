@@ -219,9 +219,10 @@ func GenerateDump(ds *repository.DataStructure, db *sql.DB) {
 		}
 
 		tableInsertions["track_data_spotify"] += fmt.Sprintf(
-			"('%s', '%s', %d)",
+			"('%s', '%s', %d, %d)",
 			track.Spotify.ID,
 			handleSingleQuotationMark(track.Spotify.Title),
+			track.Spotify.Popularity,
 			track.Spotify.DurationMS,
 		) + endOfLine
 

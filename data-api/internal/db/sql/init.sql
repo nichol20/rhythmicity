@@ -121,12 +121,13 @@ CREATE TABLE IF NOT EXISTS track_thumbnails_youtube (
 CREATE TABLE IF NOT EXISTS track_data_spotify (
     id TEXT PRIMARY KEY NOT NULL,
     title TEXT NOT NULL,
+    popularity INT NOT NULL,
     durationMs INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS tracks (
     id UUID PRIMARY KEY NOT NULL,
-    albumId UUID, 
+    albumId UUID NOT NULL, 
     explicit BOOLEAN NOT NULL,
     playCount INT NOT NULL,
     spotifyId TEXT NOT NULL,
