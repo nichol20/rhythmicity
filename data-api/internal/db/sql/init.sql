@@ -138,6 +138,22 @@ CREATE TABLE IF NOT EXISTS tracks (
     FOREIGN KEY (youtubeDataId) REFERENCES track_data_youtube(id)
 );
 
+CREATE TABLE IF NOT EXISTS tracks_genres (
+    trackId UUID NOT NULL,
+    genreId INT NOT NULL,
+    FOREIGN KEY (trackId) REFERENCES tracks(id),
+    FOREIGN KEY (genreId) REFERENCES genres(id),
+    PRIMARY KEY (trackId, genreId)
+);
+
+CREATE TABLE IF NOT EXISTS tracks_styles (
+    trackId UUID NOT NULL,
+    styleId INT NOT NULL,
+    FOREIGN KEY (trackId) REFERENCES tracks(id),
+    FOREIGN KEY (styleId) REFERENCES styles(id),
+    PRIMARY KEY (trackId, styleId)
+);
+
 CREATE TABLE IF NOT EXISTS artists_tracks (
     trackId UUID NOT NULL,
     artistId UUID NOT NULL,

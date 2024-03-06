@@ -95,7 +95,7 @@ func GenerateDump(ds *repository.DataStructure, db *sql.DB) {
 			if len(artist.Genres)-1 != j {
 				end = ",\n"
 			}
-			genreId := slices.Index[[]string](ds.Genres, genre) + 1
+			genreId := slices.Index(ds.Genres, genre) + 1
 			if genreId == 0 {
 				log.Fatal("Genre not found.")
 			}
@@ -111,7 +111,7 @@ func GenerateDump(ds *repository.DataStructure, db *sql.DB) {
 				end = ",\n"
 			}
 
-			styleId := slices.Index[[]string](ds.Styles, style) + 1
+			styleId := slices.Index(ds.Styles, style) + 1
 			if styleId == 0 {
 				log.Fatal("Style not found.")
 			}
@@ -151,7 +151,7 @@ func GenerateDump(ds *repository.DataStructure, db *sql.DB) {
 			if len(album.Genres)-1 != j {
 				end = ",\n"
 			}
-			genreId := slices.Index[[]string](ds.Genres, genre) + 1
+			genreId := slices.Index(ds.Genres, genre) + 1
 			if genreId == 0 {
 				log.Fatal("Genre not found.")
 			}
@@ -166,7 +166,7 @@ func GenerateDump(ds *repository.DataStructure, db *sql.DB) {
 			if len(album.Styles)-1 != j {
 				end = ",\n"
 			}
-			styleId := slices.Index[[]string](ds.Styles, style) + 1
+			styleId := slices.Index(ds.Styles, style) + 1
 			if styleId == 0 {
 				log.Fatal("Style not found.")
 			}
@@ -237,6 +237,36 @@ func GenerateDump(ds *repository.DataStructure, db *sql.DB) {
 			strconv.Quote(handleSingleQuotationMark(track.Lyrics)),
 		) + endOfLine
 
+		for j, genre := range track.Genres {
+			end := endOfLine
+			if len(track.Genres)-1 != j {
+				end = ",\n"
+			}
+			genreId := slices.Index(ds.Genres, genre) + 1
+			if genreId == 0 {
+				log.Fatal("Genre not found.")
+			}
+			tableInsertions["tracks_genres"] += fmt.Sprintf(
+				"('%s', %d)",
+				track.ID, genreId,
+			) + end
+		}
+
+		for j, style := range track.Styles {
+			end := endOfLine
+			if len(track.Styles)-1 != j {
+				end = ",\n"
+			}
+			styleId := slices.Index(ds.Styles, style) + 1
+			if styleId == 0 {
+				log.Fatal("Style not found.")
+			}
+			tableInsertions["tracks_styles"] += fmt.Sprintf(
+				"('%s', %d)",
+				track.ID, styleId,
+			) + end
+		}
+
 		for j, artistId := range track.ArtistIds {
 			end := endOfLine
 			if len(track.ArtistIds)-1 != j {
@@ -269,6 +299,8 @@ func GenerateDump(ds *repository.DataStructure, db *sql.DB) {
 		"track_thumbnails_youtube",
 		"track_data_spotify",
 		"tracks",
+		"tracks_genres",
+		"tracks_styles",
 		"artists_tracks",
 	}
 
