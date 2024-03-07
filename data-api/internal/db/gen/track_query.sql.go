@@ -7,9 +7,309 @@ package db
 
 import (
 	"context"
+	"database/sql"
+	"time"
 
 	"github.com/google/uuid"
 )
+
+const getPopularTracks = `-- name: GetPopularTracks :many
+SELECT 
+	t.id trackId, t.albumId, t.explicit, t.playCount, t.spotifyId, t.lyrics,
+	sp.title spotifyTitle, sp.popularity spotifyPopularity, sp.durationMs spotifyDurationMs,
+    y.youtubeId, y.title youtubeTitle, y.durationMs youtubeDurationMs, y.publishedAt youtubePublishedAt,
+    sy.viewCount youtubeViewCount, sy.likeCount youtubeLikeCount, sy.favoriteCount youtubeFavoriteCount, 
+    sy.commentCount youtubeCommentCount
+FROM tracks t
+INNER JOIN track_data_spotify sp ON t.spotifyId = sp.id
+INNER JOIN track_data_youtube y ON t.youtubeDataId = y.id
+INNER JOIN track_statistics_youtube sy ON y.id = sy.youtubeDataId 
+ORDER BY sp.popularity DESC 
+LIMIT $1
+`
+
+type GetPopularTracksRow struct {
+	Trackid              uuid.UUID
+	Albumid              uuid.UUID
+	Explicit             bool
+	Playcount            int32
+	Spotifyid            string
+	Lyrics               sql.NullString
+	Spotifytitle         string
+	Spotifypopularity    int32
+	Spotifydurationms    int32
+	Youtubeid            string
+	Youtubetitle         string
+	Youtubedurationms    int32
+	Youtubepublishedat   time.Time
+	Youtubeviewcount     string
+	Youtubelikecount     string
+	Youtubefavoritecount string
+	Youtubecommentcount  string
+}
+
+func (q *Queries) GetPopularTracks(ctx context.Context, limit int32) ([]GetPopularTracksRow, error) {
+	rows, err := q.db.QueryContext(ctx, getPopularTracks, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetPopularTracksRow
+	for rows.Next() {
+		var i GetPopularTracksRow
+		if err := rows.Scan(
+			&i.Trackid,
+			&i.Albumid,
+			&i.Explicit,
+			&i.Playcount,
+			&i.Spotifyid,
+			&i.Lyrics,
+			&i.Spotifytitle,
+			&i.Spotifypopularity,
+			&i.Spotifydurationms,
+			&i.Youtubeid,
+			&i.Youtubetitle,
+			&i.Youtubedurationms,
+			&i.Youtubepublishedat,
+			&i.Youtubeviewcount,
+			&i.Youtubelikecount,
+			&i.Youtubefavoritecount,
+			&i.Youtubecommentcount,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getTrack = `-- name: GetTrack :one
+SELECT 
+	t.id trackId, t.albumId, t.explicit, t.playCount, t.spotifyId, t.lyrics,
+	sp.title spotifyTitle, sp.popularity spotifyPopularity, sp.durationMs spotifyDurationMs,
+    y.youtubeId, y.title youtubeTitle, y.durationMs youtubeDurationMs, y.publishedAt youtubePublishedAt,
+    sy.viewCount youtubeViewCount, sy.likeCount youtubeLikeCount, sy.favoriteCount youtubeFavoriteCount, 
+    sy.commentCount youtubeCommentCount
+FROM tracks t
+INNER JOIN track_data_spotify sp ON t.spotifyId = sp.id
+INNER JOIN track_data_youtube y ON t.youtubeDataId = y.id
+INNER JOIN track_statistics_youtube sy ON y.id = sy.youtubeDataId
+WHERE t.id = $1
+`
+
+type GetTrackRow struct {
+	Trackid              uuid.UUID
+	Albumid              uuid.UUID
+	Explicit             bool
+	Playcount            int32
+	Spotifyid            string
+	Lyrics               sql.NullString
+	Spotifytitle         string
+	Spotifypopularity    int32
+	Spotifydurationms    int32
+	Youtubeid            string
+	Youtubetitle         string
+	Youtubedurationms    int32
+	Youtubepublishedat   time.Time
+	Youtubeviewcount     string
+	Youtubelikecount     string
+	Youtubefavoritecount string
+	Youtubecommentcount  string
+}
+
+func (q *Queries) GetTrack(ctx context.Context, id uuid.UUID) (GetTrackRow, error) {
+	row := q.db.QueryRowContext(ctx, getTrack, id)
+	var i GetTrackRow
+	err := row.Scan(
+		&i.Trackid,
+		&i.Albumid,
+		&i.Explicit,
+		&i.Playcount,
+		&i.Spotifyid,
+		&i.Lyrics,
+		&i.Spotifytitle,
+		&i.Spotifypopularity,
+		&i.Spotifydurationms,
+		&i.Youtubeid,
+		&i.Youtubetitle,
+		&i.Youtubedurationms,
+		&i.Youtubepublishedat,
+		&i.Youtubeviewcount,
+		&i.Youtubelikecount,
+		&i.Youtubefavoritecount,
+		&i.Youtubecommentcount,
+	)
+	return i, err
+}
+
+const getTrackArtistIds = `-- name: GetTrackArtistIds :many
+SELECT artistId FROM artists_tracks WHERE trackId = $1
+`
+
+func (q *Queries) GetTrackArtistIds(ctx context.Context, trackid uuid.UUID) ([]uuid.UUID, error) {
+	rows, err := q.db.QueryContext(ctx, getTrackArtistIds, trackid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []uuid.UUID
+	for rows.Next() {
+		var artistid uuid.UUID
+		if err := rows.Scan(&artistid); err != nil {
+			return nil, err
+		}
+		items = append(items, artistid)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getTrackGenres = `-- name: GetTrackGenres :many
+SELECT genre 
+FROM tracks_genres tg
+INNER JOIN genres g ON tg.genreId = g.id
+WHERE tg.trackId = $1
+`
+
+func (q *Queries) GetTrackGenres(ctx context.Context, trackid uuid.UUID) ([]string, error) {
+	rows, err := q.db.QueryContext(ctx, getTrackGenres, trackid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []string
+	for rows.Next() {
+		var genre string
+		if err := rows.Scan(&genre); err != nil {
+			return nil, err
+		}
+		items = append(items, genre)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getTrackStyles = `-- name: GetTrackStyles :many
+SELECT style 
+FROM tracks_styles ts
+INNER JOIN styles s ON ts.styleId = s.id
+WHERE ts.trackId = $1
+`
+
+func (q *Queries) GetTrackStyles(ctx context.Context, trackid uuid.UUID) ([]string, error) {
+	rows, err := q.db.QueryContext(ctx, getTrackStyles, trackid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []string
+	for rows.Next() {
+		var style string
+		if err := rows.Scan(&style); err != nil {
+			return nil, err
+		}
+		items = append(items, style)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getTracksByArtistId = `-- name: GetTracksByArtistId :many
+SELECT 
+	t.id trackId, t.albumId, t.explicit, t.playCount, t.spotifyId, t.lyrics,
+	sp.title spotifyTitle, sp.popularity spotifyPopularity, sp.durationMs spotifyDurationMs,
+    y.youtubeId, y.title youtubeTitle, y.durationMs youtubeDurationMs, y.publishedAt youtubePublishedAt,
+    sy.viewCount youtubeViewCount, sy.likeCount youtubeLikeCount, sy.favoriteCount youtubeFavoriteCount, 
+    sy.commentCount youtubeCommentCount
+FROM artists_tracks at
+INNER JOIN tracks t ON t.id = at.trackId
+INNER JOIN track_data_spotify sp ON t.spotifyId = sp.id
+INNER JOIN track_data_youtube y ON t.youtubeDataId = y.id
+INNER JOIN track_statistics_youtube sy ON y.id = sy.youtubeDataId
+WHERE at.artistId = $1
+`
+
+type GetTracksByArtistIdRow struct {
+	Trackid              uuid.UUID
+	Albumid              uuid.UUID
+	Explicit             bool
+	Playcount            int32
+	Spotifyid            string
+	Lyrics               sql.NullString
+	Spotifytitle         string
+	Spotifypopularity    int32
+	Spotifydurationms    int32
+	Youtubeid            string
+	Youtubetitle         string
+	Youtubedurationms    int32
+	Youtubepublishedat   time.Time
+	Youtubeviewcount     string
+	Youtubelikecount     string
+	Youtubefavoritecount string
+	Youtubecommentcount  string
+}
+
+func (q *Queries) GetTracksByArtistId(ctx context.Context, artistid uuid.UUID) ([]GetTracksByArtistIdRow, error) {
+	rows, err := q.db.QueryContext(ctx, getTracksByArtistId, artistid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetTracksByArtistIdRow
+	for rows.Next() {
+		var i GetTracksByArtistIdRow
+		if err := rows.Scan(
+			&i.Trackid,
+			&i.Albumid,
+			&i.Explicit,
+			&i.Playcount,
+			&i.Spotifyid,
+			&i.Lyrics,
+			&i.Spotifytitle,
+			&i.Spotifypopularity,
+			&i.Spotifydurationms,
+			&i.Youtubeid,
+			&i.Youtubetitle,
+			&i.Youtubedurationms,
+			&i.Youtubepublishedat,
+			&i.Youtubeviewcount,
+			&i.Youtubelikecount,
+			&i.Youtubefavoritecount,
+			&i.Youtubecommentcount,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
 
 const getYoutubeId = `-- name: GetYoutubeId :one
 SELECT y.youtubeId FROM tracks t INNER JOIN track_data_youtube y ON t.youtubeDataId = y.id WHERE t.id = $1
@@ -20,4 +320,38 @@ func (q *Queries) GetYoutubeId(ctx context.Context, id uuid.UUID) (string, error
 	var youtubeid string
 	err := row.Scan(&youtubeid)
 	return youtubeid, err
+}
+
+const getYoutubeThumbnails = `-- name: GetYoutubeThumbnails :many
+SELECT id, url, width, height, type, youtubedataid FROM track_thumbnails_youtube WHERE youtubeDataId = $1
+`
+
+func (q *Queries) GetYoutubeThumbnails(ctx context.Context, youtubedataid uuid.UUID) ([]TrackThumbnailsYoutube, error) {
+	rows, err := q.db.QueryContext(ctx, getYoutubeThumbnails, youtubedataid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []TrackThumbnailsYoutube
+	for rows.Next() {
+		var i TrackThumbnailsYoutube
+		if err := rows.Scan(
+			&i.ID,
+			&i.Url,
+			&i.Width,
+			&i.Height,
+			&i.Type,
+			&i.Youtubedataid,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

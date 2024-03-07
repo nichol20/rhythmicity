@@ -88,7 +88,7 @@ type Style struct {
 
 type Track struct {
 	ID            uuid.UUID
-	Albumid       uuid.NullUUID
+	Albumid       uuid.UUID
 	Explicit      bool
 	Playcount     int32
 	Spotifyid     string
@@ -99,6 +99,7 @@ type Track struct {
 type TrackDataSpotify struct {
 	ID         string
 	Title      string
+	Popularity int32
 	Durationms int32
 }
 
@@ -126,4 +127,14 @@ type TrackThumbnailsYoutube struct {
 	Height        int32
 	Type          string
 	Youtubedataid uuid.UUID
+}
+
+type TracksGenre struct {
+	Trackid uuid.UUID
+	Genreid int32
+}
+
+type TracksStyle struct {
+	Trackid uuid.UUID
+	Styleid int32
 }
