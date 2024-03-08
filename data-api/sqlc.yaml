@@ -3,6 +3,10 @@ sql:
   - engine: "postgresql"
     queries:
       - "internal/db/sql/track_query.sql"
+      - "internal/db/sql/artist_query.sql"
+      - "internal/db/sql/album_query.sql"
+      - "internal/db/sql/genre_query.sql"
+      - "internal/db/sql/style_query.sql"
     schema: "internal/db/sql/init.sql"
     gen:
       go:

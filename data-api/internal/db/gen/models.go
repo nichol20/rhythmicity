@@ -61,6 +61,11 @@ type ArtistImagesSpotify struct {
 	Spotifyid string
 }
 
+type ArtistsAlbum struct {
+	Artistid uuid.UUID
+	Albumid  uuid.UUID
+}
+
 type ArtistsGenre struct {
 	Artistid uuid.UUID
 	Genreid  int32
@@ -72,8 +77,8 @@ type ArtistsStyle struct {
 }
 
 type ArtistsTrack struct {
-	Trackid  uuid.UUID
 	Artistid uuid.UUID
+	Trackid  uuid.UUID
 }
 
 type Genre struct {
