@@ -89,6 +89,14 @@ CREATE TABLE IF NOT EXISTS albums_styles (
     PRIMARY KEY (albumId, styleId)
 );
 
+CREATE TABLE IF NOT EXISTS artists_albums (
+    artistId UUID NOT NULL,
+    albumId UUID NOT NULL,
+    FOREIGN KEY (artistId) REFERENCES artists(id),
+    FOREIGN KEY (albumId) REFERENCES albums(id),
+    PRIMARY KEY (artistId, albumId)
+);
+
 ------ TRACKS ------
 CREATE TABLE IF NOT EXISTS track_data_youtube (
     id UUID PRIMARY KEY NOT NULL,
@@ -155,9 +163,9 @@ CREATE TABLE IF NOT EXISTS tracks_styles (
 );
 
 CREATE TABLE IF NOT EXISTS artists_tracks (
-    trackId UUID NOT NULL,
     artistId UUID NOT NULL,
-    FOREIGN KEY (trackId) REFERENCES tracks(id),
+    trackId UUID NOT NULL,
     FOREIGN KEY (artistId) REFERENCES artists(id),
-    PRIMARY KEY (trackId, artistId)
+    FOREIGN KEY (trackId) REFERENCES tracks(id),
+    PRIMARY KEY (artistId, trackId)
 );

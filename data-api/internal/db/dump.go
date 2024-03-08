@@ -35,11 +35,13 @@ func GenerateDump(ds *repository.DataStructure, db *sql.DB) {
 	}
 
 	tableInsertions := make(map[string]string)
+	var insertOrder []string
 
 	tableRegex := regexp.MustCompile(`CREATE TABLE IF NOT EXISTS (\w+) \(([\s\S]*?)\);`)
 	matches := tableRegex.FindAllStringSubmatch(string(initSQL), -1)
 	for _, match := range matches {
 		tableName := match[1]
+		insertOrder = append(insertOrder, tableName)
 		columns := strings.Split(strings.TrimSpace(match[2]), "\n")
 		var columnNames []string
 		for _, column := range columns {
@@ -175,6 +177,19 @@ func GenerateDump(ds *repository.DataStructure, db *sql.DB) {
 				album.ID, styleId,
 			) + end
 		}
+
+		for j, artistId := range album.ArtistIds {
+			end := endOfLine
+			if len(album.ArtistIds)-1 != j {
+				end = ",\n"
+			}
+
+			tableInsertions["artists_albums"] += fmt.Sprintf(
+				"('%s', '%s')",
+				artistId,
+				album.ID,
+			) + end
+		}
 	}
 
 	for i, track := range ds.Tracks {
@@ -275,33 +290,10 @@ func GenerateDump(ds *repository.DataStructure, db *sql.DB) {
 
 			tableInsertions["artists_tracks"] += fmt.Sprintf(
 				"('%s', '%s')",
-				track.ID,
 				artistId,
+				track.ID,
 			) + end
 		}
-	}
-
-	insertOrder := []string{
-		"genres",
-		"styles",
-		"artist_data_spotify",
-		"artist_images_spotify",
-		"artists",
-		"artists_genres",
-		"artists_styles",
-		"album_data_spotify",
-		"album_images_spotify",
-		"albums",
-		"albums_genres",
-		"albums_styles",
-		"track_data_youtube",
-		"track_statistics_youtube",
-		"track_thumbnails_youtube",
-		"track_data_spotify",
-		"tracks",
-		"tracks_genres",
-		"tracks_styles",
-		"artists_tracks",
 	}
 
 	dumpSQL := ""
@@ -319,14 +311,19 @@ func GenerateDump(ds *repository.DataStructure, db *sql.DB) {
 	if err != nil {
 		log.Fatal("Error when trying to dump data: ", err)
 	}
-	fmt.Println("Dumped successfully")
+	fmt.Println("Dumped successfully into database")
 
-	// err = os.WriteFile("dump.sql", []byte(dumpSQL), 0644)
-	// if err != nil {
-	// 	fmt.Println("Error writing dump.sql file:", err)
-	// 	return
-	// }
-	// fmt.Println("Dump created successfully.")
+	absPath, err = filepath.Abs(dirname + "/sql/dump.sql")
+	if err != nil {
+		log.Fatalf("Error when converting to absolute path: %s", err)
+	}
+
+	err = os.WriteFile(absPath, []byte(dumpSQL), 0644)
+	if err != nil {
+		fmt.Println("Error writing dump.sql file:", err)
+		return
+	}
+	fmt.Println("Dump file created successfully.")
 }
 
 func formatInsert(table, columns string) string {
