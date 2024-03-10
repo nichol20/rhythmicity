@@ -1,3 +1,10 @@
+-- name: GetPopularAlbums :many
+SELECT a.id albumId, a.name, a.totalTracks, a.spotifyId, sp.popularity spotifyPopularity, sp.releaseDate spotifyReleaseDate
+FROM albums a
+INNER JOIN album_data_spotify sp ON a.spotifyId = sp.id
+ORDER BY sp.popularity DESC
+LIMIT $1;
+
 -- name: GetAlbum :one
 SELECT a.id albumId, a.name, a.totalTracks, a.spotifyId, sp.popularity spotifyPopularity, sp.releaseDate spotifyReleaseDate
 FROM albums a

@@ -206,3 +206,50 @@ func (q *Queries) GetAlbumsByArtistId(ctx context.Context, artistid uuid.UUID) (
 	}
 	return items, nil
 }
+
+const getPopularAlbums = `-- name: GetPopularAlbums :many
+SELECT a.id albumId, a.name, a.totalTracks, a.spotifyId, sp.popularity spotifyPopularity, sp.releaseDate spotifyReleaseDate
+FROM albums a
+INNER JOIN album_data_spotify sp ON a.spotifyId = sp.id
+ORDER BY sp.popularity DESC
+LIMIT $1
+`
+
+type GetPopularAlbumsRow struct {
+	Albumid            uuid.UUID
+	Name               string
+	Totaltracks        int32
+	Spotifyid          string
+	Spotifypopularity  int32
+	Spotifyreleasedate time.Time
+}
+
+func (q *Queries) GetPopularAlbums(ctx context.Context, limit int32) ([]GetPopularAlbumsRow, error) {
+	rows, err := q.db.QueryContext(ctx, getPopularAlbums, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetPopularAlbumsRow
+	for rows.Next() {
+		var i GetPopularAlbumsRow
+		if err := rows.Scan(
+			&i.Albumid,
+			&i.Name,
+			&i.Totaltracks,
+			&i.Spotifyid,
+			&i.Spotifypopularity,
+			&i.Spotifyreleasedate,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
