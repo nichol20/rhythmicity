@@ -1,3 +1,6 @@
+-- name: CheckIfArtistExists :one
+SELECT EXISTS(SELECT 1 FROM artists WHERE id = $1) AS idExists;
+
 -- name: GetPopularArtists :many
 SELECT 
 	a.id artistId, a.name, a.spotifyId, sp.popularity spotifyPopularity

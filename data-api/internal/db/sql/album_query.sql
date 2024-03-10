@@ -1,3 +1,6 @@
+-- name: CheckIfAlbumExists :one
+SELECT EXISTS(SELECT 1 FROM albums WHERE id = $1) AS idExists;
+
 -- name: GetPopularAlbums :many
 SELECT a.id albumId, a.name, a.totalTracks, a.spotifyId, sp.popularity spotifyPopularity, sp.releaseDate spotifyReleaseDate
 FROM albums a

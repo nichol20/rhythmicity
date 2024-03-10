@@ -12,6 +12,17 @@ import (
 	"github.com/google/uuid"
 )
 
+const checkIfAlbumExists = `-- name: CheckIfAlbumExists :one
+SELECT EXISTS(SELECT 1 FROM albums WHERE id = $1) AS idExists
+`
+
+func (q *Queries) CheckIfAlbumExists(ctx context.Context, id uuid.UUID) (bool, error) {
+	row := q.db.QueryRowContext(ctx, checkIfAlbumExists, id)
+	var idexists bool
+	err := row.Scan(&idexists)
+	return idexists, err
+}
+
 const getAlbum = `-- name: GetAlbum :one
 SELECT a.id albumId, a.name, a.totalTracks, a.spotifyId, sp.popularity spotifyPopularity, sp.releaseDate spotifyReleaseDate
 FROM albums a

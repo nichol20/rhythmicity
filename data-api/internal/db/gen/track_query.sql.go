@@ -13,6 +13,17 @@ import (
 	"github.com/google/uuid"
 )
 
+const checkIfTrackExists = `-- name: CheckIfTrackExists :one
+SELECT EXISTS(SELECT 1 FROM tracks WHERE id = $1) AS idExists
+`
+
+func (q *Queries) CheckIfTrackExists(ctx context.Context, id uuid.UUID) (bool, error) {
+	row := q.db.QueryRowContext(ctx, checkIfTrackExists, id)
+	var idexists bool
+	err := row.Scan(&idexists)
+	return idexists, err
+}
+
 const getPopularTracks = `-- name: GetPopularTracks :many
 SELECT 
 	t.id trackId, t.albumId, t.explicit, t.playCount, t.spotifyId, t.lyrics,
