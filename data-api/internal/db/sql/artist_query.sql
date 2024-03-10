@@ -1,3 +1,11 @@
+-- name: GetPopularArtists :many
+SELECT 
+	a.id artistId, a.name, a.spotifyId, sp.popularity spotifyPopularity
+FROM artists a
+INNER JOIN artist_data_spotify sp ON a.spotifyId = sp.id
+ORDER BY sp.popularity DESC
+LIMIT $1;
+
 -- name: GetArtist :one
 SELECT 
 	a.id artistId, a.name, a.spotifyId, sp.popularity spotifyPopularity
