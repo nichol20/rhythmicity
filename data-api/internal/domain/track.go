@@ -4,6 +4,7 @@ import "github.com/google/uuid"
 
 type SpotifyTrack struct {
 	Spotify
+	Title       string  `json:"title"`
 	DurationMS  int     `json:"durationMs"`
 	AlbumImages []Image `json:"albumImages"`
 }
@@ -34,8 +35,8 @@ type YouTube struct {
 
 type Track struct {
 	ID        uuid.UUID    `json:"id"`
-	ArtistIds []string     `json:"artistIds"`
-	AlbumId   string       `json:"albumId"`
+	ArtistIds uuid.UUIDs   `json:"artistIds"`
+	AlbumId   uuid.UUID    `json:"albumId"`
 	Genres    []string     `json:"genres"`
 	Styles    []string     `json:"styles"`
 	Explicit  bool         `json:"explicit"`
@@ -43,5 +44,4 @@ type Track struct {
 	Spotify   SpotifyTrack `json:"spotify"`
 	YouTube   YouTube      `json:"youtube"`
 	Lyrics    string       `json:"lyrics"`
-	Type      string       `json:"type"`
 }

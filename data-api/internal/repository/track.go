@@ -33,7 +33,7 @@ func (r *TrackRepository) GetPopularTracks(ctx context.Context, limit int32) ([]
 	tracksRow, err := r.queries.GetPopularTracks(ctx, limit)
 	var tracks []domain.Track
 	for _, v := range tracksRow {
-		track, err := r.mapTrack(ctx, v)
+		track, err := r.createTrack(ctx, v)
 		if err != nil {
 			return nil, err
 		}
@@ -58,7 +58,7 @@ func (r *TrackRepository) GetTrack(ctx context.Context, trackID string) (*domain
 	if err != nil {
 		return nil, err
 	}
-	track, err := r.mapTrack(ctx, trackRow)
+	track, err := r.createTrack(ctx, trackRow)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func (r *TrackRepository) GetTracksByArtistId(ctx context.Context, artistID stri
 	tracksRow, err := r.queries.GetTracksByArtistId(ctx, uuid)
 	var tracks []domain.Track
 	for _, v := range tracksRow {
-		track, err := r.mapTrack(ctx, v)
+		track, err := r.createTrack(ctx, v)
 		if err != nil {
 			return nil, err
 		}
@@ -91,7 +91,7 @@ func (r *TrackRepository) GetTracksByAlbumId(ctx context.Context, albumID string
 	tracksRow, err := r.queries.GetTracksByAlbumId(ctx, uuid)
 	var tracks []domain.Track
 	for _, v := range tracksRow {
-		track, err := r.mapTrack(ctx, v)
+		track, err := r.createTrack(ctx, v)
 		if err != nil {
 			return nil, err
 		}
@@ -219,10 +219,10 @@ func (r *TrackRepository) getYoutubeThumbnails(ctx context.Context, trackID uuid
 	return thumbnails, nil
 }
 
-func (r *TrackRepository) mapTrack(ctx context.Context, row interface{}) (*domain.Track, error) {
+func (r *TrackRepository) createTrack(ctx context.Context, row interface{}) (*domain.Track, error) {
 	t, ok := row.(db.GetTrackRow)
 	if !ok {
-		return nil, errors.New("Error asserting type as db.GetTrackRow")
+		return nil, errors.New("error asserting type as db.GetTrackRow")
 	}
 	details, err := r.getTrackDetails(ctx, t.Trackid, t.Albumid)
 	if err != nil {
@@ -238,11 +238,11 @@ func (r *TrackRepository) mapTrack(ctx context.Context, row interface{}) (*domai
 		PlayCount: int(t.Playcount),
 		Lyrics:    "track.Lyrics",
 		Spotify: domain.SpotifyTrack{
+			Title:       t.Spotifytitle,
 			DurationMS:  int(t.Spotifydurationms),
 			AlbumImages: details.AlbumImages,
 			Spotify: domain.Spotify{
 				ID:         t.Spotifyid,
-				Title:      t.Spotifytitle,
 				Popularity: int(t.Spotifypopularity),
 			},
 		},
