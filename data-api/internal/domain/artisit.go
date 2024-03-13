@@ -13,5 +13,4 @@ type Artist struct {
 	Genres  []string      `json:"genres"`
 	Styles  []string      `json:"styles"`
 	Spotify SpotifyArtist `json:"spotify"`
-	Type    string        `json:"type"`
 }
