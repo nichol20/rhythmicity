@@ -198,23 +198,23 @@ func GenerateDump(ds *repository.DataStructure, db *sql.DB) {
 		tableInsertions["track_data_youtube"] += fmt.Sprintf(
 			"('%s', '%s', '%s', %d, '%s' )",
 			track.ID,
-			track.YouTube.ID,
-			handleSingleQuotationMark(track.YouTube.Title),
-			track.YouTube.DurationMs,
-			track.YouTube.PublishedAt,
+			track.Youtube.ID,
+			handleSingleQuotationMark(track.Youtube.Title),
+			track.Youtube.DurationMs,
+			track.Youtube.PublishedAt,
 		) + endOfLine
 
-		tableInsertions["track_statistics_youtube"] += fmt.Sprintf(
+		tableInsertions["track_statistics_Youtube"] += fmt.Sprintf(
 			"('%s', '%s', '%s', '%s', '%s', '%s')",
 			track.ID,
-			track.YouTube.Statistics.ViewCount,
-			track.YouTube.Statistics.LikeCount,
-			track.YouTube.Statistics.FavoriteCount,
-			track.YouTube.Statistics.CommentCount,
+			track.Youtube.Statistics.ViewCount,
+			track.Youtube.Statistics.LikeCount,
+			track.Youtube.Statistics.FavoriteCount,
+			track.Youtube.Statistics.CommentCount,
 			track.ID,
 		) + endOfLine
 
-		values := reflect.ValueOf(track.YouTube.Thumbnails)
+		values := reflect.ValueOf(track.Youtube.Thumbnails)
 		types := values.Type()
 		for j := 0; j < values.NumField(); j++ {
 			end := endOfLine

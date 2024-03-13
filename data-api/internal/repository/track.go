@@ -108,6 +108,49 @@ func (r *TrackRepository) GetTracksByAlbumId(ctx context.Context, albumID string
 	return tracks, err
 }
 
+func (r *TrackRepository) createTrack(ctx context.Context, row interface{}) (*domain.Track, error) {
+	t, ok := row.(db.GetTrackRow)
+	if !ok {
+		return nil, errors.New("error asserting type as db.GetTrackRow")
+	}
+	details, err := r.getTrackDetails(ctx, t.Trackid, t.Albumid)
+	if err != nil {
+		return nil, err
+	}
+	return &domain.Track{
+		ID:        t.Trackid,
+		AlbumId:   t.Albumid,
+		ArtistIds: details.ArtistIds,
+		Genres:    details.Genres,
+		Styles:    details.Styles,
+		Explicit:  t.Explicit,
+		PlayCount: int(t.Playcount),
+		Lyrics:    t.Lyrics.String,
+		Spotify: domain.SpotifyTrack{
+			Title:       t.Spotifytitle,
+			DurationMS:  int(t.Spotifydurationms),
+			AlbumImages: details.AlbumImages,
+			Spotify: domain.Spotify{
+				ID:         t.Spotifyid,
+				Popularity: int(t.Spotifypopularity),
+			},
+		},
+		Youtube: domain.Youtube{
+			ID:          t.Youtubeid,
+			Title:       t.Youtubetitle,
+			DurationMs:  int(t.Youtubedurationms),
+			PublishedAt: t.Youtubepublishedat.String(),
+			Thumbnails:  details.Thumbnails,
+			Statistics: domain.YoutubeStatistcs{
+				ViewCount:     t.Youtubeviewcount,
+				LikeCount:     t.Youtubelikecount,
+				FavoriteCount: t.Youtubefavoritecount,
+				CommentCount:  t.Youtubefavoritecount,
+			},
+		},
+	}, nil
+}
+
 func (r *TrackRepository) handleError(err error) error {
 	if err == sql.ErrNoRows {
 		return domain.ErrNotFound
@@ -220,47 +263,4 @@ func (r *TrackRepository) getYoutubeThumbnails(ctx context.Context, trackID uuid
 	}
 
 	return thumbnails, nil
-}
-
-func (r *TrackRepository) createTrack(ctx context.Context, row interface{}) (*domain.Track, error) {
-	t, ok := row.(db.GetTrackRow)
-	if !ok {
-		return nil, errors.New("error asserting type as db.GetTrackRow")
-	}
-	details, err := r.getTrackDetails(ctx, t.Trackid, t.Albumid)
-	if err != nil {
-		return nil, err
-	}
-	return &domain.Track{
-		ID:        t.Trackid,
-		AlbumId:   t.Albumid,
-		ArtistIds: details.ArtistIds,
-		Genres:    details.Genres,
-		Styles:    details.Styles,
-		Explicit:  t.Explicit,
-		PlayCount: int(t.Playcount),
-		Lyrics:    "track.Lyrics",
-		Spotify: domain.SpotifyTrack{
-			Title:       t.Spotifytitle,
-			DurationMS:  int(t.Spotifydurationms),
-			AlbumImages: details.AlbumImages,
-			Spotify: domain.Spotify{
-				ID:         t.Spotifyid,
-				Popularity: int(t.Spotifypopularity),
-			},
-		},
-		YouTube: domain.YouTube{
-			ID:          t.Youtubeid,
-			Title:       t.Youtubetitle,
-			DurationMs:  int(t.Youtubedurationms),
-			PublishedAt: t.Youtubepublishedat.String(),
-			Thumbnails:  details.Thumbnails,
-			Statistics: domain.YoutubeStatistcs{
-				ViewCount:     t.Youtubeviewcount,
-				LikeCount:     t.Youtubelikecount,
-				FavoriteCount: t.Youtubefavoritecount,
-				CommentCount:  t.Youtubefavoritecount,
-			},
-		},
-	}, nil
 }

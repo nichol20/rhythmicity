@@ -24,7 +24,7 @@ type YoutubeThumbnails struct {
 	Maxres   Image `json:"maxres"`
 }
 
-type YouTube struct {
+type Youtube struct {
 	ID          string            `json:"id"`
 	Title       string            `json:"title"`
 	DurationMs  int               `json:"durationMs"`
@@ -42,6 +42,6 @@ type Track struct {
 	Explicit  bool         `json:"explicit"`
 	PlayCount int          `json:"playCount"`
 	Spotify   SpotifyTrack `json:"spotify"`
-	YouTube   YouTube      `json:"youtube"`
+	Youtube   Youtube      `json:"youtube"`
 	Lyrics    string       `json:"lyrics"`
 }
