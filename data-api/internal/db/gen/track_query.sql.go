@@ -240,6 +240,59 @@ func (q *Queries) GetTrackStyles(ctx context.Context, trackid uuid.UUID) ([]stri
 	return items, nil
 }
 
+const getTrackYoutubeId = `-- name: GetTrackYoutubeId :one
+SELECT y.youtubeId FROM tracks t INNER JOIN track_data_youtube y ON t.youtubeDataId = y.id WHERE t.id = $1
+`
+
+func (q *Queries) GetTrackYoutubeId(ctx context.Context, id uuid.UUID) (string, error) {
+	row := q.db.QueryRowContext(ctx, getTrackYoutubeId, id)
+	var youtubeid string
+	err := row.Scan(&youtubeid)
+	return youtubeid, err
+}
+
+const getTrackYoutubeThumbnails = `-- name: GetTrackYoutubeThumbnails :many
+SELECT ty.url, ty.width, ty.height, ty.type 
+FROM tracks t
+INNER JOIN track_thumbnails_youtube ty ON t.youtubeDataId = ty.youtubeDataId
+WHERE t.id = $1
+`
+
+type GetTrackYoutubeThumbnailsRow struct {
+	Url    string
+	Width  int32
+	Height int32
+	Type   string
+}
+
+func (q *Queries) GetTrackYoutubeThumbnails(ctx context.Context, id uuid.UUID) ([]GetTrackYoutubeThumbnailsRow, error) {
+	rows, err := q.db.QueryContext(ctx, getTrackYoutubeThumbnails, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetTrackYoutubeThumbnailsRow
+	for rows.Next() {
+		var i GetTrackYoutubeThumbnailsRow
+		if err := rows.Scan(
+			&i.Url,
+			&i.Width,
+			&i.Height,
+			&i.Type,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getTracksByAlbumId = `-- name: GetTracksByAlbumId :many
 SELECT 
 	t.id trackId, t.albumId, t.explicit, t.playCount, t.spotifyId, t.lyrics,
@@ -377,51 +430,6 @@ func (q *Queries) GetTracksByArtistId(ctx context.Context, artistid uuid.UUID) (
 			&i.Youtubelikecount,
 			&i.Youtubefavoritecount,
 			&i.Youtubecommentcount,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const getYoutubeId = `-- name: GetYoutubeId :one
-SELECT y.youtubeId FROM tracks t INNER JOIN track_data_youtube y ON t.youtubeDataId = y.id WHERE t.id = $1
-`
-
-func (q *Queries) GetYoutubeId(ctx context.Context, id uuid.UUID) (string, error) {
-	row := q.db.QueryRowContext(ctx, getYoutubeId, id)
-	var youtubeid string
-	err := row.Scan(&youtubeid)
-	return youtubeid, err
-}
-
-const getYoutubeThumbnails = `-- name: GetYoutubeThumbnails :many
-SELECT id, url, width, height, type, youtubedataid FROM track_thumbnails_youtube WHERE youtubeDataId = $1
-`
-
-func (q *Queries) GetYoutubeThumbnails(ctx context.Context, youtubedataid uuid.UUID) ([]TrackThumbnailsYoutube, error) {
-	rows, err := q.db.QueryContext(ctx, getYoutubeThumbnails, youtubedataid)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []TrackThumbnailsYoutube
-	for rows.Next() {
-		var i TrackThumbnailsYoutube
-		if err := rows.Scan(
-			&i.ID,
-			&i.Url,
-			&i.Width,
-			&i.Height,
-			&i.Type,
-			&i.Youtubedataid,
 		); err != nil {
 			return nil, err
 		}

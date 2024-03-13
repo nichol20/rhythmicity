@@ -53,6 +53,33 @@ func (q *Queries) GetAlbum(ctx context.Context, id uuid.UUID) (GetAlbumRow, erro
 	return i, err
 }
 
+const getAlbumArtistIds = `-- name: GetAlbumArtistIds :many
+SELECT artistId FROM artists_albums WHERE albumId = $1
+`
+
+func (q *Queries) GetAlbumArtistIds(ctx context.Context, albumid uuid.UUID) ([]uuid.UUID, error) {
+	rows, err := q.db.QueryContext(ctx, getAlbumArtistIds, albumid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []uuid.UUID
+	for rows.Next() {
+		var artistid uuid.UUID
+		if err := rows.Scan(&artistid); err != nil {
+			return nil, err
+		}
+		items = append(items, artistid)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getAlbumByTrackId = `-- name: GetAlbumByTrackId :one
 SELECT a.id albumId, a.name, a.totalTracks, a.spotifyId, sp.popularity spotifyPopularity, sp.releaseDate spotifyReleaseDate
 FROM tracks t
@@ -112,7 +139,10 @@ func (q *Queries) GetAlbumGenres(ctx context.Context, albumid uuid.UUID) ([]stri
 }
 
 const getAlbumSpotifyImages = `-- name: GetAlbumSpotifyImages :many
-SELECT url, width, height FROM album_images_spotify WHERE spotifyId = $1
+SELECT ip.url, ip.width, ip.height 
+FROM albums a
+INNER JOIN album_images_spotify ip ON ip.spotifyId = a.spotifyId
+WHERE a.id = $1
 `
 
 type GetAlbumSpotifyImagesRow struct {
@@ -121,8 +151,8 @@ type GetAlbumSpotifyImagesRow struct {
 	Height int32
 }
 
-func (q *Queries) GetAlbumSpotifyImages(ctx context.Context, spotifyid string) ([]GetAlbumSpotifyImagesRow, error) {
-	rows, err := q.db.QueryContext(ctx, getAlbumSpotifyImages, spotifyid)
+func (q *Queries) GetAlbumSpotifyImages(ctx context.Context, id uuid.UUID) ([]GetAlbumSpotifyImagesRow, error) {
+	rows, err := q.db.QueryContext(ctx, getAlbumSpotifyImages, id)
 	if err != nil {
 		return nil, err
 	}
@@ -161,6 +191,33 @@ func (q *Queries) GetAlbumStyles(ctx context.Context, albumid uuid.UUID) ([]stri
 			return nil, err
 		}
 		items = append(items, style)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getAlbumTrackIds = `-- name: GetAlbumTrackIds :many
+SELECT id FROM tracks WHERE albumId = $1
+`
+
+func (q *Queries) GetAlbumTrackIds(ctx context.Context, albumid uuid.UUID) ([]uuid.UUID, error) {
+	rows, err := q.db.QueryContext(ctx, getAlbumTrackIds, albumid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []uuid.UUID
+	for rows.Next() {
+		var id uuid.UUID
+		if err := rows.Scan(&id); err != nil {
+			return nil, err
+		}
+		items = append(items, id)
 	}
 	if err := rows.Close(); err != nil {
 		return nil, err

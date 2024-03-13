@@ -17,7 +17,10 @@ INNER JOIN artist_data_spotify sp ON a.spotifyId = sp.id
 WHERE a.id = $1;
 
 -- name: GetArtistSpotifyImages :many
-SELECT url, width, height FROM artist_images_spotify WHERE spotifyId = $1;
+SELECT ip.url, ip.width, ip.height 
+FROM artists a
+INNER JOIN artist_images_spotify ip ON ip.spotifyId = a.spotifyId
+WHERE a.id = $1;
 
 -- name: GetArtistGenres :many
 SELECT genre FROM artists_genres ag INNER JOIN genres g ON ag.genreId = g.id WHERE ag.artistId = $1;

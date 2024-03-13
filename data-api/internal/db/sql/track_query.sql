@@ -1,7 +1,7 @@
 -- name: CheckIfTrackExists :one
 SELECT EXISTS(SELECT 1 FROM tracks WHERE id = $1) AS idExists;
 
--- name: GetYoutubeId :one
+-- name: GetTrackYoutubeId :one
 SELECT y.youtubeId FROM tracks t INNER JOIN track_data_youtube y ON t.youtubeDataId = y.id WHERE t.id = $1;
 
 -- name: GetPopularTracks :many
@@ -31,8 +31,11 @@ INNER JOIN track_data_youtube y ON t.youtubeDataId = y.id
 INNER JOIN track_statistics_youtube sy ON y.id = sy.youtubeDataId
 WHERE t.id = $1;
 
--- name: GetYoutubeThumbnails :many
-SELECT * FROM track_thumbnails_youtube WHERE youtubeDataId = $1;
+-- name: GetTrackYoutubeThumbnails :many
+SELECT ty.url, ty.width, ty.height, ty.type 
+FROM tracks t
+INNER JOIN track_thumbnails_youtube ty ON t.youtubeDataId = ty.youtubeDataId
+WHERE t.id = $1;
 
 -- name: GetTrackGenres :many
 SELECT genre FROM tracks_genres tg INNER JOIN genres g ON tg.genreId = g.id WHERE tg.trackId = $1;

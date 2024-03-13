@@ -78,7 +78,10 @@ func (q *Queries) GetArtistGenres(ctx context.Context, artistid uuid.UUID) ([]st
 }
 
 const getArtistSpotifyImages = `-- name: GetArtistSpotifyImages :many
-SELECT url, width, height FROM artist_images_spotify WHERE spotifyId = $1
+SELECT ip.url, ip.width, ip.height 
+FROM artists a
+INNER JOIN artist_images_spotify ip ON ip.spotifyId = a.spotifyId
+WHERE a.id = $1
 `
 
 type GetArtistSpotifyImagesRow struct {
@@ -87,8 +90,8 @@ type GetArtistSpotifyImagesRow struct {
 	Height int32
 }
 
-func (q *Queries) GetArtistSpotifyImages(ctx context.Context, spotifyid string) ([]GetArtistSpotifyImagesRow, error) {
-	rows, err := q.db.QueryContext(ctx, getArtistSpotifyImages, spotifyid)
+func (q *Queries) GetArtistSpotifyImages(ctx context.Context, id uuid.UUID) ([]GetArtistSpotifyImagesRow, error) {
+	rows, err := q.db.QueryContext(ctx, getArtistSpotifyImages, id)
 	if err != nil {
 		return nil, err
 	}
