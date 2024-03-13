@@ -47,11 +47,9 @@ func (r *TrackRepository) GetTrack(ctx context.Context, trackID string) (*domain
 	if err != nil {
 		return nil, domain.ErrNotFound
 	}
-	exists, err := r.checkIfTrackExists(ctx, uuid)
-	if err != nil {
+	if exists, err := r.queries.CheckIfTrackExists(ctx, uuid); err != nil {
 		return nil, err
-	}
-	if !exists {
+	} else if !exists {
 		return nil, domain.ErrNotFound
 	}
 	trackRow, err := r.queries.GetTrack(ctx, uuid)
@@ -71,6 +69,11 @@ func (r *TrackRepository) GetTracksByArtistId(ctx context.Context, artistID stri
 	if err != nil {
 		return nil, domain.ErrNotFound
 	}
+	if exists, err := r.queries.CheckIfArtistExists(ctx, uuid); err != nil {
+		return nil, err
+	} else if !exists {
+		return nil, domain.ErrNotFound
+	}
 	tracksRow, err := r.queries.GetTracksByArtistId(ctx, uuid)
 	var tracks []domain.Track
 	for _, v := range tracksRow {
@@ -86,6 +89,11 @@ func (r *TrackRepository) GetTracksByArtistId(ctx context.Context, artistID stri
 func (r *TrackRepository) GetTracksByAlbumId(ctx context.Context, albumID string) ([]domain.Track, error) {
 	uuid, err := uuid.Parse(albumID)
 	if err != nil {
+		return nil, domain.ErrNotFound
+	}
+	if exists, err := r.queries.CheckIfAlbumExists(ctx, uuid); err != nil {
+		return nil, err
+	} else if !exists {
 		return nil, domain.ErrNotFound
 	}
 	tracksRow, err := r.queries.GetTracksByAlbumId(ctx, uuid)
@@ -107,12 +115,7 @@ func (r *TrackRepository) handleError(err error) error {
 	return err
 }
 
-func (r *TrackRepository) checkIfTrackExists(ctx context.Context, trackID uuid.UUID) (bool, error) {
-	exists, err := r.queries.CheckIfTrackExists(ctx, trackID)
-	return exists, err
-}
-
-type getTrackDetailsRes struct {
+type TrackDetails struct {
 	ArtistIds   []uuid.UUID
 	Genres      []string
 	Styles      []string
@@ -120,7 +123,7 @@ type getTrackDetailsRes struct {
 	Thumbnails  domain.YoutubeThumbnails
 }
 
-func (r *TrackRepository) getTrackDetails(ctx context.Context, trackID uuid.UUID, albumID uuid.UUID) (*getTrackDetailsRes, error) {
+func (r *TrackRepository) getTrackDetails(ctx context.Context, trackID uuid.UUID, albumID uuid.UUID) (*TrackDetails, error) {
 	artistIds, err := r.queries.GetTrackArtistIds(ctx, trackID)
 	if err != nil {
 		return nil, err
@@ -146,7 +149,7 @@ func (r *TrackRepository) getTrackDetails(ctx context.Context, trackID uuid.UUID
 		return nil, err
 	}
 
-	return &getTrackDetailsRes{
+	return &TrackDetails{
 		ArtistIds:   artistIds,
 		Genres:      genres,
 		Styles:      styles,
