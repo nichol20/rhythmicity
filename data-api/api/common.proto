@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option go_package = "github.com/nichol20/rhythmicity/data-api/internal/pb";
+
+message Empty {}
+
+message RequestById {
+    string id = 1;
+}
+
+message Image {
+    int32 height = 1;
+    string url = 2;
+    int32 width = 3; 
+}

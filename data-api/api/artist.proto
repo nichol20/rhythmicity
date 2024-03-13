@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option go_package = "github.com/nichol20/rhythmicity/data-api/internal/pb";
+
+import "common.proto";
+
+message ArtistSpotify {
+    string id = 1;
+    int32 popularity = 2;
+    repeated Image images = 3;
+}
+
+message ArtistMessage {
+    string id = 1;
+    string name = 2;
+    repeated string genres = 3;
+    repeated string styles = 4;
+    ArtistSpotify spotify = 5;
+}
+
+message MultipleArtists {
+    repeated ArtistMessage artists = 1;
+}
+
+service Artist {
+    rpc GetPopularArtists(Empty) returns (MultipleArtists){};
+    rpc GetArtist(RequestById) returns (ArtistMessage){};
+    rpc GetArtistsByTrackId(RequestById) returns (MultipleArtists){};
+    rpc GetArtistsByAlbumId(RequestById) returns (MultipleArtists){};
+}
