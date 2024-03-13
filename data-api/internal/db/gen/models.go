@@ -95,7 +95,7 @@ type Track struct {
 	ID            uuid.UUID
 	Albumid       uuid.UUID
 	Explicit      bool
-	Playcount     int32
+	Playcount     int64
 	Spotifyid     string
 	Youtubedataid uuid.UUID
 	Lyrics        sql.NullString

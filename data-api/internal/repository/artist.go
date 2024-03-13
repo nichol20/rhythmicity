@@ -123,7 +123,7 @@ func (r *ArtistRepository) createArtist(ctx context.Context, row interface{}) (*
 			Images: details.Images,
 			Spotify: domain.Spotify{
 				ID:         a.Spotifyid.String,
-				Popularity: int(a.Spotifypopularity),
+				Popularity: a.Spotifypopularity,
 			},
 		},
 	}, nil
@@ -163,8 +163,8 @@ func (r *ArtistRepository) getSpotifyImages(ctx context.Context, artistID uuid.U
 	var images []domain.Image
 	for _, v := range imagesRow {
 		image := domain.Image{
-			Height: int(v.Height),
-			Width:  int(v.Width),
+			Height: v.Height,
+			Width:  v.Width,
 			Url:    v.Url,
 		}
 		images = append(images, image)

@@ -124,21 +124,21 @@ func (r *TrackRepository) createTrack(ctx context.Context, row interface{}) (*do
 		Genres:    details.Genres,
 		Styles:    details.Styles,
 		Explicit:  t.Explicit,
-		PlayCount: int(t.Playcount),
+		PlayCount: t.Playcount,
 		Lyrics:    t.Lyrics.String,
 		Spotify: domain.SpotifyTrack{
 			Title:       t.Spotifytitle,
-			DurationMS:  int(t.Spotifydurationms),
+			DurationMS:  t.Spotifydurationms,
 			AlbumImages: details.AlbumImages,
 			Spotify: domain.Spotify{
 				ID:         t.Spotifyid,
-				Popularity: int(t.Spotifypopularity),
+				Popularity: t.Spotifypopularity,
 			},
 		},
 		Youtube: domain.Youtube{
 			ID:          t.Youtubeid,
 			Title:       t.Youtubetitle,
-			DurationMs:  int(t.Youtubedurationms),
+			DurationMs:  t.Youtubedurationms,
 			PublishedAt: t.Youtubepublishedat.String(),
 			Thumbnails:  details.Thumbnails,
 			Statistics: domain.YoutubeStatistcs{
@@ -210,8 +210,8 @@ func (r *TrackRepository) getAlbumImages(ctx context.Context, albumID uuid.UUID)
 	var albumImages []domain.Image
 	for _, v := range albumImagesRow {
 		image := domain.Image{
-			Height: int(v.Height),
-			Width:  int(v.Width),
+			Height: v.Height,
+			Width:  v.Width,
 			Url:    v.Url,
 		}
 		albumImages = append(albumImages, image)
@@ -231,32 +231,32 @@ func (r *TrackRepository) getYoutubeThumbnails(ctx context.Context, trackID uuid
 		switch v.Type {
 		case "default":
 			thumbnails.Default = domain.Image{
-				Height: int(v.Height),
-				Width:  int(v.Width),
+				Height: v.Height,
+				Width:  v.Width,
 				Url:    v.Url,
 			}
 		case "medium":
 			thumbnails.Medium = domain.Image{
-				Height: int(v.Height),
-				Width:  int(v.Width),
+				Height: v.Height,
+				Width:  v.Width,
 				Url:    v.Url,
 			}
 		case "high":
 			thumbnails.High = domain.Image{
-				Height: int(v.Height),
-				Width:  int(v.Width),
+				Height: v.Height,
+				Width:  v.Width,
 				Url:    v.Url,
 			}
 		case "standard":
 			thumbnails.Standard = domain.Image{
-				Height: int(v.Height),
-				Width:  int(v.Width),
+				Height: v.Height,
+				Width:  v.Width,
 				Url:    v.Url,
 			}
 		case "maxres":
 			thumbnails.Maxres = domain.Image{
-				Height: int(v.Height),
-				Width:  int(v.Width),
+				Height: v.Height,
+				Width:  v.Width,
 				Url:    v.Url,
 			}
 		}

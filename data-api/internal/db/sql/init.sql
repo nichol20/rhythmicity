@@ -137,7 +137,7 @@ CREATE TABLE IF NOT EXISTS tracks (
     id UUID PRIMARY KEY NOT NULL,
     albumId UUID NOT NULL, 
     explicit BOOLEAN NOT NULL,
-    playCount INT NOT NULL,
+    playCount BIGINT NOT NULL,
     spotifyId TEXT NOT NULL,
     youtubeDataId UUID NOT NULL,
     lyrics TEXT,

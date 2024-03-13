@@ -112,7 +112,7 @@ func (r *AlbumRepository) createAlbum(ctx context.Context, row interface{}) (*do
 		Name:        a.Name,
 		ArtistIds:   details.ArtistIds,
 		TrackIds:    details.TrackIds,
-		TotalTracks: int(a.Totaltracks),
+		TotalTracks: a.Totaltracks,
 		Genres:      details.Genres,
 		Styles:      details.Styles,
 		Spotify: domain.SpotifyAlbum{
@@ -120,7 +120,7 @@ func (r *AlbumRepository) createAlbum(ctx context.Context, row interface{}) (*do
 			ReleaseDate: a.Spotifyreleasedate.String(),
 			Spotify: domain.Spotify{
 				ID:         a.Spotifyid,
-				Popularity: int(a.Spotifypopularity),
+				Popularity: a.Spotifypopularity,
 			},
 		},
 	}, nil
@@ -173,8 +173,8 @@ func (r *AlbumRepository) getSpotifyImages(ctx context.Context, albumID uuid.UUI
 	var images []domain.Image
 	for _, v := range imagesRow {
 		image := domain.Image{
-			Height: int(v.Height),
-			Width:  int(v.Width),
+			Height: v.Height,
+			Width:  v.Width,
 			Url:    v.Url,
 		}
 		images = append(images, image)

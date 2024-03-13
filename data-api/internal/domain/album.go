@@ -13,7 +13,7 @@ type Album struct {
 	Name        string       `json:"name"`
 	ArtistIds   uuid.UUIDs   `json:"artistIds"`
 	TrackIds    uuid.UUIDs   `json:"trackIds"`
-	TotalTracks int          `json:"totalTracks"`
+	TotalTracks int32        `json:"totalTracks"`
 	Genres      []string     `json:"genres"`
 	Styles      []string     `json:"styles"`
 	Spotify     SpotifyAlbum `json:"spotify"`

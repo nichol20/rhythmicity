@@ -43,7 +43,7 @@ type GetPopularTracksRow struct {
 	Trackid              uuid.UUID
 	Albumid              uuid.UUID
 	Explicit             bool
-	Playcount            int32
+	Playcount            int64
 	Spotifyid            string
 	Lyrics               sql.NullString
 	Spotifytitle         string
@@ -118,7 +118,7 @@ type GetTrackRow struct {
 	Trackid              uuid.UUID
 	Albumid              uuid.UUID
 	Explicit             bool
-	Playcount            int32
+	Playcount            int64
 	Spotifyid            string
 	Lyrics               sql.NullString
 	Spotifytitle         string
@@ -311,7 +311,7 @@ type GetTracksByAlbumIdRow struct {
 	Trackid              uuid.UUID
 	Albumid              uuid.UUID
 	Explicit             bool
-	Playcount            int32
+	Playcount            int64
 	Spotifyid            string
 	Lyrics               sql.NullString
 	Spotifytitle         string
@@ -387,7 +387,7 @@ type GetTracksByArtistIdRow struct {
 	Trackid              uuid.UUID
 	Albumid              uuid.UUID
 	Explicit             bool
-	Playcount            int32
+	Playcount            int64
 	Spotifyid            string
 	Lyrics               sql.NullString
 	Spotifytitle         string

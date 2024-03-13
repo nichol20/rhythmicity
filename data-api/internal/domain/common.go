@@ -2,11 +2,11 @@ package domain
 
 type Spotify struct {
 	ID         string `json:"id"`
-	Popularity int    `json:"popularity"`
+	Popularity int32  `json:"popularity"`
 }
 
 type Image struct {
-	Height int    `json:"height"`
-	Width  int    `json:"width"`
+	Height int32  `json:"height"`
+	Width  int32  `json:"width"`
 	Url    string `json:"url"`
 }
