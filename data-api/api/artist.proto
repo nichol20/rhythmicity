@@ -18,12 +18,16 @@ message ArtistMessage {
     ArtistSpotify spotify = 5;
 }
 
+message GetPopularArtistsRequest {
+    optional int32 limit = 1;
+}
+
 message MultipleArtists {
     repeated ArtistMessage artists = 1;
 }
 
 service Artist {
-    rpc GetPopularArtists(Empty) returns (MultipleArtists){};
+    rpc GetPopularArtists(GetPopularArtistsRequest) returns (MultipleArtists){};
     rpc GetArtist(RequestById) returns (ArtistMessage){};
     rpc GetArtistsByTrackId(RequestById) returns (MultipleArtists){};
     rpc GetArtistsByAlbumId(RequestById) returns (MultipleArtists){};

@@ -20,12 +20,16 @@ message AlbumMessage {
     AlbumSpotify spotify = 6;
 }
 
+message GetPopularAlbumsRequest {
+    optional int32 limit = 1;
+}
+
 message MultipleAlbums {
     repeated AlbumMessage albums = 1;
 }
 
 service Album {
-    rpc GetPopularAlbums(Empty) returns (MultipleAlbums){};
+    rpc GetPopularAlbums(GetPopularAlbumsRequest) returns (MultipleAlbums){};
     rpc GetAlbum(RequestById) returns (AlbumMessage){};
     rpc GetAlbumByTrackId(RequestById) returns (AlbumMessage){};
     rpc GetAlbumsByArtistId(RequestById) returns (MultipleAlbums){};

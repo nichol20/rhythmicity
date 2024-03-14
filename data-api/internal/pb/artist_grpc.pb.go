@@ -29,7 +29,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ArtistClient interface {
-	GetPopularArtists(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*MultipleArtists, error)
+	GetPopularArtists(ctx context.Context, in *GetPopularArtistsRequest, opts ...grpc.CallOption) (*MultipleArtists, error)
 	GetArtist(ctx context.Context, in *RequestById, opts ...grpc.CallOption) (*ArtistMessage, error)
 	GetArtistsByTrackId(ctx context.Context, in *RequestById, opts ...grpc.CallOption) (*MultipleArtists, error)
 	GetArtistsByAlbumId(ctx context.Context, in *RequestById, opts ...grpc.CallOption) (*MultipleArtists, error)
@@ -43,7 +43,7 @@ func NewArtistClient(cc grpc.ClientConnInterface) ArtistClient {
 	return &artistClient{cc}
 }
 
-func (c *artistClient) GetPopularArtists(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*MultipleArtists, error) {
+func (c *artistClient) GetPopularArtists(ctx context.Context, in *GetPopularArtistsRequest, opts ...grpc.CallOption) (*MultipleArtists, error) {
 	out := new(MultipleArtists)
 	err := c.cc.Invoke(ctx, Artist_GetPopularArtists_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -83,7 +83,7 @@ func (c *artistClient) GetArtistsByAlbumId(ctx context.Context, in *RequestById,
 // All implementations must embed UnimplementedArtistServer
 // for forward compatibility
 type ArtistServer interface {
-	GetPopularArtists(context.Context, *Empty) (*MultipleArtists, error)
+	GetPopularArtists(context.Context, *GetPopularArtistsRequest) (*MultipleArtists, error)
 	GetArtist(context.Context, *RequestById) (*ArtistMessage, error)
 	GetArtistsByTrackId(context.Context, *RequestById) (*MultipleArtists, error)
 	GetArtistsByAlbumId(context.Context, *RequestById) (*MultipleArtists, error)
@@ -94,7 +94,7 @@ type ArtistServer interface {
 type UnimplementedArtistServer struct {
 }
 
-func (UnimplementedArtistServer) GetPopularArtists(context.Context, *Empty) (*MultipleArtists, error) {
+func (UnimplementedArtistServer) GetPopularArtists(context.Context, *GetPopularArtistsRequest) (*MultipleArtists, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPopularArtists not implemented")
 }
 func (UnimplementedArtistServer) GetArtist(context.Context, *RequestById) (*ArtistMessage, error) {
@@ -120,7 +120,7 @@ func RegisterArtistServer(s grpc.ServiceRegistrar, srv ArtistServer) {
 }
 
 func _Artist_GetPopularArtists_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(GetPopularArtistsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -132,7 +132,7 @@ func _Artist_GetPopularArtists_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: Artist_GetPopularArtists_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ArtistServer).GetPopularArtists(ctx, req.(*Empty))
+		return srv.(ArtistServer).GetPopularArtists(ctx, req.(*GetPopularArtistsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

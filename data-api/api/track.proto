@@ -18,7 +18,6 @@ message YoutubeThumbnails {
     optional Image high = 3;
     optional Image standard = 4;
     optional Image maxres = 5;
-    
 }
 
 message YoutubeStatistics {
@@ -44,7 +43,7 @@ message TrackMessage {
     repeated string genres = 4;
     repeated string styles = 5;
     bool explicit = 6;
-    int32 playCount = 7;
+    int64 playCount = 7;
     TrackSpotify spotify = 8;
     Youtube youtube = 9;
     string lyrics = 10;
@@ -54,14 +53,18 @@ message PlaybackResponse {
     string youtubeId = 1;
 }
 
+message GetPopularTracksRequest {
+    optional int32 limit = 1;
+}
+
 message MultipleTracks {
     repeated TrackMessage tracks = 1;
 }
 
 service Track {
     rpc Playback(RequestById) returns (PlaybackResponse){};
-    rpc GetPopularTracks(Empty) returns (MultipleTracks){};
+    rpc GetPopularTracks(GetPopularTracksRequest) returns (MultipleTracks){};
     rpc GetTrack(RequestById) returns (TrackMessage){};
-    rpc GetTracksByArtistId(RequestById) returns (TrackMessage){};
-    rpc GetTracksByAlbumId(RequestById) returns (TrackMessage){};
+    rpc GetTracksByArtistId(RequestById) returns (MultipleTracks){};
+    rpc GetTracksByAlbumId(RequestById) returns (MultipleTracks){};
 }

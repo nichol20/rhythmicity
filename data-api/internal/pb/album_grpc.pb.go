@@ -29,7 +29,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AlbumClient interface {
-	GetPopularAlbums(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*MultipleAlbums, error)
+	GetPopularAlbums(ctx context.Context, in *GetPopularAlbumsRequest, opts ...grpc.CallOption) (*MultipleAlbums, error)
 	GetAlbum(ctx context.Context, in *RequestById, opts ...grpc.CallOption) (*AlbumMessage, error)
 	GetAlbumByTrackId(ctx context.Context, in *RequestById, opts ...grpc.CallOption) (*AlbumMessage, error)
 	GetAlbumsByArtistId(ctx context.Context, in *RequestById, opts ...grpc.CallOption) (*MultipleAlbums, error)
@@ -43,7 +43,7 @@ func NewAlbumClient(cc grpc.ClientConnInterface) AlbumClient {
 	return &albumClient{cc}
 }
 
-func (c *albumClient) GetPopularAlbums(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*MultipleAlbums, error) {
+func (c *albumClient) GetPopularAlbums(ctx context.Context, in *GetPopularAlbumsRequest, opts ...grpc.CallOption) (*MultipleAlbums, error) {
 	out := new(MultipleAlbums)
 	err := c.cc.Invoke(ctx, Album_GetPopularAlbums_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -83,7 +83,7 @@ func (c *albumClient) GetAlbumsByArtistId(ctx context.Context, in *RequestById, 
 // All implementations must embed UnimplementedAlbumServer
 // for forward compatibility
 type AlbumServer interface {
-	GetPopularAlbums(context.Context, *Empty) (*MultipleAlbums, error)
+	GetPopularAlbums(context.Context, *GetPopularAlbumsRequest) (*MultipleAlbums, error)
 	GetAlbum(context.Context, *RequestById) (*AlbumMessage, error)
 	GetAlbumByTrackId(context.Context, *RequestById) (*AlbumMessage, error)
 	GetAlbumsByArtistId(context.Context, *RequestById) (*MultipleAlbums, error)
@@ -94,7 +94,7 @@ type AlbumServer interface {
 type UnimplementedAlbumServer struct {
 }
 
-func (UnimplementedAlbumServer) GetPopularAlbums(context.Context, *Empty) (*MultipleAlbums, error) {
+func (UnimplementedAlbumServer) GetPopularAlbums(context.Context, *GetPopularAlbumsRequest) (*MultipleAlbums, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPopularAlbums not implemented")
 }
 func (UnimplementedAlbumServer) GetAlbum(context.Context, *RequestById) (*AlbumMessage, error) {
@@ -120,7 +120,7 @@ func RegisterAlbumServer(s grpc.ServiceRegistrar, srv AlbumServer) {
 }
 
 func _Album_GetPopularAlbums_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(GetPopularAlbumsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -132,7 +132,7 @@ func _Album_GetPopularAlbums_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: Album_GetPopularAlbums_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AlbumServer).GetPopularAlbums(ctx, req.(*Empty))
+		return srv.(AlbumServer).GetPopularAlbums(ctx, req.(*GetPopularAlbumsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
