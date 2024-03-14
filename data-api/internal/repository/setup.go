@@ -12,11 +12,11 @@ import (
 
 type DataStructure struct {
 	dataPath string
-	Tracks   []domain.Track  `json:"tracks"`
-	Artists  []domain.Artist `json:"artists"`
-	Albums   []domain.Album  `json:"albums"`
-	Genres   []string       `json:"genres"`
-	Styles   []string       `json:"styles"`
+	Tracks   []domain.SetupTrack `json:"tracks"`
+	Artists  []domain.Artist     `json:"artists"`
+	Albums   []domain.SetupAlbum `json:"albums"`
+	Genres   []string            `json:"genres"`
+	Styles   []string            `json:"styles"`
 }
 
 func NewDataStructure() *DataStructure {

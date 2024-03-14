@@ -120,8 +120,6 @@ func (r *TrackRepository) createTrack(ctx context.Context, row interface{}) (*do
 	}
 	return &domain.Track{
 		ID:        t.Trackid,
-		AlbumId:   t.Albumid,
-		ArtistIds: details.ArtistIds,
 		Genres:    details.Genres,
 		Styles:    details.Styles,
 		Explicit:  t.Explicit,
@@ -160,7 +158,6 @@ func (r *TrackRepository) handleError(err error) error {
 }
 
 type TrackDetails struct {
-	ArtistIds   []uuid.UUID
 	Genres      []string
 	Styles      []string
 	AlbumImages []domain.Image
@@ -168,11 +165,6 @@ type TrackDetails struct {
 }
 
 func (r *TrackRepository) getTrackDetails(ctx context.Context, trackID uuid.UUID, albumID uuid.UUID) (*TrackDetails, error) {
-	artistIds, err := r.queries.GetTrackArtistIds(ctx, trackID)
-	if err != nil {
-		return nil, err
-	}
-
 	genres, err := r.queries.GetTrackGenres(ctx, trackID)
 	if err != nil {
 		return nil, err
@@ -194,7 +186,6 @@ func (r *TrackRepository) getTrackDetails(ctx context.Context, trackID uuid.UUID
 	}
 
 	return &TrackDetails{
-		ArtistIds:   artistIds,
 		Genres:      genres,
 		Styles:      styles,
 		AlbumImages: albumImages,

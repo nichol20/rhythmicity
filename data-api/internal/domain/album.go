@@ -11,10 +11,14 @@ type SpotifyAlbum struct {
 type Album struct {
 	ID          uuid.UUID    `json:"id"`
 	Name        string       `json:"name"`
-	ArtistIds   uuid.UUIDs   `json:"artistIds"`
-	TrackIds    uuid.UUIDs   `json:"trackIds"`
 	TotalTracks int32        `json:"totalTracks"`
 	Genres      []string     `json:"genres"`
 	Styles      []string     `json:"styles"`
 	Spotify     SpotifyAlbum `json:"spotify"`
+}
+
+type SetupAlbum struct {
+	Album
+	ArtistIds uuid.UUIDs `json:"artistIds"`
+	TrackIds  uuid.UUIDs `json:"trackIds"`
 }

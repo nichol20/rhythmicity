@@ -112,8 +112,6 @@ func (s *TrackGRPCService) GetTracksByAlbumId(ctx context.Context, req *pb.Reque
 func (s *TrackGRPCService) trackToMessage(track domain.Track) *pb.TrackMessage {
 	return &pb.TrackMessage{
 		Id:        track.ID.String(),
-		ArtistIds: track.ArtistIds.Strings(),
-		AlbumId:   track.AlbumId.String(),
 		Genres:    track.Genres,
 		Styles:    track.Styles,
 		Explicit:  track.Explicit,

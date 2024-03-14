@@ -35,8 +35,6 @@ type Youtube struct {
 
 type Track struct {
 	ID        uuid.UUID    `json:"id"`
-	ArtistIds uuid.UUIDs   `json:"artistIds"`
-	AlbumId   uuid.UUID    `json:"albumId"`
 	Genres    []string     `json:"genres"`
 	Styles    []string     `json:"styles"`
 	Explicit  bool         `json:"explicit"`
@@ -44,4 +42,10 @@ type Track struct {
 	Spotify   SpotifyTrack `json:"spotify"`
 	Youtube   Youtube      `json:"youtube"`
 	Lyrics    string       `json:"lyrics"`
+}
+
+type SetupTrack struct {
+	Track
+	ArtistIds uuid.UUIDs `json:"artistIds"`
+	AlbumId   uuid.UUID  `json:"albumId"`
 }

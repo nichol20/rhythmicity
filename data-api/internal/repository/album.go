@@ -111,8 +111,6 @@ func (r *AlbumRepository) createAlbum(ctx context.Context, row interface{}) (*do
 	return &domain.Album{
 		ID:          a.Albumid,
 		Name:        a.Name,
-		ArtistIds:   details.ArtistIds,
-		TrackIds:    details.TrackIds,
 		TotalTracks: a.Totaltracks,
 		Genres:      details.Genres,
 		Styles:      details.Styles,
@@ -136,10 +134,6 @@ type AlbumDetails struct {
 }
 
 func (r *AlbumRepository) getAlbumDetails(ctx context.Context, albumID uuid.UUID) (*AlbumDetails, error) {
-	artistIds, err := r.queries.GetAlbumArtistIds(ctx, albumID)
-	if err != nil {
-		return nil, err
-	}
 	genres, err := r.queries.GetAlbumGenres(ctx, albumID)
 	if err != nil {
 		return nil, err
@@ -148,20 +142,14 @@ func (r *AlbumRepository) getAlbumDetails(ctx context.Context, albumID uuid.UUID
 	if err != nil {
 		return nil, err
 	}
-	trackIds, err := r.queries.GetAlbumTrackIds(ctx, albumID)
-	if err != nil {
-		return nil, err
-	}
 	images, err := r.getSpotifyImages(ctx, albumID)
 	if err != nil {
 		return nil, err
 	}
 	return &AlbumDetails{
-		ArtistIds: artistIds,
-		TrackIds:  trackIds,
-		Genres:    genres,
-		Styles:    styles,
-		Images:    images,
+		Genres: genres,
+		Styles: styles,
+		Images: images,
 	}, nil
 }
 
