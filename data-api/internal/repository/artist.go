@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	db "github.com/nichol20/rhythmicity/data-api/internal/db/gen"
 	"github.com/nichol20/rhythmicity/data-api/internal/domain"
+	"github.com/nichol20/rhythmicity/data-api/internal/utils"
 )
 
 type ArtistRepository struct {
@@ -105,10 +106,11 @@ func (r *ArtistRepository) GetArtistsByAlbumId(ctx context.Context, albumID stri
 }
 
 func (r *ArtistRepository) createArtist(ctx context.Context, row interface{}) (*domain.Artist, error) {
-	a, ok := row.(db.GetArtistRow)
-	if !ok {
-		return nil, errors.New("error asserting type as db.GetArtistRow")
+	a, err := utils.TypeConverter[db.GetArtistRow](row)
+	if err != nil {
+		return nil, errors.New("error converting row to db.GetArtistRow")
 	}
+
 	details, err := r.getArtistDetails(ctx, a.Artistid)
 	if err != nil {
 		return nil, err

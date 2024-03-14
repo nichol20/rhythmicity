@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	db "github.com/nichol20/rhythmicity/data-api/internal/db/gen"
 	"github.com/nichol20/rhythmicity/data-api/internal/domain"
+	"github.com/nichol20/rhythmicity/data-api/internal/utils"
 )
 
 type TrackRepository struct {
@@ -109,9 +110,9 @@ func (r *TrackRepository) GetTracksByAlbumId(ctx context.Context, albumID string
 }
 
 func (r *TrackRepository) createTrack(ctx context.Context, row interface{}) (*domain.Track, error) {
-	t, ok := row.(db.GetTrackRow)
-	if !ok {
-		return nil, errors.New("error asserting type as db.GetTrackRow")
+	t, err := utils.TypeConverter[db.GetTrackRow](row)
+	if err != nil {
+		return nil, errors.New("error converting row to db.GetTrackRow")
 	}
 	details, err := r.getTrackDetails(ctx, t.Trackid, t.Albumid)
 	if err != nil {
