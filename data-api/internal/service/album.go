@@ -32,14 +32,7 @@ func (s *AlbumGRPCService) GetPopularAlbums(ctx context.Context, req *pb.GetPopu
 	if err != nil {
 		return nil, domain.ErrInternalServerError
 	}
-	var albumsMessage []*pb.AlbumMessage
-	for _, v := range albums {
-		albumsMessage = append(albumsMessage, s.albumToMessage(v))
-	}
-
-	return &pb.MultipleAlbums{
-		Albums: albumsMessage,
-	}, nil
+	return s.albumsToMessage(albums), nil
 }
 
 func (s *AlbumGRPCService) GetAlbum(ctx context.Context, req *pb.RequestById) (*pb.AlbumMessage, error) {
@@ -59,14 +52,7 @@ func (s *AlbumGRPCService) GetSeveralAlbums(ctx context.Context, req *pb.Request
 	if err != nil {
 		return nil, domain.ErrInternalServerError
 	}
-	var albumsMessage []*pb.AlbumMessage
-	for _, v := range albums {
-		albumsMessage = append(albumsMessage, s.albumToMessage(v))
-	}
-
-	return &pb.MultipleAlbums{
-		Albums: albumsMessage,
-	}, nil
+	return s.albumsToMessage(albums), nil
 }
 
 func (s *AlbumGRPCService) GetAlbumByTrackId(ctx context.Context, req *pb.RequestById) (*pb.AlbumMessage, error) {
@@ -90,6 +76,10 @@ func (s *AlbumGRPCService) GetAlbumsByArtistId(ctx context.Context, req *pb.Requ
 
 		return nil, domain.ErrInternalServerError
 	}
+	return s.albumsToMessage(albums), nil
+}
+
+func (s *AlbumGRPCService) albumsToMessage(albums []domain.Album) *pb.MultipleAlbums {
 	var albumsMessage []*pb.AlbumMessage
 	for _, v := range albums {
 		albumsMessage = append(albumsMessage, s.albumToMessage(v))
@@ -97,7 +87,7 @@ func (s *AlbumGRPCService) GetAlbumsByArtistId(ctx context.Context, req *pb.Requ
 
 	return &pb.MultipleAlbums{
 		Albums: albumsMessage,
-	}, nil
+	}
 }
 
 func (s *AlbumGRPCService) albumToMessage(album domain.Album) *pb.AlbumMessage {

@@ -32,14 +32,7 @@ func (s *ArtistGRPCService) GetPopularArtists(ctx context.Context, req *pb.GetPo
 	if err != nil {
 		return nil, domain.ErrInternalServerError
 	}
-	var artistsMessage []*pb.ArtistMessage
-	for _, v := range artists {
-		artistsMessage = append(artistsMessage, s.artistToMessage(v))
-	}
-
-	return &pb.MultipleArtists{
-		Artists: artistsMessage,
-	}, nil
+	return s.artistsToMessage(artists), nil
 }
 
 func (s *ArtistGRPCService) GetArtist(ctx context.Context, req *pb.RequestById) (*pb.ArtistMessage, error) {
@@ -59,14 +52,7 @@ func (s *ArtistGRPCService) GetServeralArtists(ctx context.Context, req *pb.Requ
 	if err != nil {
 		return nil, domain.ErrInternalServerError
 	}
-	var artistsMessage []*pb.ArtistMessage
-	for _, v := range artists {
-		artistsMessage = append(artistsMessage, s.artistToMessage(v))
-	}
-
-	return &pb.MultipleArtists{
-		Artists: artistsMessage,
-	}, nil
+	return s.artistsToMessage(artists), nil
 }
 
 func (s *ArtistGRPCService) GetArtistsByTrackId(ctx context.Context, req *pb.RequestById) (*pb.MultipleArtists, error) {
@@ -78,14 +64,7 @@ func (s *ArtistGRPCService) GetArtistsByTrackId(ctx context.Context, req *pb.Req
 
 		return nil, domain.ErrInternalServerError
 	}
-	var artistsMessage []*pb.ArtistMessage
-	for _, v := range artists {
-		artistsMessage = append(artistsMessage, s.artistToMessage(v))
-	}
-
-	return &pb.MultipleArtists{
-		Artists: artistsMessage,
-	}, nil
+	return s.artistsToMessage(artists), nil
 }
 
 func (s *ArtistGRPCService) GetArtistsByAlbumId(ctx context.Context, req *pb.RequestById) (*pb.MultipleArtists, error) {
@@ -97,6 +76,10 @@ func (s *ArtistGRPCService) GetArtistsByAlbumId(ctx context.Context, req *pb.Req
 
 		return nil, domain.ErrInternalServerError
 	}
+	return s.artistsToMessage(artists), nil
+}
+
+func (s *ArtistGRPCService) artistsToMessage(artists []domain.Artist) *pb.MultipleArtists {
 	var artistsMessage []*pb.ArtistMessage
 	for _, v := range artists {
 		artistsMessage = append(artistsMessage, s.artistToMessage(v))
@@ -104,7 +87,7 @@ func (s *ArtistGRPCService) GetArtistsByAlbumId(ctx context.Context, req *pb.Req
 
 	return &pb.MultipleArtists{
 		Artists: artistsMessage,
-	}, nil
+	}
 }
 
 func (s *ArtistGRPCService) artistToMessage(artist domain.Artist) *pb.ArtistMessage {

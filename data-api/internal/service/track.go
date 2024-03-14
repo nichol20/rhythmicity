@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/nichol20/rhythmicity/data-api/internal/domain"
 	"github.com/nichol20/rhythmicity/data-api/internal/pb"
@@ -47,17 +46,9 @@ func (s *TrackGRPCService) GetPopularTracks(ctx context.Context, req *pb.GetPopu
 	}
 	tracks, err := s.TrackRepository.GetPopularTracks(ctx, limit)
 	if err != nil {
-		fmt.Println(err)
 		return nil, domain.ErrInternalServerError
 	}
-	var tracksMessage []*pb.TrackMessage
-	for _, v := range tracks {
-		tracksMessage = append(tracksMessage, s.trackToMessage(v))
-	}
-
-	return &pb.MultipleTracks{
-		Tracks: tracksMessage,
-	}, nil
+	return s.tracksToMessage(tracks), nil
 }
 
 func (s *TrackGRPCService) GetTrack(ctx context.Context, req *pb.RequestById) (*pb.TrackMessage, error) {
@@ -77,14 +68,7 @@ func (s *TrackGRPCService) GetSeveralTracks(ctx context.Context, req *pb.Request
 	if err != nil {
 		return nil, domain.ErrInternalServerError
 	}
-	var tracksMessage []*pb.TrackMessage
-	for _, v := range tracks {
-		tracksMessage = append(tracksMessage, s.trackToMessage(v))
-	}
-
-	return &pb.MultipleTracks{
-		Tracks: tracksMessage,
-	}, nil
+	return s.tracksToMessage(tracks), nil
 }
 
 func (s *TrackGRPCService) GetTracksByArtistId(ctx context.Context, req *pb.RequestById) (*pb.MultipleTracks, error) {
@@ -96,14 +80,7 @@ func (s *TrackGRPCService) GetTracksByArtistId(ctx context.Context, req *pb.Requ
 
 		return nil, domain.ErrInternalServerError
 	}
-	var tracksMessage []*pb.TrackMessage
-	for _, v := range tracks {
-		tracksMessage = append(tracksMessage, s.trackToMessage(v))
-	}
-
-	return &pb.MultipleTracks{
-		Tracks: tracksMessage,
-	}, nil
+	return s.tracksToMessage(tracks), nil
 }
 
 func (s *TrackGRPCService) GetTracksByAlbumId(ctx context.Context, req *pb.RequestById) (*pb.MultipleTracks, error) {
@@ -115,6 +92,10 @@ func (s *TrackGRPCService) GetTracksByAlbumId(ctx context.Context, req *pb.Reque
 
 		return nil, domain.ErrInternalServerError
 	}
+	return s.tracksToMessage(tracks), nil
+}
+
+func (s *TrackGRPCService) tracksToMessage(tracks []domain.Track) *pb.MultipleTracks {
 	var tracksMessage []*pb.TrackMessage
 	for _, v := range tracks {
 		tracksMessage = append(tracksMessage, s.trackToMessage(v))
@@ -122,7 +103,7 @@ func (s *TrackGRPCService) GetTracksByAlbumId(ctx context.Context, req *pb.Reque
 
 	return &pb.MultipleTracks{
 		Tracks: tracksMessage,
-	}, nil
+	}
 }
 
 func (s *TrackGRPCService) trackToMessage(track domain.Track) *pb.TrackMessage {
