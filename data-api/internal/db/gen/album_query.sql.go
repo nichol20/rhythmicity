@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 )
 
 const checkIfAlbumExists = `-- name: CheckIfAlbumExists :one
@@ -301,6 +302,52 @@ func (q *Queries) GetPopularAlbums(ctx context.Context, limit int32) ([]GetPopul
 	var items []GetPopularAlbumsRow
 	for rows.Next() {
 		var i GetPopularAlbumsRow
+		if err := rows.Scan(
+			&i.Albumid,
+			&i.Name,
+			&i.Totaltracks,
+			&i.Spotifyid,
+			&i.Spotifypopularity,
+			&i.Spotifyreleasedate,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getSeveralAlbums = `-- name: GetSeveralAlbums :many
+SELECT a.id albumId, a.name, a.totalTracks, a.spotifyId, sp.popularity spotifyPopularity, sp.releaseDate spotifyReleaseDate
+FROM albums a
+INNER JOIN album_data_spotify sp ON a.spotifyId = sp.id
+WHERE a.id = ANY($1::uuid[])
+`
+
+type GetSeveralAlbumsRow struct {
+	Albumid            uuid.UUID
+	Name               string
+	Totaltracks        int32
+	Spotifyid          string
+	Spotifypopularity  int32
+	Spotifyreleasedate time.Time
+}
+
+func (q *Queries) GetSeveralAlbums(ctx context.Context, dollar_1 []uuid.UUID) ([]GetSeveralAlbumsRow, error) {
+	rows, err := q.db.QueryContext(ctx, getSeveralAlbums, pq.Array(dollar_1))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetSeveralAlbumsRow
+	for rows.Next() {
+		var i GetSeveralAlbumsRow
 		if err := rows.Scan(
 			&i.Albumid,
 			&i.Name,

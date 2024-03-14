@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 )
 
 const checkIfTrackExists = `-- name: CheckIfTrackExists :one
@@ -68,6 +69,81 @@ func (q *Queries) GetPopularTracks(ctx context.Context, limit int32) ([]GetPopul
 	var items []GetPopularTracksRow
 	for rows.Next() {
 		var i GetPopularTracksRow
+		if err := rows.Scan(
+			&i.Trackid,
+			&i.Albumid,
+			&i.Explicit,
+			&i.Playcount,
+			&i.Spotifyid,
+			&i.Lyrics,
+			&i.Spotifytitle,
+			&i.Spotifypopularity,
+			&i.Spotifydurationms,
+			&i.Youtubeid,
+			&i.Youtubetitle,
+			&i.Youtubedurationms,
+			&i.Youtubepublishedat,
+			&i.Youtubeviewcount,
+			&i.Youtubelikecount,
+			&i.Youtubefavoritecount,
+			&i.Youtubecommentcount,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getSeveralTracks = `-- name: GetSeveralTracks :many
+SELECT 
+	t.id trackId, t.albumId, t.explicit, t.playCount, t.spotifyId, t.lyrics,
+	sp.title spotifyTitle, sp.popularity spotifyPopularity, sp.durationMs spotifyDurationMs,
+    y.youtubeId, y.title youtubeTitle, y.durationMs youtubeDurationMs, y.publishedAt youtubePublishedAt,
+    sy.viewCount youtubeViewCount, sy.likeCount youtubeLikeCount, sy.favoriteCount youtubeFavoriteCount, 
+    sy.commentCount youtubeCommentCount
+FROM tracks t
+INNER JOIN track_data_spotify sp ON t.spotifyId = sp.id
+INNER JOIN track_data_youtube y ON t.youtubeDataId = y.id
+INNER JOIN track_statistics_youtube sy ON y.id = sy.youtubeDataId
+WHERE t.id = ANY($1::uuid[])
+`
+
+type GetSeveralTracksRow struct {
+	Trackid              uuid.UUID
+	Albumid              uuid.UUID
+	Explicit             bool
+	Playcount            int64
+	Spotifyid            string
+	Lyrics               sql.NullString
+	Spotifytitle         string
+	Spotifypopularity    int32
+	Spotifydurationms    int32
+	Youtubeid            string
+	Youtubetitle         string
+	Youtubedurationms    int32
+	Youtubepublishedat   time.Time
+	Youtubeviewcount     string
+	Youtubelikecount     string
+	Youtubefavoritecount string
+	Youtubecommentcount  string
+}
+
+func (q *Queries) GetSeveralTracks(ctx context.Context, dollar_1 []uuid.UUID) ([]GetSeveralTracksRow, error) {
+	rows, err := q.db.QueryContext(ctx, getSeveralTracks, pq.Array(dollar_1))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetSeveralTracksRow
+	for rows.Next() {
+		var i GetSeveralTracksRow
 		if err := rows.Scan(
 			&i.Trackid,
 			&i.Albumid,

@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	Artist_GetPopularArtists_FullMethodName   = "/Artist/GetPopularArtists"
 	Artist_GetArtist_FullMethodName           = "/Artist/GetArtist"
+	Artist_GetSeveralArtists_FullMethodName   = "/Artist/GetSeveralArtists"
 	Artist_GetArtistsByTrackId_FullMethodName = "/Artist/GetArtistsByTrackId"
 	Artist_GetArtistsByAlbumId_FullMethodName = "/Artist/GetArtistsByAlbumId"
 )
@@ -31,6 +32,7 @@ const (
 type ArtistClient interface {
 	GetPopularArtists(ctx context.Context, in *GetPopularArtistsRequest, opts ...grpc.CallOption) (*MultipleArtists, error)
 	GetArtist(ctx context.Context, in *RequestById, opts ...grpc.CallOption) (*ArtistMessage, error)
+	GetSeveralArtists(ctx context.Context, in *RequestByIds, opts ...grpc.CallOption) (*MultipleArtists, error)
 	GetArtistsByTrackId(ctx context.Context, in *RequestById, opts ...grpc.CallOption) (*MultipleArtists, error)
 	GetArtistsByAlbumId(ctx context.Context, in *RequestById, opts ...grpc.CallOption) (*MultipleArtists, error)
 }
@@ -61,6 +63,15 @@ func (c *artistClient) GetArtist(ctx context.Context, in *RequestById, opts ...g
 	return out, nil
 }
 
+func (c *artistClient) GetSeveralArtists(ctx context.Context, in *RequestByIds, opts ...grpc.CallOption) (*MultipleArtists, error) {
+	out := new(MultipleArtists)
+	err := c.cc.Invoke(ctx, Artist_GetSeveralArtists_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *artistClient) GetArtistsByTrackId(ctx context.Context, in *RequestById, opts ...grpc.CallOption) (*MultipleArtists, error) {
 	out := new(MultipleArtists)
 	err := c.cc.Invoke(ctx, Artist_GetArtistsByTrackId_FullMethodName, in, out, opts...)
@@ -85,6 +96,7 @@ func (c *artistClient) GetArtistsByAlbumId(ctx context.Context, in *RequestById,
 type ArtistServer interface {
 	GetPopularArtists(context.Context, *GetPopularArtistsRequest) (*MultipleArtists, error)
 	GetArtist(context.Context, *RequestById) (*ArtistMessage, error)
+	GetSeveralArtists(context.Context, *RequestByIds) (*MultipleArtists, error)
 	GetArtistsByTrackId(context.Context, *RequestById) (*MultipleArtists, error)
 	GetArtistsByAlbumId(context.Context, *RequestById) (*MultipleArtists, error)
 	mustEmbedUnimplementedArtistServer()
@@ -99,6 +111,9 @@ func (UnimplementedArtistServer) GetPopularArtists(context.Context, *GetPopularA
 }
 func (UnimplementedArtistServer) GetArtist(context.Context, *RequestById) (*ArtistMessage, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetArtist not implemented")
+}
+func (UnimplementedArtistServer) GetSeveralArtists(context.Context, *RequestByIds) (*MultipleArtists, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSeveralArtists not implemented")
 }
 func (UnimplementedArtistServer) GetArtistsByTrackId(context.Context, *RequestById) (*MultipleArtists, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetArtistsByTrackId not implemented")
@@ -155,6 +170,24 @@ func _Artist_GetArtist_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Artist_GetSeveralArtists_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RequestByIds)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArtistServer).GetSeveralArtists(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Artist_GetSeveralArtists_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArtistServer).GetSeveralArtists(ctx, req.(*RequestByIds))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Artist_GetArtistsByTrackId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RequestById)
 	if err := dec(in); err != nil {
@@ -205,6 +238,10 @@ var Artist_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetArtist",
 			Handler:    _Artist_GetArtist_Handler,
+		},
+		{
+			MethodName: "GetSeveralArtists",
+			Handler:    _Artist_GetSeveralArtists_Handler,
 		},
 		{
 			MethodName: "GetArtistsByTrackId",

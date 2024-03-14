@@ -31,6 +31,19 @@ INNER JOIN track_data_youtube y ON t.youtubeDataId = y.id
 INNER JOIN track_statistics_youtube sy ON y.id = sy.youtubeDataId
 WHERE t.id = $1;
 
+-- name: GetSeveralTracks :many
+SELECT 
+	t.id trackId, t.albumId, t.explicit, t.playCount, t.spotifyId, t.lyrics,
+	sp.title spotifyTitle, sp.popularity spotifyPopularity, sp.durationMs spotifyDurationMs,
+    y.youtubeId, y.title youtubeTitle, y.durationMs youtubeDurationMs, y.publishedAt youtubePublishedAt,
+    sy.viewCount youtubeViewCount, sy.likeCount youtubeLikeCount, sy.favoriteCount youtubeFavoriteCount, 
+    sy.commentCount youtubeCommentCount
+FROM tracks t
+INNER JOIN track_data_spotify sp ON t.spotifyId = sp.id
+INNER JOIN track_data_youtube y ON t.youtubeDataId = y.id
+INNER JOIN track_statistics_youtube sy ON y.id = sy.youtubeDataId
+WHERE t.id = ANY($1::uuid[]);
+
 -- name: GetTrackYoutubeThumbnails :many
 SELECT ty.url, ty.width, ty.height, ty.type 
 FROM tracks t

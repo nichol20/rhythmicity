@@ -12,6 +12,7 @@ import (
 type AlbumRepositoryInterface interface {
 	GetPopularAlbums(ctx context.Context, limit int32) ([]domain.Album, error)
 	GetAlbum(ctx context.Context, albumID string) (*domain.Album, error)
+	GetSeveralAlbums(ctx context.Context, albumIDs []string) ([]domain.Album, error)
 	GetAlbumByTrackId(ctx context.Context, trackID string) (*domain.Album, error)
 	GetAlbumsByArtistId(ctx context.Context, artistID string) ([]domain.Album, error)
 }
@@ -51,6 +52,21 @@ func (s *AlbumGRPCService) GetAlbum(ctx context.Context, req *pb.RequestById) (*
 		return nil, domain.ErrInternalServerError
 	}
 	return s.albumToMessage(*album), nil
+}
+
+func (s *AlbumGRPCService) GetSeveralAlbums(ctx context.Context, req *pb.RequestByIds) (*pb.MultipleAlbums, error) {
+	albums, err := s.AlbumRepository.GetSeveralAlbums(ctx, req.Ids)
+	if err != nil {
+		return nil, domain.ErrInternalServerError
+	}
+	var albumsMessage []*pb.AlbumMessage
+	for _, v := range albums {
+		albumsMessage = append(albumsMessage, s.albumToMessage(v))
+	}
+
+	return &pb.MultipleAlbums{
+		Albums: albumsMessage,
+	}, nil
 }
 
 func (s *AlbumGRPCService) GetAlbumByTrackId(ctx context.Context, req *pb.RequestById) (*pb.AlbumMessage, error) {

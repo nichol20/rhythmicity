@@ -55,6 +55,23 @@ func (r *AlbumRepository) GetAlbum(ctx context.Context, albumID string) (*domain
 	return album, err
 }
 
+func (r *AlbumRepository) GetSeveralAlbums(ctx context.Context, albumIDs []string) ([]domain.Album, error) {
+	filteredIDs := utils.IDsToUUIDs(albumIDs)
+	albumsRow, err := r.queries.GetSeveralAlbums(ctx, filteredIDs)
+	if err != nil {
+		return nil, err
+	}
+	var albums []domain.Album
+	for _, v := range albumsRow {
+		album, err := r.createAlbum(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		albums = append(albums, *album)
+	}
+	return albums, nil
+}
+
 func (r *AlbumRepository) GetAlbumByTrackId(ctx context.Context, trackID string) (*domain.Album, error) {
 	uuid, err := uuid.Parse(trackID)
 	if err != nil {

@@ -12,6 +12,7 @@ import (
 type ArtistRepositoryInterface interface {
 	GetPopularArtists(ctx context.Context, limit int32) ([]domain.Artist, error)
 	GetArtist(ctx context.Context, artistID string) (*domain.Artist, error)
+	GetSeveralArtists(ctx context.Context, artistIDs []string) ([]domain.Artist, error)
 	GetArtistsByTrackId(ctx context.Context, trackID string) ([]domain.Artist, error)
 	GetArtistsByAlbumId(ctx context.Context, albumID string) ([]domain.Artist, error)
 }
@@ -51,6 +52,21 @@ func (s *ArtistGRPCService) GetArtist(ctx context.Context, req *pb.RequestById) 
 		return nil, domain.ErrInternalServerError
 	}
 	return s.artistToMessage(*artist), nil
+}
+
+func (s *ArtistGRPCService) GetServeralArtists(ctx context.Context, req *pb.RequestByIds) (*pb.MultipleArtists, error) {
+	artists, err := s.ArtistRepository.GetSeveralArtists(ctx, req.Ids)
+	if err != nil {
+		return nil, domain.ErrInternalServerError
+	}
+	var artistsMessage []*pb.ArtistMessage
+	for _, v := range artists {
+		artistsMessage = append(artistsMessage, s.artistToMessage(v))
+	}
+
+	return &pb.MultipleArtists{
+		Artists: artistsMessage,
+	}, nil
 }
 
 func (s *ArtistGRPCService) GetArtistsByTrackId(ctx context.Context, req *pb.RequestById) (*pb.MultipleArtists, error) {

@@ -8,6 +8,10 @@ message RequestById {
     string id = 1;
 }
 
+message RequestByIds {
+    repeated string ids = 1;
+}
+
 message Image {
     int32 height = 1;
     string url = 2;

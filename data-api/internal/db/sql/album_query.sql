@@ -14,6 +14,12 @@ FROM albums a
 INNER JOIN album_data_spotify sp ON a.spotifyId = sp.id
 WHERE a.id = $1;
 
+-- name: GetSeveralAlbums :many
+SELECT a.id albumId, a.name, a.totalTracks, a.spotifyId, sp.popularity spotifyPopularity, sp.releaseDate spotifyReleaseDate
+FROM albums a
+INNER JOIN album_data_spotify sp ON a.spotifyId = sp.id
+WHERE a.id = ANY($1::uuid[]);
+
 -- name: GetAlbumSpotifyImages :many
 SELECT ip.url, ip.width, ip.height 
 FROM albums a

@@ -55,6 +55,23 @@ func (r *ArtistRepository) GetArtist(ctx context.Context, artistID string) (*dom
 	return artist, err
 }
 
+func (r *ArtistRepository) GetSeveralArtists(ctx context.Context, artistIDs []string) ([]domain.Artist, error) {
+	filteredIDs := utils.IDsToUUIDs(artistIDs)
+	artistsRow, err := r.queries.GetServeralArtists(ctx, filteredIDs)
+	if err != nil {
+		return nil, err
+	}
+	var artists []domain.Artist
+	for _, v := range artistsRow {
+		artist, err := r.createArtist(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		artists = append(artists, *artist)
+	}
+	return artists, nil
+}
+
 func (r *ArtistRepository) GetArtistsByTrackId(ctx context.Context, trackID string) ([]domain.Artist, error) {
 	uuid, err := uuid.Parse(trackID)
 	if err != nil {
@@ -77,7 +94,7 @@ func (r *ArtistRepository) GetArtistsByTrackId(ctx context.Context, trackID stri
 		}
 		artists = append(artists, *artist)
 	}
-	return artists, err
+	return artists, nil
 }
 
 func (r *ArtistRepository) GetArtistsByAlbumId(ctx context.Context, albumID string) ([]domain.Artist, error) {

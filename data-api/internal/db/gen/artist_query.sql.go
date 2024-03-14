@@ -10,6 +10,7 @@ import (
 	"database/sql"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 )
 
 const checkIfArtistExists = `-- name: CheckIfArtistExists :one
@@ -253,6 +254,49 @@ func (q *Queries) GetPopularArtists(ctx context.Context, limit int32) ([]GetPopu
 	var items []GetPopularArtistsRow
 	for rows.Next() {
 		var i GetPopularArtistsRow
+		if err := rows.Scan(
+			&i.Artistid,
+			&i.Name,
+			&i.Spotifyid,
+			&i.Spotifypopularity,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getServeralArtists = `-- name: GetServeralArtists :many
+SELECT 
+	a.id artistId, a.name, a.spotifyId, sp.popularity spotifyPopularity
+FROM artists a
+INNER JOIN artist_data_spotify sp ON a.spotifyId = sp.id
+WHERE a.id = ANY($1::uuid[])
+`
+
+type GetServeralArtistsRow struct {
+	Artistid          uuid.UUID
+	Name              string
+	Spotifyid         sql.NullString
+	Spotifypopularity int32
+}
+
+func (q *Queries) GetServeralArtists(ctx context.Context, dollar_1 []uuid.UUID) ([]GetServeralArtistsRow, error) {
+	rows, err := q.db.QueryContext(ctx, getServeralArtists, pq.Array(dollar_1))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetServeralArtistsRow
+	for rows.Next() {
+		var i GetServeralArtistsRow
 		if err := rows.Scan(
 			&i.Artistid,
 			&i.Name,

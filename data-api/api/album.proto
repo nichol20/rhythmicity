@@ -31,6 +31,7 @@ message MultipleAlbums {
 service Album {
     rpc GetPopularAlbums(GetPopularAlbumsRequest) returns (MultipleAlbums){};
     rpc GetAlbum(RequestById) returns (AlbumMessage){};
+    rpc GetSeveralAlbums(RequestByIds) returns (MultipleAlbums){};
     rpc GetAlbumByTrackId(RequestById) returns (AlbumMessage){};
     rpc GetAlbumsByArtistId(RequestById) returns (MultipleAlbums){};
 }

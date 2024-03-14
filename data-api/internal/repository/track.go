@@ -32,6 +32,9 @@ func (r *TrackRepository) GetYoutubeId(ctx context.Context, trackID string) (str
 
 func (r *TrackRepository) GetPopularTracks(ctx context.Context, limit int32) ([]domain.Track, error) {
 	tracksRow, err := r.queries.GetPopularTracks(ctx, limit)
+	if err != nil {
+		return nil, err
+	}
 	var tracks []domain.Track
 	for _, v := range tracksRow {
 		track, err := r.createTrack(ctx, v)
@@ -65,6 +68,23 @@ func (r *TrackRepository) GetTrack(ctx context.Context, trackID string) (*domain
 	return track, nil
 }
 
+func (r *TrackRepository) GetSeveralTracks(ctx context.Context, trackIDs []string) ([]domain.Track, error) {
+	filteredIDs := utils.IDsToUUIDs(trackIDs)
+	tracksRow, err := r.queries.GetSeveralTracks(ctx, filteredIDs)
+	if err != nil {
+		return nil, err
+	}
+	var tracks []domain.Track
+	for _, v := range tracksRow {
+		track, err := r.createTrack(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		tracks = append(tracks, *track)
+	}
+	return tracks, nil
+}
+
 func (r *TrackRepository) GetTracksByArtistId(ctx context.Context, artistID string) ([]domain.Track, error) {
 	uuid, err := uuid.Parse(artistID)
 	if err != nil {
@@ -76,6 +96,9 @@ func (r *TrackRepository) GetTracksByArtistId(ctx context.Context, artistID stri
 		return nil, domain.ErrNotFound
 	}
 	tracksRow, err := r.queries.GetTracksByArtistId(ctx, uuid)
+	if err != nil {
+		return nil, err
+	}
 	var tracks []domain.Track
 	for _, v := range tracksRow {
 		track, err := r.createTrack(ctx, v)
@@ -84,7 +107,7 @@ func (r *TrackRepository) GetTracksByArtistId(ctx context.Context, artistID stri
 		}
 		tracks = append(tracks, *track)
 	}
-	return tracks, err
+	return tracks, nil
 }
 
 func (r *TrackRepository) GetTracksByAlbumId(ctx context.Context, albumID string) ([]domain.Track, error) {
@@ -98,6 +121,9 @@ func (r *TrackRepository) GetTracksByAlbumId(ctx context.Context, albumID string
 		return nil, domain.ErrNotFound
 	}
 	tracksRow, err := r.queries.GetTracksByAlbumId(ctx, uuid)
+	if err != nil {
+		return nil, err
+	}
 	var tracks []domain.Track
 	for _, v := range tracksRow {
 		track, err := r.createTrack(ctx, v)
@@ -106,7 +132,7 @@ func (r *TrackRepository) GetTracksByAlbumId(ctx context.Context, albumID string
 		}
 		tracks = append(tracks, *track)
 	}
-	return tracks, err
+	return tracks, nil
 }
 
 func (r *TrackRepository) createTrack(ctx context.Context, row interface{}) (*domain.Track, error) {

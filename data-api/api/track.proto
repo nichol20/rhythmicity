@@ -38,8 +38,6 @@ message Youtube {
 
 message TrackMessage {
     string id = 1;
-    repeated string artistIds = 2;
-    string albumId = 3;
     repeated string genres = 4;
     repeated string styles = 5;
     bool explicit = 6;
@@ -65,6 +63,7 @@ service Track {
     rpc Playback(RequestById) returns (PlaybackResponse){};
     rpc GetPopularTracks(GetPopularTracksRequest) returns (MultipleTracks){};
     rpc GetTrack(RequestById) returns (TrackMessage){};
+    rpc GetSeveralTracks(RequestByIds) returns (MultipleTracks){};
     rpc GetTracksByArtistId(RequestById) returns (MultipleTracks){};
     rpc GetTracksByAlbumId(RequestById) returns (MultipleTracks){};
 }

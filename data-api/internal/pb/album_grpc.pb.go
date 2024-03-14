@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	Album_GetPopularAlbums_FullMethodName    = "/Album/GetPopularAlbums"
 	Album_GetAlbum_FullMethodName            = "/Album/GetAlbum"
+	Album_GetSeveralAlbums_FullMethodName    = "/Album/GetSeveralAlbums"
 	Album_GetAlbumByTrackId_FullMethodName   = "/Album/GetAlbumByTrackId"
 	Album_GetAlbumsByArtistId_FullMethodName = "/Album/GetAlbumsByArtistId"
 )
@@ -31,6 +32,7 @@ const (
 type AlbumClient interface {
 	GetPopularAlbums(ctx context.Context, in *GetPopularAlbumsRequest, opts ...grpc.CallOption) (*MultipleAlbums, error)
 	GetAlbum(ctx context.Context, in *RequestById, opts ...grpc.CallOption) (*AlbumMessage, error)
+	GetSeveralAlbums(ctx context.Context, in *RequestByIds, opts ...grpc.CallOption) (*MultipleAlbums, error)
 	GetAlbumByTrackId(ctx context.Context, in *RequestById, opts ...grpc.CallOption) (*AlbumMessage, error)
 	GetAlbumsByArtistId(ctx context.Context, in *RequestById, opts ...grpc.CallOption) (*MultipleAlbums, error)
 }
@@ -61,6 +63,15 @@ func (c *albumClient) GetAlbum(ctx context.Context, in *RequestById, opts ...grp
 	return out, nil
 }
 
+func (c *albumClient) GetSeveralAlbums(ctx context.Context, in *RequestByIds, opts ...grpc.CallOption) (*MultipleAlbums, error) {
+	out := new(MultipleAlbums)
+	err := c.cc.Invoke(ctx, Album_GetSeveralAlbums_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *albumClient) GetAlbumByTrackId(ctx context.Context, in *RequestById, opts ...grpc.CallOption) (*AlbumMessage, error) {
 	out := new(AlbumMessage)
 	err := c.cc.Invoke(ctx, Album_GetAlbumByTrackId_FullMethodName, in, out, opts...)
@@ -85,6 +96,7 @@ func (c *albumClient) GetAlbumsByArtistId(ctx context.Context, in *RequestById, 
 type AlbumServer interface {
 	GetPopularAlbums(context.Context, *GetPopularAlbumsRequest) (*MultipleAlbums, error)
 	GetAlbum(context.Context, *RequestById) (*AlbumMessage, error)
+	GetSeveralAlbums(context.Context, *RequestByIds) (*MultipleAlbums, error)
 	GetAlbumByTrackId(context.Context, *RequestById) (*AlbumMessage, error)
 	GetAlbumsByArtistId(context.Context, *RequestById) (*MultipleAlbums, error)
 	mustEmbedUnimplementedAlbumServer()
@@ -99,6 +111,9 @@ func (UnimplementedAlbumServer) GetPopularAlbums(context.Context, *GetPopularAlb
 }
 func (UnimplementedAlbumServer) GetAlbum(context.Context, *RequestById) (*AlbumMessage, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAlbum not implemented")
+}
+func (UnimplementedAlbumServer) GetSeveralAlbums(context.Context, *RequestByIds) (*MultipleAlbums, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSeveralAlbums not implemented")
 }
 func (UnimplementedAlbumServer) GetAlbumByTrackId(context.Context, *RequestById) (*AlbumMessage, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAlbumByTrackId not implemented")
@@ -155,6 +170,24 @@ func _Album_GetAlbum_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Album_GetSeveralAlbums_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RequestByIds)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AlbumServer).GetSeveralAlbums(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Album_GetSeveralAlbums_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AlbumServer).GetSeveralAlbums(ctx, req.(*RequestByIds))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Album_GetAlbumByTrackId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RequestById)
 	if err := dec(in); err != nil {
@@ -205,6 +238,10 @@ var Album_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAlbum",
 			Handler:    _Album_GetAlbum_Handler,
+		},
+		{
+			MethodName: "GetSeveralAlbums",
+			Handler:    _Album_GetSeveralAlbums_Handler,
 		},
 		{
 			MethodName: "GetAlbumByTrackId",

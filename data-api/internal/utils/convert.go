@@ -3,6 +3,7 @@ package utils
 import (
 	"encoding/json"
 
+	"github.com/google/uuid"
 	"github.com/nichol20/rhythmicity/data-api/internal/domain"
 	"github.com/nichol20/rhythmicity/data-api/internal/pb"
 )
@@ -30,4 +31,15 @@ func ImagesToMessage(images []domain.Image) []*pb.Image {
 		})
 	}
 	return i
+}
+
+func IDsToUUIDs(ids []string) uuid.UUIDs {
+	uuids := make(uuid.UUIDs, 0)
+	for _, v := range ids {
+		uuid, err := uuid.Parse(v)
+		if err == nil {
+			uuids = append(uuids, uuid)
+		}
+	}
+	return uuids
 }

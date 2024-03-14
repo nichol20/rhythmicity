@@ -14,6 +14,7 @@ type TrackRepositoryInterface interface {
 	GetYoutubeId(ctx context.Context, id string) (string, error)
 	GetPopularTracks(ctx context.Context, limit int32) ([]domain.Track, error)
 	GetTrack(ctx context.Context, trackId string) (*domain.Track, error)
+	GetSeveralTracks(ctx context.Context, trackIDs []string) ([]domain.Track, error)
 	GetTracksByArtistId(ctx context.Context, artistID string) ([]domain.Track, error)
 	GetTracksByAlbumId(ctx context.Context, albumID string) ([]domain.Track, error)
 }
@@ -69,6 +70,21 @@ func (s *TrackGRPCService) GetTrack(ctx context.Context, req *pb.RequestById) (*
 		return nil, domain.ErrInternalServerError
 	}
 	return s.trackToMessage(*track), nil
+}
+
+func (s *TrackGRPCService) GetSeveralTracks(ctx context.Context, req *pb.RequestByIds) (*pb.MultipleTracks, error) {
+	tracks, err := s.TrackRepository.GetSeveralTracks(ctx, req.Ids)
+	if err != nil {
+		return nil, domain.ErrInternalServerError
+	}
+	var tracksMessage []*pb.TrackMessage
+	for _, v := range tracks {
+		tracksMessage = append(tracksMessage, s.trackToMessage(v))
+	}
+
+	return &pb.MultipleTracks{
+		Tracks: tracksMessage,
+	}, nil
 }
 
 func (s *TrackGRPCService) GetTracksByArtistId(ctx context.Context, req *pb.RequestById) (*pb.MultipleTracks, error) {
