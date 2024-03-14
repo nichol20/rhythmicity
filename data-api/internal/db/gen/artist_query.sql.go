@@ -273,7 +273,7 @@ func (q *Queries) GetPopularArtists(ctx context.Context, limit int32) ([]GetPopu
 	return items, nil
 }
 
-const getServeralArtists = `-- name: GetServeralArtists :many
+const getSeveralArtists = `-- name: GetSeveralArtists :many
 SELECT 
 	a.id artistId, a.name, a.spotifyId, sp.popularity spotifyPopularity
 FROM artists a
@@ -281,22 +281,22 @@ INNER JOIN artist_data_spotify sp ON a.spotifyId = sp.id
 WHERE a.id = ANY($1::uuid[])
 `
 
-type GetServeralArtistsRow struct {
+type GetSeveralArtistsRow struct {
 	Artistid          uuid.UUID
 	Name              string
 	Spotifyid         sql.NullString
 	Spotifypopularity int32
 }
 
-func (q *Queries) GetServeralArtists(ctx context.Context, dollar_1 []uuid.UUID) ([]GetServeralArtistsRow, error) {
-	rows, err := q.db.QueryContext(ctx, getServeralArtists, pq.Array(dollar_1))
+func (q *Queries) GetSeveralArtists(ctx context.Context, dollar_1 []uuid.UUID) ([]GetSeveralArtistsRow, error) {
+	rows, err := q.db.QueryContext(ctx, getSeveralArtists, pq.Array(dollar_1))
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []GetServeralArtistsRow
+	var items []GetSeveralArtistsRow
 	for rows.Next() {
-		var i GetServeralArtistsRow
+		var i GetSeveralArtistsRow
 		if err := rows.Scan(
 			&i.Artistid,
 			&i.Name,

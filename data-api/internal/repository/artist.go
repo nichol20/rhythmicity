@@ -57,7 +57,7 @@ func (r *ArtistRepository) GetArtist(ctx context.Context, artistID string) (*dom
 
 func (r *ArtistRepository) GetSeveralArtists(ctx context.Context, artistIDs []string) ([]domain.Artist, error) {
 	filteredIDs := utils.IDsToUUIDs(artistIDs)
-	artistsRow, err := r.queries.GetServeralArtists(ctx, filteredIDs)
+	artistsRow, err := r.queries.GetSeveralArtists(ctx, filteredIDs)
 	if err != nil {
 		return nil, err
 	}

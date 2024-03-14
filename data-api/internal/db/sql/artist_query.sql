@@ -16,7 +16,7 @@ FROM artists a
 INNER JOIN artist_data_spotify sp ON a.spotifyId = sp.id
 WHERE a.id = $1;
 
--- name: GetServeralArtists :many
+-- name: GetSeveralArtists :many
 SELECT 
 	a.id artistId, a.name, a.spotifyId, sp.popularity spotifyPopularity
 FROM artists a

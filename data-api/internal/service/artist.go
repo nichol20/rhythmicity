@@ -47,7 +47,7 @@ func (s *ArtistGRPCService) GetArtist(ctx context.Context, req *pb.RequestById) 
 	return s.artistToMessage(*artist), nil
 }
 
-func (s *ArtistGRPCService) GetServeralArtists(ctx context.Context, req *pb.RequestByIds) (*pb.MultipleArtists, error) {
+func (s *ArtistGRPCService) GetSeveralArtists(ctx context.Context, req *pb.RequestByIds) (*pb.MultipleArtists, error) {
 	artists, err := s.ArtistRepository.GetSeveralArtists(ctx, req.Ids)
 	if err != nil {
 		return nil, domain.ErrInternalServerError
