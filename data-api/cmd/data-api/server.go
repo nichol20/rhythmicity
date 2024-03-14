@@ -23,8 +23,21 @@ func main() {
 	}
 	pb.RegisterTrackServer(grpcServer, trackGRPCService)
 
+	artistRepository := repository.NewArtistRepository(db)
+	artistGRPCService := &service.ArtistGRPCService{
+		ArtistRepository: artistRepository,
+	}
+	pb.RegisterArtistServer(grpcServer, artistGRPCService)
+
+	albumRepository := repository.NewAlbumRepository(db)
+	albumGRPCService := &service.AlbumGRPCService{
+		AlbumRepository: albumRepository,
+	}
+	pb.RegisterAlbumServer(grpcServer, albumGRPCService)
+
 	address := fmt.Sprintf("0.0.0.0:%d", port)
 	listener, err := net.Listen("tcp", address)
+
 	if err != nil {
 		log.Fatal("cannot start grpc server", err)
 	}
