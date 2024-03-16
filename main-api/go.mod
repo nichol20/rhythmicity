@@ -1,4 +1,4 @@
-module github.com/nichol20/rhythmicity/data-api
+module github.com/nichol20/rhythmicity/main-api
 
 go 1.21.5
 

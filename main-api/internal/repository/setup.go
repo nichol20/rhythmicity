@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/nichol20/rhythmicity/data-api/internal/domain"
+	"github.com/nichol20/rhythmicity/main-api/internal/domain"
 )
 
 type DataStructure struct {

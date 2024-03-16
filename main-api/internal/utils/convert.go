@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 
 	"github.com/google/uuid"
-	"github.com/nichol20/rhythmicity/data-api/internal/domain"
-	"github.com/nichol20/rhythmicity/data-api/internal/pb"
+	"github.com/nichol20/rhythmicity/main-api/internal/domain"
+	"github.com/nichol20/rhythmicity/main-api/internal/pb"
 )
 
 func TypeConverter[R any](data any) (*R, error) {

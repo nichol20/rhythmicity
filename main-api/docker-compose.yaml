@@ -97,7 +97,7 @@ services:
       timeout: 5s
       retries: 5
 
-  data-api:
+  main-api:
     build: .
     depends_on:
       db:

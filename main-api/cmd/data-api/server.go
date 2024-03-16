@@ -6,10 +6,10 @@ import (
 	"log/slog"
 	"net"
 
-	database "github.com/nichol20/rhythmicity/data-api/internal/db"
-	"github.com/nichol20/rhythmicity/data-api/internal/pb"
-	"github.com/nichol20/rhythmicity/data-api/internal/repository"
-	"github.com/nichol20/rhythmicity/data-api/internal/service"
+	database "github.com/nichol20/rhythmicity/main-api/internal/db"
+	"github.com/nichol20/rhythmicity/main-api/internal/pb"
+	"github.com/nichol20/rhythmicity/main-api/internal/repository"
+	"github.com/nichol20/rhythmicity/main-api/internal/service"
 	"google.golang.org/grpc"
 )
 

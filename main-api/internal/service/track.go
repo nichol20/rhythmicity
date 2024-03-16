@@ -5,9 +5,9 @@ import (
 	"errors"
 	"log/slog"
 
-	"github.com/nichol20/rhythmicity/data-api/internal/domain"
-	"github.com/nichol20/rhythmicity/data-api/internal/pb"
-	"github.com/nichol20/rhythmicity/data-api/internal/utils"
+	"github.com/nichol20/rhythmicity/main-api/internal/domain"
+	"github.com/nichol20/rhythmicity/main-api/internal/pb"
+	"github.com/nichol20/rhythmicity/main-api/internal/utils"
 )
 
 type TrackRepositoryInterface interface {

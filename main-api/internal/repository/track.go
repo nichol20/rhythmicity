@@ -6,9 +6,9 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
-	db "github.com/nichol20/rhythmicity/data-api/internal/db/gen"
-	"github.com/nichol20/rhythmicity/data-api/internal/domain"
-	"github.com/nichol20/rhythmicity/data-api/internal/utils"
+	db "github.com/nichol20/rhythmicity/main-api/internal/db/gen"
+	"github.com/nichol20/rhythmicity/main-api/internal/domain"
+	"github.com/nichol20/rhythmicity/main-api/internal/utils"
 )
 
 type TrackRepository struct {
