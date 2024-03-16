@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package rhythmicity.main_api;
+
+option go_package = "github.com/nichol20/rhythmicity/data-api/internal/pb";
+
+import "common.proto";
+
+message AlbumSpotify {
+    string id = 1;
+    int32 popularity = 2;
+    repeated Image images = 3;
+    string releaseData = 4;
+}
+
+message AlbumMessage {
+    string id = 1;
+    string name = 2;
+    repeated string genres = 3;
+    repeated string styles = 4;
+    int32 totalTracks = 5;
+    AlbumSpotify spotify = 6;
+}
+
+message GetPopularAlbumsRequest {
+    optional int32 limit = 1;
+}
+
+message MultipleAlbums {
+    repeated AlbumMessage albums = 1;
+}
+
+service Album {
+    rpc GetPopularAlbums(GetPopularAlbumsRequest) returns (MultipleAlbums){};
+    rpc GetAlbum(RequestById) returns (AlbumMessage){};
+    rpc GetSeveralAlbums(RequestByIds) returns (MultipleAlbums){};
+    rpc GetAlbumByTrackId(RequestById) returns (AlbumMessage){};
+    rpc GetAlbumsByArtistId(RequestById) returns (MultipleAlbums){};
+}

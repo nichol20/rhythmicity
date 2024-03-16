@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package rhythmicity.main_api;
+
+option go_package = "github.com/nichol20/rhythmicity/data-api/internal/pb";
+
+import "common.proto";
+
+message TrackSpotify {
+    string id = 1;
+    string title = 2;
+    int32 popularity = 3;
+    int32 durationMs = 4;
+    repeated Image albumImages = 5;
+}
+
+message YoutubeThumbnails {
+    optional Image default = 1;
+    optional Image medium = 2;
+    optional Image high = 3;
+    optional Image standard = 4;
+    optional Image maxres = 5;
+}
+
+message YoutubeStatistics {
+    string viewCount = 1;
+    string likeCount = 2;
+    string favoriteCount = 3;
+    string commentCount = 4;
+}
+
+message Youtube {
+    string id = 1;
+    string title = 2;
+    int32 durationMs = 3;
+    string publishedAt = 4;
+    YoutubeStatistics statistics = 5;
+    YoutubeThumbnails thumbnails = 6;
+}
+
+message TrackMessage {
+    string id = 1;
+    repeated string genres = 4;
+    repeated string styles = 5;
+    bool explicit = 6;
+    int64 playCount = 7;
+    TrackSpotify spotify = 8;
+    Youtube youtube = 9;
+    string lyrics = 10;
+}
+
+message PlaybackResponse {
+    string youtubeId = 1;
+}
+
+message GetPopularTracksRequest {
+    optional int32 limit = 1;
+}
+
+message MultipleTracks {
+    repeated TrackMessage tracks = 1;
+}
+
+service Track {
+    rpc Playback(RequestById) returns (PlaybackResponse){};
+    rpc GetPopularTracks(GetPopularTracksRequest) returns (MultipleTracks){};
+    rpc GetTrack(RequestById) returns (TrackMessage){};
+    rpc GetSeveralTracks(RequestByIds) returns (MultipleTracks){};
+    rpc GetTracksByArtistId(RequestById) returns (MultipleTracks){};
+    rpc GetTracksByAlbumId(RequestById) returns (MultipleTracks){};
+}
