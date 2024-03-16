@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"log/slog"
 	"net"
 
 	database "github.com/nichol20/rhythmicity/data-api/internal/db"
@@ -42,7 +43,7 @@ func main() {
 		log.Fatal("cannot start grpc server", err)
 	}
 
-	log.Printf("gRPC server has been started on port %d", port)
+	slog.Info("gRPC server has been started", "port", port)
 	err = grpcServer.Serve(listener)
 	if err != nil {
 		log.Fatal("cannot start grpc server", err)

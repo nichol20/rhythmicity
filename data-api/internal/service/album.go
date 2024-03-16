@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"log/slog"
 
 	"github.com/nichol20/rhythmicity/data-api/internal/domain"
 	"github.com/nichol20/rhythmicity/data-api/internal/pb"
@@ -30,6 +31,7 @@ func (s *AlbumGRPCService) GetPopularAlbums(ctx context.Context, req *pb.GetPopu
 	}
 	albums, err := s.AlbumRepository.GetPopularAlbums(ctx, limit)
 	if err != nil {
+		slog.Error(err.Error())
 		return nil, domain.ErrInternalServerError
 	}
 	return s.albumsToMessage(albums), nil
@@ -42,6 +44,7 @@ func (s *AlbumGRPCService) GetAlbum(ctx context.Context, req *pb.RequestById) (*
 			return nil, errors.New("album not found")
 		}
 
+		slog.Error(err.Error())
 		return nil, domain.ErrInternalServerError
 	}
 	return s.albumToMessage(*album), nil
@@ -50,6 +53,7 @@ func (s *AlbumGRPCService) GetAlbum(ctx context.Context, req *pb.RequestById) (*
 func (s *AlbumGRPCService) GetSeveralAlbums(ctx context.Context, req *pb.RequestByIds) (*pb.MultipleAlbums, error) {
 	albums, err := s.AlbumRepository.GetSeveralAlbums(ctx, req.Ids)
 	if err != nil {
+		slog.Error(err.Error())
 		return nil, domain.ErrInternalServerError
 	}
 	return s.albumsToMessage(albums), nil
@@ -62,6 +66,7 @@ func (s *AlbumGRPCService) GetAlbumByTrackId(ctx context.Context, req *pb.Reques
 			return nil, errors.New("track not found")
 		}
 
+		slog.Error(err.Error())
 		return nil, domain.ErrInternalServerError
 	}
 	return s.albumToMessage(*album), nil
@@ -74,6 +79,7 @@ func (s *AlbumGRPCService) GetAlbumsByArtistId(ctx context.Context, req *pb.Requ
 			return nil, errors.New("artist not found")
 		}
 
+		slog.Error(err.Error())
 		return nil, domain.ErrInternalServerError
 	}
 	return s.albumsToMessage(albums), nil

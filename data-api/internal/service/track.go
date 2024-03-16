@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"log/slog"
 
 	"github.com/nichol20/rhythmicity/data-api/internal/domain"
 	"github.com/nichol20/rhythmicity/data-api/internal/pb"
@@ -30,6 +31,7 @@ func (s *TrackGRPCService) Playback(ctx context.Context, req *pb.RequestById) (*
 			return nil, errors.New("track not found")
 		}
 
+		slog.Error(err.Error())
 		return nil, domain.ErrInternalServerError
 	}
 
@@ -46,6 +48,7 @@ func (s *TrackGRPCService) GetPopularTracks(ctx context.Context, req *pb.GetPopu
 	}
 	tracks, err := s.TrackRepository.GetPopularTracks(ctx, limit)
 	if err != nil {
+		slog.Error(err.Error())
 		return nil, domain.ErrInternalServerError
 	}
 	return s.tracksToMessage(tracks), nil
@@ -58,6 +61,7 @@ func (s *TrackGRPCService) GetTrack(ctx context.Context, req *pb.RequestById) (*
 			return nil, errors.New("track not found")
 		}
 
+		slog.Error(err.Error())
 		return nil, domain.ErrInternalServerError
 	}
 	return s.trackToMessage(*track), nil
@@ -66,6 +70,7 @@ func (s *TrackGRPCService) GetTrack(ctx context.Context, req *pb.RequestById) (*
 func (s *TrackGRPCService) GetSeveralTracks(ctx context.Context, req *pb.RequestByIds) (*pb.MultipleTracks, error) {
 	tracks, err := s.TrackRepository.GetSeveralTracks(ctx, req.Ids)
 	if err != nil {
+		slog.Error(err.Error())
 		return nil, domain.ErrInternalServerError
 	}
 	return s.tracksToMessage(tracks), nil
@@ -78,6 +83,7 @@ func (s *TrackGRPCService) GetTracksByArtistId(ctx context.Context, req *pb.Requ
 			return nil, errors.New("artist not found")
 		}
 
+		slog.Error(err.Error())
 		return nil, domain.ErrInternalServerError
 	}
 	return s.tracksToMessage(tracks), nil
@@ -90,6 +96,7 @@ func (s *TrackGRPCService) GetTracksByAlbumId(ctx context.Context, req *pb.Reque
 			return nil, errors.New("album not found")
 		}
 
+		slog.Error(err.Error())
 		return nil, domain.ErrInternalServerError
 	}
 	return s.tracksToMessage(tracks), nil
