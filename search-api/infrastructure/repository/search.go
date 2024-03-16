@@ -22,7 +22,7 @@ func (r *SearchRepository) Search(ctx context.Context, search *model.Search) ([]
 			"function_score": map[string]interface{}{
 				"multi_match": map[string]interface{}{
 					"query":  search.Query,
-					"fields": []string{"artistNames", "trackName", "lyrics"},
+					"fields": []string{"artistNames", "trackName", "lyrics", "albumName"},
 				},
 				"field_value_factor": map[string]interface{}{
 					"field":   "playCount",

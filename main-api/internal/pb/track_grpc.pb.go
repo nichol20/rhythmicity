@@ -19,12 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Track_Playback_FullMethodName            = "/Track/Playback"
-	Track_GetPopularTracks_FullMethodName    = "/Track/GetPopularTracks"
-	Track_GetTrack_FullMethodName            = "/Track/GetTrack"
-	Track_GetSeveralTracks_FullMethodName    = "/Track/GetSeveralTracks"
-	Track_GetTracksByArtistId_FullMethodName = "/Track/GetTracksByArtistId"
-	Track_GetTracksByAlbumId_FullMethodName  = "/Track/GetTracksByAlbumId"
+	Track_Playback_FullMethodName            = "/rhythmicity.main_api.Track/Playback"
+	Track_GetPopularTracks_FullMethodName    = "/rhythmicity.main_api.Track/GetPopularTracks"
+	Track_GetTrack_FullMethodName            = "/rhythmicity.main_api.Track/GetTrack"
+	Track_GetSeveralTracks_FullMethodName    = "/rhythmicity.main_api.Track/GetSeveralTracks"
+	Track_GetTracksByArtistId_FullMethodName = "/rhythmicity.main_api.Track/GetTracksByArtistId"
+	Track_GetTracksByAlbumId_FullMethodName  = "/rhythmicity.main_api.Track/GetTracksByAlbumId"
 )
 
 // TrackClient is the client API for Track service.
@@ -261,7 +261,7 @@ func _Track_GetTracksByAlbumId_Handler(srv interface{}, ctx context.Context, dec
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Track_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "Track",
+	ServiceName: "rhythmicity.main_api.Track",
 	HandlerType: (*TrackServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

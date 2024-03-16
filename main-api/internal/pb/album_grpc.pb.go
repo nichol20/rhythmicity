@@ -19,11 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Album_GetPopularAlbums_FullMethodName    = "/Album/GetPopularAlbums"
-	Album_GetAlbum_FullMethodName            = "/Album/GetAlbum"
-	Album_GetSeveralAlbums_FullMethodName    = "/Album/GetSeveralAlbums"
-	Album_GetAlbumByTrackId_FullMethodName   = "/Album/GetAlbumByTrackId"
-	Album_GetAlbumsByArtistId_FullMethodName = "/Album/GetAlbumsByArtistId"
+	Album_GetPopularAlbums_FullMethodName    = "/rhythmicity.main_api.Album/GetPopularAlbums"
+	Album_GetAlbum_FullMethodName            = "/rhythmicity.main_api.Album/GetAlbum"
+	Album_GetSeveralAlbums_FullMethodName    = "/rhythmicity.main_api.Album/GetSeveralAlbums"
+	Album_GetAlbumByTrackId_FullMethodName   = "/rhythmicity.main_api.Album/GetAlbumByTrackId"
+	Album_GetAlbumsByArtistId_FullMethodName = "/rhythmicity.main_api.Album/GetAlbumsByArtistId"
 )
 
 // AlbumClient is the client API for Album service.
@@ -228,7 +228,7 @@ func _Album_GetAlbumsByArtistId_Handler(srv interface{}, ctx context.Context, de
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Album_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "Album",
+	ServiceName: "rhythmicity.main_api.Album",
 	HandlerType: (*AlbumServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

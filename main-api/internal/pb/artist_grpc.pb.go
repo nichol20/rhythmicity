@@ -19,11 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Artist_GetPopularArtists_FullMethodName   = "/Artist/GetPopularArtists"
-	Artist_GetArtist_FullMethodName           = "/Artist/GetArtist"
-	Artist_GetSeveralArtists_FullMethodName   = "/Artist/GetSeveralArtists"
-	Artist_GetArtistsByTrackId_FullMethodName = "/Artist/GetArtistsByTrackId"
-	Artist_GetArtistsByAlbumId_FullMethodName = "/Artist/GetArtistsByAlbumId"
+	Artist_GetPopularArtists_FullMethodName   = "/rhythmicity.main_api.Artist/GetPopularArtists"
+	Artist_GetArtist_FullMethodName           = "/rhythmicity.main_api.Artist/GetArtist"
+	Artist_GetSeveralArtists_FullMethodName   = "/rhythmicity.main_api.Artist/GetSeveralArtists"
+	Artist_GetArtistsByTrackId_FullMethodName = "/rhythmicity.main_api.Artist/GetArtistsByTrackId"
+	Artist_GetArtistsByAlbumId_FullMethodName = "/rhythmicity.main_api.Artist/GetArtistsByAlbumId"
 )
 
 // ArtistClient is the client API for Artist service.
@@ -228,7 +228,7 @@ func _Artist_GetArtistsByAlbumId_Handler(srv interface{}, ctx context.Context, d
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Artist_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "Artist",
+	ServiceName: "rhythmicity.main_api.Artist",
 	HandlerType: (*ArtistServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
