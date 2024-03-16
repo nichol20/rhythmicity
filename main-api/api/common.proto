@@ -1,6 +1,8 @@
 syntax = "proto3";
 
-option go_package = "github.com/nichol20/rhythmicity/main-api/internal/pb";
+package rhythmicity.main_api;
+
+option go_package = "github.com/nichol20/rhythmicity/data-api/internal/pb";
 
 message Empty {}
 
