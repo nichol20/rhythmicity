@@ -4,6 +4,7 @@ node_modules
 ca.crt
 dump.sql
 test.*
+backlog.txt
 
 data/
 certs/
