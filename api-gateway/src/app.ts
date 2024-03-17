@@ -1,6 +1,7 @@
 import express from "express"
 import mainApiTrackRouter from "./routes/mainApi/track"
 import mainApiArtistRouter from "./routes/mainApi/artist"
+import mainApiAlbumRouter from "./routes/mainApi/album"
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -8,6 +9,7 @@ const port = process.env.PORT || 3000
 app.use(express.json())
 app.use(mainApiTrackRouter)
 app.use(mainApiArtistRouter)
+app.use(mainApiAlbumRouter)
 
 app.get('/healthCheck', (req, res) => {
     res.send("Everything is alright!😉")
