@@ -1,6 +1,6 @@
 import path from 'path'
-import protoLoader from "@grpc/proto-loader"
-import grpcLibrary from "@grpc/grpc-js"
+import * as protoLoader from "@grpc/proto-loader"
+import * as grpcLibrary from "@grpc/grpc-js"
 import { ProtoGrpcType as AlbumProtoGrpcType } from '../proto/album'
 import { ProtoGrpcType as TrackProtoGrpcType } from '../proto/track'
 import { ProtoGrpcType as ArtistProtoGrpcType } from '../proto/artist'
