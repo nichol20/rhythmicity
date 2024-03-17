@@ -8,7 +8,7 @@ import { ProtoGrpcType as ArtistProtoGrpcType } from '../proto/artist'
 type ProtoGrpcType = AlbumProtoGrpcType & TrackProtoGrpcType & ArtistProtoGrpcType
 
 const protoDir = path.resolve(__dirname, '../proto')
-const serverUrl = process.env.MAIN_API_URL || "http://localhost:50051"
+const serverUrl = process.env.MAIN_API_URL || "localhost:50051"
 
 const protoFiles = [
   `${protoDir}/album.proto`,
