@@ -204,7 +204,7 @@ func GenerateDump(ds *repository.DataStructure, db *sql.DB) {
 			track.Youtube.PublishedAt,
 		) + endOfLine
 
-		tableInsertions["track_statistics_Youtube"] += fmt.Sprintf(
+		tableInsertions["track_statistics_youtube"] += fmt.Sprintf(
 			"('%s', '%s', '%s', '%s', '%s', '%s')",
 			track.ID,
 			track.Youtube.Statistics.ViewCount,
@@ -307,12 +307,6 @@ func GenerateDump(ds *repository.DataStructure, db *sql.DB) {
 
 	dumpSQL = string(initSQL) + "\n\n" + dumpSQL
 
-	_, err = db.Query(dumpSQL)
-	if err != nil {
-		log.Fatal("Error when trying to dump data: ", err)
-	}
-	fmt.Println("Dumped successfully into database")
-
 	absPath, err = filepath.Abs(dirname + "/sql/dump.sql")
 	if err != nil {
 		log.Fatalf("Error when converting to absolute path: %s", err)
@@ -324,6 +318,13 @@ func GenerateDump(ds *repository.DataStructure, db *sql.DB) {
 		return
 	}
 	fmt.Println("Dump file created successfully.")
+
+	_, err = db.Query(dumpSQL)
+	if err != nil {
+		log.Fatal("Error when trying to dump data: ", err)
+	}
+	fmt.Println("Dumped successfully into database")
+
 }
 
 func formatInsert(table, columns string) string {
