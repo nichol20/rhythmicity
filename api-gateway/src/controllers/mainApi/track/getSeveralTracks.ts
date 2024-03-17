@@ -3,7 +3,7 @@ import { trackClient } from "../../../servers/mainApi";
 import { getSeveralTracksQuerySchema } from "../../../validators/mainApi/track";
 
 export default function getSeveralTracks(req: Request, res: Response) {
-    const { error: validationErr, value: query } = getSeveralTracksQuerySchema.validate(req.query, )
+    const { error: validationErr, value: query } = getSeveralTracksQuerySchema.validate(req.query)
     if(validationErr) {
         return res.status(400).json({ message: validationErr.message })
     }

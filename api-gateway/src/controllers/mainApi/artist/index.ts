@@ -1,0 +1,5 @@
+export { default as getArtist } from './getArtist'
+export { default as getSeveralArtists } from './getSeveralArtists'
+export { default as getPopularArtists } from './getPopularArtists'
+export { default as getArtistTracks } from './getArtistTracks'
+export { default as getArtistAlbums } from './getArtistAlbums'
