@@ -3,10 +3,10 @@ import { getTrack, getPopularTracks, getSeveralTracks, getTrackArtists, getTrack
 
 const router = express.Router()
 
+router.get("/tracks", getSeveralTracks)
 router.get("/popular/tracks", getPopularTracks)
 router.get("/tracks/:id/artists", getTrackArtists)
 router.get("/tracks/:id/album", getTrackAlbum)
-router.get("/tracks", getSeveralTracks)
 router.get("/tracks/:id", getTrack)
 
 export default router

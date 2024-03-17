@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { trackClient } from "../../../servers/mainApi";
 
-function getPopularTracks(req: Request, res: Response) {
+export default function getPopularTracks(req: Request, res: Response) {
     let limit = Number(req.query.limit)
     
     if(isNaN(limit)) {
@@ -16,5 +16,3 @@ function getPopularTracks(req: Request, res: Response) {
         return res.status(200).json(value?.tracks)
     })
 }
-
-export default getPopularTracks

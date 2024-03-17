@@ -3,7 +3,7 @@ import { albumClient } from "../../../servers/mainApi";
 import { Status } from "@grpc/grpc-js/build/src/constants";
 
 export default function getTrackAlbum(req: Request, res: Response) {
-    albumClient.GetAlbumByTrackId({}, (err, value) => {
+    albumClient.GetAlbumByTrackId({ id: req.params.id }, (err, value) => {
         if(err) {
             if(err.code === Status.NOT_FOUND) {
                 return res.status(404).json({ message: err.message })

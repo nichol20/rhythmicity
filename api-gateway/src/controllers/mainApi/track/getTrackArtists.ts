@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import { artistClient } from "../../../servers/mainApi";
 import { status } from "@grpc/grpc-js";
 
-function getTrackArtists(req: Request, res: Response) {
-    artistClient.GetArtistsByTrackId({}, (err, value) => {
+export default function getTrackArtists(req: Request, res: Response) {
+    artistClient.GetArtistsByTrackId({ id: req.params.id }, (err, value) => {
         if(err) {
             if(err.code === status.NOT_FOUND) {
                 return res.status(404).json({ message: err.message })
@@ -16,5 +16,3 @@ function getTrackArtists(req: Request, res: Response) {
         return res.status(200).json(value?.artists)
     })
 }
-
-export default getTrackArtists

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { trackClient } from "../../../servers/mainApi"
 import { status } from "@grpc/grpc-js";
 
-function getTrack(req: Request, res: Response) {    
+export default function getTrack(req: Request, res: Response) {    
     trackClient.GetTrack({ id: req.params.id }, (err, value) => {
         if(err) {
             if(err.code === status.NOT_FOUND) {
@@ -16,5 +16,3 @@ function getTrack(req: Request, res: Response) {
         return res.status(200).json(value)
     })
 }
-
-export default getTrack
