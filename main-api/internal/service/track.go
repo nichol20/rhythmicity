@@ -8,6 +8,8 @@ import (
 	"github.com/nichol20/rhythmicity/main-api/internal/domain"
 	"github.com/nichol20/rhythmicity/main-api/internal/pb"
 	"github.com/nichol20/rhythmicity/main-api/internal/utils"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type TrackRepositoryInterface interface {
@@ -28,11 +30,11 @@ func (s *TrackGRPCService) Playback(ctx context.Context, req *pb.RequestById) (*
 	youtubeId, err := s.TrackRepository.GetYoutubeId(ctx, req.Id)
 	if err != nil {
 		if errors.Is(err, domain.ErrNotFound) {
-			return nil, errors.New("track not found")
+			return nil, status.Errorf(codes.NotFound, "track not found")
 		}
 
 		slog.Error(err.Error())
-		return nil, domain.ErrInternalServerError
+		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
 
 	return &pb.PlaybackResponse{
@@ -49,7 +51,7 @@ func (s *TrackGRPCService) GetPopularTracks(ctx context.Context, req *pb.GetPopu
 	tracks, err := s.TrackRepository.GetPopularTracks(ctx, limit)
 	if err != nil {
 		slog.Error(err.Error())
-		return nil, domain.ErrInternalServerError
+		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
 	return s.tracksToMessage(tracks), nil
 }
@@ -58,11 +60,11 @@ func (s *TrackGRPCService) GetTrack(ctx context.Context, req *pb.RequestById) (*
 	track, err := s.TrackRepository.GetTrack(ctx, req.Id)
 	if err != nil {
 		if errors.Is(err, domain.ErrNotFound) {
-			return nil, errors.New("track not found")
+			return nil, status.Errorf(codes.NotFound, "track not found")
 		}
 
 		slog.Error(err.Error())
-		return nil, domain.ErrInternalServerError
+		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
 	return s.trackToMessage(*track), nil
 }
@@ -71,7 +73,7 @@ func (s *TrackGRPCService) GetSeveralTracks(ctx context.Context, req *pb.Request
 	tracks, err := s.TrackRepository.GetSeveralTracks(ctx, req.Ids)
 	if err != nil {
 		slog.Error(err.Error())
-		return nil, domain.ErrInternalServerError
+		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
 	return s.tracksToMessage(tracks), nil
 }
@@ -80,11 +82,11 @@ func (s *TrackGRPCService) GetTracksByArtistId(ctx context.Context, req *pb.Requ
 	tracks, err := s.TrackRepository.GetTracksByArtistId(ctx, req.Id)
 	if err != nil {
 		if errors.Is(err, domain.ErrNotFound) {
-			return nil, errors.New("artist not found")
+			return nil, status.Errorf(codes.NotFound, "artist not found")
 		}
 
 		slog.Error(err.Error())
-		return nil, domain.ErrInternalServerError
+		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
 	return s.tracksToMessage(tracks), nil
 }
@@ -93,11 +95,11 @@ func (s *TrackGRPCService) GetTracksByAlbumId(ctx context.Context, req *pb.Reque
 	tracks, err := s.TrackRepository.GetTracksByAlbumId(ctx, req.Id)
 	if err != nil {
 		if errors.Is(err, domain.ErrNotFound) {
-			return nil, errors.New("album not found")
+			return nil, status.Errorf(codes.NotFound, "album not found")
 		}
 
 		slog.Error(err.Error())
-		return nil, domain.ErrInternalServerError
+		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
 	return s.tracksToMessage(tracks), nil
 }

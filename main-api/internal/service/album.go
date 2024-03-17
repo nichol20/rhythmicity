@@ -8,6 +8,8 @@ import (
 	"github.com/nichol20/rhythmicity/main-api/internal/domain"
 	"github.com/nichol20/rhythmicity/main-api/internal/pb"
 	"github.com/nichol20/rhythmicity/main-api/internal/utils"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type AlbumRepositoryInterface interface {
@@ -32,7 +34,7 @@ func (s *AlbumGRPCService) GetPopularAlbums(ctx context.Context, req *pb.GetPopu
 	albums, err := s.AlbumRepository.GetPopularAlbums(ctx, limit)
 	if err != nil {
 		slog.Error(err.Error())
-		return nil, domain.ErrInternalServerError
+		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
 	return s.albumsToMessage(albums), nil
 }
@@ -41,11 +43,11 @@ func (s *AlbumGRPCService) GetAlbum(ctx context.Context, req *pb.RequestById) (*
 	album, err := s.AlbumRepository.GetAlbum(ctx, req.Id)
 	if err != nil {
 		if errors.Is(err, domain.ErrNotFound) {
-			return nil, errors.New("album not found")
+			return nil, status.Errorf(codes.NotFound, "album not found")
 		}
 
 		slog.Error(err.Error())
-		return nil, domain.ErrInternalServerError
+		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
 	return s.albumToMessage(*album), nil
 }
@@ -54,7 +56,7 @@ func (s *AlbumGRPCService) GetSeveralAlbums(ctx context.Context, req *pb.Request
 	albums, err := s.AlbumRepository.GetSeveralAlbums(ctx, req.Ids)
 	if err != nil {
 		slog.Error(err.Error())
-		return nil, domain.ErrInternalServerError
+		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
 	return s.albumsToMessage(albums), nil
 }
@@ -63,11 +65,11 @@ func (s *AlbumGRPCService) GetAlbumByTrackId(ctx context.Context, req *pb.Reques
 	album, err := s.AlbumRepository.GetAlbumByTrackId(ctx, req.Id)
 	if err != nil {
 		if errors.Is(err, domain.ErrNotFound) {
-			return nil, errors.New("track not found")
+			return nil, status.Errorf(codes.NotFound, "track not found")
 		}
 
 		slog.Error(err.Error())
-		return nil, domain.ErrInternalServerError
+		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
 	return s.albumToMessage(*album), nil
 }
@@ -76,11 +78,11 @@ func (s *AlbumGRPCService) GetAlbumsByArtistId(ctx context.Context, req *pb.Requ
 	albums, err := s.AlbumRepository.GetAlbumsByArtistId(ctx, req.Id)
 	if err != nil {
 		if errors.Is(err, domain.ErrNotFound) {
-			return nil, errors.New("artist not found")
+			return nil, status.Errorf(codes.NotFound, "artist not found")
 		}
 
 		slog.Error(err.Error())
-		return nil, domain.ErrInternalServerError
+		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
 	return s.albumsToMessage(albums), nil
 }
