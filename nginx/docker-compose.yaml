@@ -6,7 +6,11 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./http.d:/etc/nginx/http.d:ro
-    extra_hosts:
-    - "host.docker.internal:host-gateway"
     ports:
       - 8080:80
+    networks:
+      - nginx_proxy
+
+networks:
+  nginx_proxy:
+    external: true

@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  api-gateway:
+    build: 
+      context: .
+      args:
+        NODE_VERSION: ${NODE_VERSION}
+    volumes:
+      - .:/app
+    networks:
+      - proxynet
+    
+networks:
+  proxynet:
+    name: nginx_proxy
