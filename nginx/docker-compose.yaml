@@ -6,8 +6,11 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./http.d:/etc/nginx/http.d:ro
+      - ./ssl/rhythmicity.crt:/etc/ssl/rhythmicity.crt:ro
+      - ./ssl/rhythmicity.key:/etc/ssl/rhythmicity.key:ro
     ports:
-      - 8080:80
+      - 80:80
+      - 443:443
     networks:
       - nginx_proxy
 
