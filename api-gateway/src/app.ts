@@ -3,11 +3,17 @@ import mainApiTrackRouter from "./routes/mainApi/track"
 import mainApiArtistRouter from "./routes/mainApi/artist"
 import mainApiAlbumRouter from "./routes/mainApi/album"
 import acceptOnlyNginx from './middlewares/acceptOnlyNginx'
+import cors from 'cors'
 import "dotenv/config"
 
 const app = express()
 const port = process.env.PORT || 3000
 
+const corsOptions: cors.CorsOptions = {
+    origin: "*"
+}
+
+app.use(cors(corsOptions))
 app.use(acceptOnlyNginx)
 app.use(express.json())
 app.use(mainApiTrackRouter)
