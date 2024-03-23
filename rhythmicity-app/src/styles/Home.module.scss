@@ -1,22 +1,20 @@
+@use '.' as *;
+
 .home {
     width: 100%;
     min-height: 100vh;
-    background: rgb(2, 7, 18);
-    display: flex;
+    background: $colors-primary-bg;
+    @include mixins-display-flex();
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
     position: relative;
 }
 
 .titleBox {
     z-index: 10;
-    color: white;
+    color: $colors-primary-txt;
     user-select: none;
-    display: flex;
+    @include mixins-display-flex();
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
 }
 
 .title {
@@ -31,7 +29,6 @@
 .container {
     margin-top: 50px;
     position: absolute;
-    left: -18px;
     top: 0;
     width: 100%;
     height: 80vh;
@@ -42,13 +39,12 @@
 
 .backgroundContainer {
     height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;    
+    @include mixins-display-flex();
 
     img {
         height: 100%;
         width: auto;
+        margin-right: 18px;
     }
 }
 
@@ -57,40 +53,31 @@
     bottom: 60px;
     z-index: 10;
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include mixins-display-flex();
 }
 
 .bottomBox {
     max-width: 800px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include mixins-display-flex();
     flex-direction: column;
     gap: 10px;
 
-    .bottomTitle {
-        color: rgb(220, 50, 35);
-        font-size: 14px;
-    }
-
     .bottomText {
-        color: white;
+        color: $colors-secondary-txt;
         font-size: 12px;
     }
-
+    
     .mainBtn {
         padding: 10px 16px;
         border-radius: 20px;
-        color: white;
-        background-color: rgb(245, 63, 46);
+        color: $colors-primary-txt;
+        background-color: $colors-primary-btn-bg;
         border: none;
         cursor: pointer;
         transition: 150ms background ease-in-out;
         
         &:hover {
-            background-color: rgb(249, 31, 12);
+            background-color: $colors-primary-btn-bg-hover;
         }
     }
 }
