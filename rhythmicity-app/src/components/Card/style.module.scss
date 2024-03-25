@@ -1,0 +1,65 @@
+@use '../../styles/' as *;
+
+.card {
+    padding: 12px;
+    min-width: 120px;
+    max-width: 200px;
+    height: 260px;
+    flex-grow: 1;
+    background-color: transparent;
+    transition: background 150ms ease-in-out;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #1a1a1aa3;
+    }
+}
+
+.container {
+    @include mixins-display-flex(flex-start);
+    flex-direction: column;
+    height: 100%;
+    
+    .imageBox {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+
+        &[data-card-type="artist"] {
+            border-radius: 100%;
+        }
+
+        &::before {
+            content: "";
+            display: block;
+            padding-top: 100%;
+        }
+
+        .boxContent {
+            position:  absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            @include mixins-display-flex();
+
+
+            img {
+                width: 100%;
+                height: auto;
+            }
+        }
+    }
+
+    .details {
+        .title {
+            font-size: 1em;
+            color: $colors-primary-txt;
+        }
+
+        .description {
+            font-size: .75em;
+            color: $colors-secondary-txt;
+        }
+    }
+}

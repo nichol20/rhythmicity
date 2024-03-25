@@ -2,6 +2,7 @@ import { homeBackground } from '@/assets'
 import { Header } from '@/components/Header'
 import styles from '@/styles/Home.module.scss'
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default function Home() {
   
@@ -20,9 +21,9 @@ export default function Home() {
       <footer className={styles.footer}>
         <div className={styles.bottomBox}>
           <span className={styles.bottomText}>Let the music speak for itself. Explore, discover, and enjoy the sounds that move you.</span>
-          <button className={styles.mainBtn}>
+          <Link href="/collection" className={styles.mainBtn}>
             Collection
-          </button>
+          </Link>
         </div>
       </footer>
     </div>
