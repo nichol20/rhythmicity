@@ -42,7 +42,7 @@ export const Header = () => {
           Rhythmicity
         </Link>
         <div className={styles.linkList}>
-          <Link href="/home" className={getLinkClass('/')}>home</Link>
+          <Link href="/" className={getLinkClass('/')}>home</Link>
           <Link href="/collection" className={getLinkClass('/collection')}>collection</Link>
         </div>
       </div>
