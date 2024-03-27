@@ -1,5 +1,6 @@
 import { collectionBackground, logo } from '@/assets'
 import Card from '@/components/Card'
+import Carousel from '@/components/Carousel'
 import { Header } from '@/components/Header'
 import styles from '@/styles/Collection.module.scss'
 import Image from 'next/image'
@@ -22,7 +23,24 @@ export default function CollectionPage() {
                 </div>
             </div>
             <div className={styles.collections}>
-                <div className={styles.section}>
+                <Carousel max={10}>
+                        <Card image={logo} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} title='Some Title' description='cool song to listen while taking a bath' />
+                </Carousel>
+                {/* <div className={styles.section}>
                     <h3 className={styles.title}>Albums</h3>
                     <div className={styles.content}>
                         <Card image={logo} title='Some Title' description='cool song to listen while taking a bath' />
@@ -64,7 +82,7 @@ export default function CollectionPage() {
                         <Card image={logo} title='Some Title' description='cool song to listen while taking a bath' />
                         <Card image={logo} title='Some Title' description='cool song to listen while taking a bath' />
                     </div>
-                </div>
+                </div> */}
             </div>
         </div>
     )

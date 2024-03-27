@@ -1,0 +1,13 @@
+@use '../../styles/' as *;
+
+.carousel {
+    @include mixins-display-flex();
+    width: 100%;
+}
+
+.carouselInner {
+    @include mixins-display-flex(center);
+    overflow: hidden;
+    width: 100%;
+    gap: 10px;
+}
