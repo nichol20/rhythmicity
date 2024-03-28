@@ -1,8 +1,9 @@
 @use '../../styles/' as *;
 
 .card {
+    position: relative;
     padding: 12px;
-    min-width: 120px;
+    min-width: 170px;
     max-width: 200px;
     height: 260px;
     flex-grow: 1;
@@ -61,5 +62,39 @@
             font-size: .75em;
             color: $colors-secondary-txt;
         }
+    }
+}
+
+.playBtn {
+    position: absolute;
+    right: 20px;
+    bottom: 40%;
+    border: none;
+    border-radius: 100%;
+    @include mixins-display-flex();
+    padding: 7px;
+    padding-left: 9px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    background-color: $colors-primary-btn-bg;
+    transition: all .2s ease-out;
+    box-shadow: 0 8px 8px rgba(0,0,0,.3);
+    visibility: hidden;
+    
+    
+
+    img {
+        height: 100%;
+        width: 100%;
+    }
+}
+
+.card:hover .playBtn {
+    visibility: visible;
+    transform: translateY(-10px);
+
+    &:hover {
+        transform: translateY(-10px) scale(1.2);
     }
 }

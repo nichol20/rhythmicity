@@ -2,15 +2,17 @@
 import React, { useState } from 'react';
 import styles from './style.module.scss'
 import Image, { StaticImageData } from 'next/image';
+import { playIcon } from '@/assets';
 
 interface CardProps {
     image: StaticImageData
     title: string
     description: string
     isArtist?: boolean
+    isPlayable?: boolean 
 }
 
-const Card = ({ image, title, description, isArtist=false }: CardProps) => {
+const Card = ({ image, title, description, isArtist=false, isPlayable=false }: CardProps) => {
   return (
     <div className={styles.card}>
         <div className={styles.container}>
@@ -24,6 +26,11 @@ const Card = ({ image, title, description, isArtist=false }: CardProps) => {
                 <p className={styles.description}>{description}</p>
             </div>
         </div>
+        {isPlayable && (
+            <button className={styles.playBtn}>
+                <Image src={playIcon} alt="play" />
+            </button>
+        )}
     </div>
   );
 };
