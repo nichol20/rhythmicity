@@ -13,6 +13,7 @@ const Carousel = ({ children, max }: CarouselProps) => {
     const [displayItems, setDisplayItems] = useState<any[]>([])
     const carouselRef = useRef<HTMLDivElement>(null)
     const [numberOfVisibleItems, setNumberOfVisibleItems] = useState(max)
+    const [isHovered, setIsHovered] = useState(false)
 
     useEffect(() => {
         const calculateVisibleItems = () => {
@@ -48,12 +49,24 @@ const Carousel = ({ children, max }: CarouselProps) => {
     }
 
     return (
-        <div className={styles.carousel}>
-            <button onClick={prevItem}>Prev</button>
-                <div className={styles.carouselInner} ref={carouselRef}>
-                    {displayItems.map(item => item)}
-                </div>
-            <button onClick={nextItem}>Next</button>
+        <div
+         className={styles.carousel} 
+         onMouseOver={() => setIsHovered(true)} 
+         onMouseLeave={() => setIsHovered(false)}
+        >
+            {isHovered && (
+                <>
+                    <div className={`${styles.chevronBox} ${styles.backward}`} onClick={prevItem}>
+                        <div></div>
+                    </div>
+                    <div className={`${styles.chevronBox} ${styles.forward}`} onClick={nextItem}>
+                        <div></div>
+                    </div>
+                </>
+            )}
+            <div className={styles.carouselInner} ref={carouselRef}>
+                {displayItems.map(item => item)}
+            </div>
         </div>
   )
 }

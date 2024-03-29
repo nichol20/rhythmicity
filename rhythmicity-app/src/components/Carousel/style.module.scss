@@ -1,7 +1,12 @@
 @use '../../styles/' as *;
 
+$chevron-image: '../../assets/images/chevron-forward.svg';
+
 .carousel {
+    position: relative;
     @include mixins-display-flex();
+    padding-left: 10px;
+    padding-right: 10px;
     width: 100%;
 }
 
@@ -11,3 +16,63 @@
     width: 100%;
     gap: 10px;
 }
+
+.chevronBox {
+    position: absolute;
+    background-color: $colors-transparent-bg;
+    padding: 14px 4px;
+    z-index: 100;
+    cursor: pointer;
+    transition: .3s;
+    border-radius: 4px;
+    top: 100px;
+  
+    @include medias-media("desktop") {
+      top: 70px;
+    }
+  
+  
+    &:hover {
+      background-color: $colors-transparent-bg-hover;
+    }
+  
+    &.forward {
+      right: 0px;
+      padding-right: 2px;
+  
+      
+      @include medias-media("tablet") {
+        right: 5px;
+        padding-top: 10px;
+        padding-right: 0px;
+        padding-bottom: 10px;
+        padding-left: 2px
+      }
+    }
+  
+    &.backward {
+      left: 0px;
+      padding-left: 2px;
+  
+      @include medias-media("tablet") {
+        left: 5px;
+        padding-top: 10px;
+        padding-right: 2px;
+        padding-bottom: 10px;
+        padding-left: 0px
+      }
+  
+      div {
+        rotate: -180deg;
+      }
+    }
+  
+    div {
+      width: 20px;
+      height: 20px;
+      background-image: url($chevron-image);
+      background-repeat: no-repeat;
+      background-position: center;
+      @include mixins-white-filter();
+    }
+  }
