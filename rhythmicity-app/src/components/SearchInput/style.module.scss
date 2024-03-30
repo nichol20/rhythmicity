@@ -1,0 +1,41 @@
+@use '../../styles/' as *;
+
+.container {
+  @include mixins-display-flex();
+  width: 350px;
+  height: 40px;
+  background-color: $colors-secondary-bg;
+  padding: 10px 8px;
+  border-radius: 6px;
+  gap: 4px;
+}
+
+.cleanBtn {
+    border: none;
+    background-color: transparent;
+    @include mixins-display-flex();
+    cursor: pointer;
+    border-radius: 100%;
+    transition: background 150ms ease-in-out;
+    padding: 4px;
+
+    &:hover {
+        background-color: $colors-transparent-bg-hover;
+    }
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  @include mixins-white-filter();
+}
+
+.searchInput {
+  width: 100%;
+  background-color: transparent;
+  color: $colors-secondary-txt;
+  height: 100%;
+  border: none;
+  outline: none;
+  font-size: .875em;
+}
