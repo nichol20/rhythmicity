@@ -1,0 +1,69 @@
+@use '../../styles/' as *;
+
+.trackRow {
+    display: grid;
+    grid-template-columns: 
+        [ index ] 16px 
+        [ title ] minmax(120px,  4fr) 
+        [ album ] minmax(120px, 2fr) 
+        [ time ] minmax(60px, 1fr);
+    gap: 16px;
+    margin-top: 100px;
+
+    @include medias-media("tablet") {
+        grid-template-columns: 
+            [ index ] 16px 
+            [ title ] minmax(120px,  4fr) 
+            [ time ] minmax(60px, 1fr);
+    }
+}
+
+.col {
+    @include mixins-display-flex();
+    color: $colors-primary-txt;
+    font-size: 1em;
+    width: 100%;
+    height: 100%;
+    padding-left: 2px;
+    padding-right: 2px;
+    white-space: nowrap;
+}
+
+.titleCol {
+    justify-content: flex-start;
+
+    .content {
+        @include mixins-display-flex(flex-start);
+        width: 100%;
+        gap: 10px;
+
+        .infoBox {
+            @include mixins-display-flex(center, flex-start);
+            flex-direction: column;
+            width: 100%;
+            padding-right: 6px;
+            
+            .title {
+                font-size: 1.2em;
+                width: 100%;
+                overflow: hidden;
+            }
+
+            .artists {
+                font-size: .8em;
+                color: $colors-secondary-txt;
+                gap: 5px;
+                width: 100%;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                
+            }
+        }
+    }
+}
+
+.albumCol {
+    @include medias-media("tablet") {
+        display: none;
+    }
+}
