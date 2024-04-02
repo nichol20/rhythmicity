@@ -5,7 +5,7 @@ import Link from 'next/link'
 import styles from './style.module.scss'
 import { usePathname } from 'next/navigation'
 import Image from 'next/image'
-import { logo } from '@/assets'
+import { logo, searchIcon } from '@/assets'
 
 export const Header = () => {
   const pathname = usePathname()
@@ -38,12 +38,16 @@ export const Header = () => {
       <div className={styles.content}>
         <button className={styles.toggleMenu} onClick={toggleMenu}></button>
         <Link href='/' className={styles.logo}>
-          <Image src={logo} alt='logo' width={30} height={30}/>
+          <Image src={logo} alt='logo' width={30} height={30} />
           Rhythmicity
         </Link>
         <div className={styles.linkList}>
           <Link href="/" className={getLinkClass('/')}>home</Link>
           <Link href="/collection" className={getLinkClass('/collection')}>collection</Link>
+          <Link href="/search" className={styles.search}>
+            search
+            <Image src={searchIcon} alt="search" className={styles.icon} />
+          </Link>
         </div>
       </div>
     </div>

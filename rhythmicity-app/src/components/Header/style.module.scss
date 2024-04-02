@@ -66,6 +66,26 @@ $close-icon: '../../assets/images/close.svg';
       color: $colors-primary-txt;
     }
   }
+
+  .search {
+    @include mixins-display-flex();
+    gap: 5px;
+    background-color: $colors-primary-btn-bg;
+    color: $colors-primary-txt;
+    padding: 4px 7px;
+    border-radius: 20px;
+    font-size: .925em;
+    transition: background 250ms ease-in-out;
+
+    &:hover {
+      background-color: $colors-primary-btn-bg-hover;
+    }
+    .icon {
+      width: 16px;
+      height: 16px;
+      @include mixins-white-filter();
+    }
+  }
 }
 
 .toggleMenu {
