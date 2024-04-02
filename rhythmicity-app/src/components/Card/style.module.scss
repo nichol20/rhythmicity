@@ -17,7 +17,7 @@
 }
 
 .container {
-    @include mixins-display-flex(flex-start);
+    @include mixins-display-flex(flex-start, flex-start);
     flex-direction: column;
     height: 100%;
     
@@ -25,23 +25,24 @@
         position: relative;
         width: 100%;
         overflow: hidden;
-
+        
         &[data-card-type="artist"] {
             border-radius: 100%;
         }
-
+        
         &::before {
             content: "";
             display: block;
             padding-top: 100%;
         }
-
+        
         .boxContent {
             position:  absolute;
             top: 0;
             left: 0;
             bottom: 0;
             right: 0;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .5);
             @include mixins-display-flex();
 
 
@@ -82,8 +83,6 @@
     box-shadow: 0 8px 8px rgba(0,0,0,.3);
     visibility: hidden;
     
-    
-
     img {
         height: 100%;
         width: 100%;
@@ -96,5 +95,37 @@
 
     &:hover {
         transform: translateY(-10px) scale(1.2);
+    }
+}
+
+.card[data-kind="big"] {
+    min-width: 300px;
+    max-width: 360px;
+    height: 214px;
+    padding: 20px;
+    border-radius: 8px;
+
+    .container {
+        justify-content: space-between;
+        .imageBox {
+            width: 92px;
+            height: 92px;
+        }
+    }
+    
+    .details {
+        .title {
+            font-size: 2em;
+            color: $colors-primary-txt;
+        }
+
+        .description {
+            font-size: .925em;
+            color: $colors-secondary-txt;
+        }
+    }
+
+    .playBtn {
+        bottom: 10%;
     }
 }
