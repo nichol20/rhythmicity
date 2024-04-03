@@ -2,6 +2,7 @@ import Image, { StaticImageData } from 'next/image'
 import styles from './style.module.scss'
 import { useState } from 'react'
 import { playIcon } from '@/assets'
+import { ExplicitSign } from '../ExplicitSign'
 
 export interface TrackRowProps {
     index: number
@@ -28,11 +29,13 @@ export const TrackRow = ({ album, artists, index, image, explicit, time, title }
                     <Image src={image} alt={title} />
                     <div className={styles.infoBox}>
                         <span className={styles.title}>{title}</span>
-                        <span className={styles.artists}>
+                        <span className={styles.description}>
                             {explicit ? (
-                                <span className={styles.explicitBox}>E</span>
+                                <ExplicitSign />
                             ) : null}
-                            {artists.join(', ')} dposajdpoasj pdjsaopd jaspojd poasj
+                            <span className={styles.artists}>
+                                {artists.join(', ')} dposajdpoasj pdjsaopd jaspojd poasj
+                            </span>
                         </span>
                     </div>
                 </div>

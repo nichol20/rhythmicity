@@ -76,8 +76,9 @@
 
     .content {
         @include mixins-display-flex(flex-start);
-        width: 100%;
+        width: calc(100% - 40px);
         gap: 10px;
+
 
         img {
             width: 40px;
@@ -99,14 +100,17 @@
                 line-height: 16px;
             }
 
-            .artists {
+            .description {
                 font-size: .8em;
                 color: $colors-secondary-txt;
-                @include mixins-display-flex();
+                @include mixins-display-flex(flex-start);
                 gap: 5px;
                 width: 100%;
-                text-overflow: ellipsis;
-                overflow: hidden;
+                
+                .artists {
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                }
             }
         }
     }
@@ -130,17 +134,4 @@
     @include mixins-display-flex(flex-start);
     flex-direction: column;
     gap: 5px;
-}
-
-.explicitBox {
-    @include mixins-display-flex();
-    background-color: hsla(0, 0%, 100%, .6);
-    border-radius: 2px;
-    color: #121212;
-    font-size: 9px;
-    height: 16px;
-    line-height: 10px;
-    padding: 3px 5px;
-    text-transform: uppercase;
-    width: 16px;
 }

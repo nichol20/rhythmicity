@@ -75,6 +75,8 @@
         border: none;
         cursor: pointer;
         transition: 150ms background ease-in-out;
+        list-style: none;
+        text-decoration: none;
         
         &:hover {
             background-color: $colors-primary-btn-bg-hover;
