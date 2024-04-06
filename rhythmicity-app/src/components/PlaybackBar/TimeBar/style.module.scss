@@ -1,0 +1,78 @@
+@use '../../../styles/' as *;
+
+.timeBar {
+    @include mixins-display-flex();
+    gap: 10px;
+    width: 100%;
+}
+
+.currentTime, .finalTime {
+    color: $colors-primary-txt;
+    font-size: .85em;
+    display: block;
+    min-width: 40px;
+}
+
+.currentTime {
+    text-align: start;
+}
+
+.finalTime {
+    text-align: end;
+}
+
+.bar {
+    width: 100%;
+    min-width: 100px;
+    padding: 4px 0px;
+}
+
+.sliderContainer {
+    height: 4px;
+    width: 100%;
+    @include mixins-display-flex();
+    position: relative;
+    background-color: #5e5e5e;
+    border-radius: 20px;
+}
+
+.slider {
+    appearance: none;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    border-radius: 20px;
+    z-index: 10;
+    display: none;
+
+    &::-webkit-slider-thumb {
+        appearance: none;
+        cursor: pointer;
+        width: 14px;
+        height: 14px;
+        border-radius: 100%;
+        background-color: white;
+    }
+}
+
+.progressBar {
+    position: absolute;
+    left: 0px;
+    height: 100%;
+    background-color: white;
+    width: 50%;
+    border-radius: 20px;
+    z-index: 1;
+}
+
+
+.timeBar:hover {
+    .slider {
+        display: block;
+    }
+
+    .progressBar {
+        background-color: $colors-primary-btn-bg;
+
+    }
+}
