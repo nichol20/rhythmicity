@@ -1,0 +1,74 @@
+@use '../../../styles/' as *;
+
+.controls {
+    @include mixins-display-flex();
+    gap: 20px;
+    
+    > button {
+        background-color: transparent;
+        width: 20px;
+        height: 20px;
+        border: none;
+        cursor: pointer;
+        position: relative;
+
+        > img {
+            @include mixins-gray-filter();
+            width: 100%;
+            height: 100%;
+
+            &:hover {
+                @include mixins-white-filter();
+            }
+        }
+    }
+}
+
+.controls .previousBtn {
+    > img {
+        rotate: -180deg;
+    }
+}
+
+.controls .playBtn {
+    border-radius: 100%;
+    background-color: white;
+    @include mixins-display-flex();
+    width: 32px;
+    height: 32px;
+    padding: 4px;
+    transition: all .2s ease-out;
+    
+    &:hover {
+        transform: scale(1.2);
+    }
+    
+    > img {
+        filter: none;
+        transform: scale(1.1);
+
+        &:hover {
+            filter: none;
+        }
+    }
+}
+
+.controls .loopBtn, .controls .randomBtn {
+
+    &.active {
+        @include mixins-green-filter();
+    }
+
+    &.active::before {
+        content: "";
+        background-color: #1db954;
+        border-radius: 50%;
+        bottom: -5px;
+        display: block;
+        height: 4px;
+        left: 50%;
+        position: absolute;
+        transform: translateX(-50%);
+        width: 4px;
+    }
+}
