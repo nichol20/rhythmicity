@@ -1,6 +1,7 @@
 import { ChangeEvent, useEffect, useState } from 'react'
 import styles from './style.module.scss'
 import { secondsToMinutes } from '@/utils/conversion'
+import { Slider } from '@/components/Slider'
 
 interface TimeBarProps {
     currentTime: number
@@ -26,21 +27,13 @@ export const TimeBar = ({ currentTime, finalTime, onChange, onMouseDown, onMouse
     return (
         <div className={styles.timeBar}>
             <span className={styles.currentTime}>{secondsToMinutes(currentTime)}</span>
-            <div className={styles.bar}>
-                <div className={styles.sliderContainer}>
-                    <div className={styles.progressBar} style={{ width: `${getPercentageValue()}%` }}></div>
-                    <input
-                        type="range"
-                        min="1"
-                        max="100"
-                        value={getPercentageValue()}
-                        className={styles.slider}
-                        onChange={handleChange}
-                        onMouseDown={onMouseDown}
-                        onMouseUp={onMouseUp}
-                    />
-                </div>
-            </div>
+            <Slider
+                value={getPercentageValue()}
+                progressBarWidth={`${getPercentageValue()}%`}
+                onChange={handleChange}
+                onMouseDown={onMouseDown}
+                onMouseUp={onMouseUp}
+            />
             <span className={styles.finalTime}>{secondsToMinutes(finalTime)}</span>
         </div>
     )
