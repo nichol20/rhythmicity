@@ -1,7 +1,7 @@
 import { MouseEvent, RefObject, useState } from 'react'
 import Image from 'next/image'
 
-import { nextIcon, pauseIcon, playIcon, randomIcon, repeatIcon, repeatOneIcon } from '@/assets'
+import { nextIcon, pauseIcon, playIcon, shuffleIcon, repeatIcon, repeatOneIcon } from '@/assets'
 import { PlayerState, YouTubePlayerRef } from '@/components/YoutubePlayer'
 
 import styles from './styles.module.scss'
@@ -46,7 +46,7 @@ export const Controls = ({ youtubePlayerRef }: ControlsProps) => {
     return (
         <div className={styles.controls}>
             <button className={styles.randomBtn} onClick={handleRandomBtnClick}>
-                <Image src={randomIcon} alt="random" />
+                <Image src={shuffleIcon} alt="random" />
             </button>
             <button className={styles.previousBtn}>
                 <Image src={nextIcon} alt="previous" />

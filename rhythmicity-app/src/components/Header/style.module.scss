@@ -70,16 +70,17 @@ $close-icon: '../../assets/images/close.svg';
   .search {
     @include mixins-display-flex();
     gap: 5px;
-    background-color: $colors-primary-btn-bg;
-    color: $colors-primary-txt;
+    background-color: $colors-primary-btn-bg-hover;
+    color: white;
     padding: 4px 7px;
     border-radius: 20px;
-    font-size: .925em;
+    font-size: .875em;
     transition: background 250ms ease-in-out;
 
     &:hover {
-      background-color: $colors-primary-btn-bg-hover;
+      color: white;
     }
+
     .icon {
       width: 16px;
       height: 16px;

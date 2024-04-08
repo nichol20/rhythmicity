@@ -36,7 +36,7 @@
     @include mixins-display-flex();
     width: 32px;
     height: 32px;
-    padding: 4px;
+    padding: 5px;
     transition: all .2s ease-out;
     
     &:hover {
@@ -45,7 +45,6 @@
     
     > img {
         filter: none;
-        transform: scale(1.1);
 
         &:hover {
             filter: none;

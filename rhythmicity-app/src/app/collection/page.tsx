@@ -23,23 +23,66 @@ export default function CollectionPage() {
                 </div>
             </div>
             <div className={styles.collections}>
-                <Carousel max={10}>
-                    <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
-                    <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
-                    <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
-                    <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
-                    <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
-                    <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
-                    <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
-                    <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
-                    <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
-                    <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
-                    <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
-                    <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
-                    <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
-                    <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
-                    <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
-                </Carousel>
+                <section className={styles.section}>
+                    <h3 className={styles.collectionTitle}>Popular Albums</h3>
+                    <Carousel max={10}>
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                    </Carousel>
+                </section>
+                <section className={styles.section}>
+                    <h3 className={styles.collectionTitle}>Popular Artists</h3>
+                    <Carousel max={10}>
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                    </Carousel>
+                </section>
+                <section className={styles.section}>
+                    <h3 className={styles.collectionTitle}>Popular Tracks</h3>
+                    <Carousel max={10}>
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={collectionBackground} title='Some Title' description='cool song to listen while taking a bath' />
+                        <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
+                    </Carousel>
+                </section>
                 
             </div>
         </div>
