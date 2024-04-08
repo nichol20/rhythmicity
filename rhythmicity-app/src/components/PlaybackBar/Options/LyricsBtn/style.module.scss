@@ -1,0 +1,54 @@
+@use '../../../../styles/' as *;
+
+.container {
+    height: 100%;
+    @include mixins-display-flex();
+}
+
+.lyricsBtn {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+
+    > img {
+        width: 100%;
+        height: 100%;
+        @include mixins-gray-filter();
+
+        &:hover {
+            @include mixins-white-filter();
+        }
+    }
+}
+
+.lyrics {
+    height: 100%;
+    width: 100%;
+    color: $colors-primary-txt;
+    font-size: 1em;
+    overflow-y: scroll;
+    background-color: transparent;
+    resize: none;
+    padding: 5px;
+    padding-right: 15px;
+    @include mixins-display-flex(flex-start, center);
+    flex: 1;
+
+    &::-webkit-scrollbar {
+        width: 10px;
+    }
+  
+    &::-webkit-scrollbar-track {
+        background: transparent; 
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: #888; 
+    }
+    
+    &::-webkit-scrollbar-thumb:hover {
+        background: #555; 
+    }
+}
