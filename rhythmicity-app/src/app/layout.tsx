@@ -1,3 +1,4 @@
+import { PlaybackProvider } from '@/contexts/PlaybackContext'
 import '@/styles/globals.scss'
 
 export const metadata = {
@@ -12,7 +13,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <PlaybackProvider>
+          {children}
+        </PlaybackProvider>
+      </body>
     </html>
   )
 }

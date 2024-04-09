@@ -15,18 +15,7 @@ interface PlaybackProviderProps {
 
 export const PlaybackContext = createContext({} as PlaybackContext)
 
-export const usePlayback = () => {
-    const context = useContext(PlaybackContext)
-
-    useEffect(() => {
-        console.log("rendered")
-        if (!context.showPlaybackBar) {
-            context.setShowPlaybackBar(true)
-        }
-    }, [context])
-
-    return context
-}
+export const usePlayback = () => useContext(PlaybackContext)
 
 export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
     const [showPlaybackBar, setShowPlaybackBar] = useState(false)

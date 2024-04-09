@@ -2,7 +2,7 @@ import Image from 'next/image'
 import styles from './style.module.scss'
 import { lyricsIcon } from '@/assets'
 import { Modal } from '@/components/Modal'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 interface LyricsBtnProps {
     lyrics?: string | null

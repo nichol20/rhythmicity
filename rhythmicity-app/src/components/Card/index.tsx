@@ -13,7 +13,7 @@ interface CardProps {
     kind?: 'normal' | 'big'
 }
 
-const Card = ({ image, title, description, isArtist = false, isPlayable = false, kind = "normal" }: CardProps) => {
+export const Card = ({ image, title, description, isArtist = false, isPlayable = false, kind = "normal" }: CardProps) => {
     return (
         <div className={styles.card} data-kind={kind}>
             <div className={styles.container}>
@@ -35,5 +35,3 @@ const Card = ({ image, title, description, isArtist = false, isPlayable = false,
         </div>
     );
 };
-
-export default Card;

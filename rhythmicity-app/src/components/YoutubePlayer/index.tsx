@@ -69,8 +69,8 @@ export const YouTubePlayer = memo(forwardRef<YouTubePlayerRef, YouTubePlayerProp
             window.onYouTubeIframeAPIReady = () => {
                 playerRef.current = new window.YT.Player('player', {
                     videoId,
-                    width: '300',
-                    height: '300',
+                    width: '0',
+                    height: '0',
                     events: {
                         onReady: event => {
                             setIsReady(true)

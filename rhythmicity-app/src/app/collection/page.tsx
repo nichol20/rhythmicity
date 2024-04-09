@@ -1,11 +1,25 @@
-import { collectionBackground, logo } from '@/assets'
-import Card from '@/components/Card'
-import Carousel from '@/components/Carousel'
-import { Header } from '@/components/Header'
-import styles from '@/styles/Collection.module.scss'
+'use client'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 
+import { collectionBackground, logo } from '@/assets'
+import { Card } from '@/components/Card'
+import { Carousel } from '@/components/Carousel'
+import { Header } from '@/components/Header'
+import { usePlayback } from '@/contexts/PlaybackContext'
+
+import styles from '@/styles/Collection.module.scss'
+
 export default function CollectionPage() {
+    const [popularAlbums, setPopularAlbums] = useState([])
+    const [popularArtists, setPopularArtists] = useState([])
+    const [popularTracks, setPopularTracks] = useState([])
+    const { setShowPlaybackBar } = usePlayback()
+
+    useEffect(() => {
+        setShowPlaybackBar(true)
+    }, [setShowPlaybackBar])
+
     return (
         <div className={styles.collectionPage}>
             <Header />
@@ -83,7 +97,7 @@ export default function CollectionPage() {
                         <Card image={logo} isPlayable title='Some Title' description='cool song to listen while taking a bath' />
                     </Carousel>
                 </section>
-                
+
             </div>
         </div>
     )

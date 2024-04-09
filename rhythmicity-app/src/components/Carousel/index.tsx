@@ -8,7 +8,7 @@ interface CarouselProps {
     max: number
 }
 
-const Carousel = ({ children, max }: CarouselProps) => {
+export const Carousel = ({ children, max }: CarouselProps) => {
     const [items] = useState(Children.toArray(children))
     const [displayItems, setDisplayItems] = useState<any[]>([])
     const carouselRef = useRef<HTMLDivElement>(null)
@@ -32,7 +32,7 @@ const Carousel = ({ children, max }: CarouselProps) => {
         return () => {
             window.removeEventListener('resize', calculateVisibleItems)
         }
-    }, [ max ])
+    }, [max])
 
     useEffect(() => {
         setDisplayItems(items.slice(0, numberOfVisibleItems))
@@ -50,9 +50,9 @@ const Carousel = ({ children, max }: CarouselProps) => {
 
     return (
         <div
-         className={styles.carousel} 
-         onMouseOver={() => setIsHovered(true)} 
-         onMouseLeave={() => setIsHovered(false)}
+            className={styles.carousel}
+            onMouseOver={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
         >
             {isHovered && (
                 <>
@@ -68,7 +68,5 @@ const Carousel = ({ children, max }: CarouselProps) => {
                 {displayItems.map(item => item)}
             </div>
         </div>
-  )
+    )
 }
-
-export default Carousel
