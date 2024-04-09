@@ -1,0 +1,42 @@
+@use '.' as *;
+
+.searchPage {
+    width: 100%;
+    min-height: 100vh;
+    background: $colors-primary-bg;
+    @include mixins-display-flex(flex-start);
+    flex-direction: column;
+    position: relative;
+}
+
+.content {
+    margin-top: 50px;
+    @include mixins-display-flex();
+    flex-direction: column;
+    gap: 10px;
+}
+
+.kinds {
+    @include mixins-display-flex();
+    gap: 8px;
+
+    > button {
+        padding: 4px 10px;
+        border-radius: 20px;
+        background-color: $colors-secondary-btn-bg;
+        border: none;
+        cursor: pointer;
+        min-width: 50px;
+        color: $colors-primary-txt;
+        transition: background 250ms ease-in-out;
+
+        &:hover {
+            background-color: $colors-secondary-btn-bg-hover;
+        }
+        
+        &.active {
+            background-color: white;
+            color: black;
+        }
+    }
+}
