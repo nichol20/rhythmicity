@@ -3,7 +3,10 @@ package domain
 import "context"
 
 type Search struct {
-	Query string `json:"query"`
+	Query  string `json:"query"`
+	Offset uint32 `json:"offset"`
+	Limit  uint32 `json:"limit"`
+	Kind   string `json:"kind"`
 }
 
 type Hit struct {
@@ -13,7 +16,7 @@ type Hit struct {
 type SearchResponse struct {
 	Hits struct {
 		Total struct {
-			Value int64 `json:"value"`
+			Value uint64 `json:"value"`
 		} `json:"total"`
 		Hits []*Hit `json:"hits"`
 	} `json:"hits"`

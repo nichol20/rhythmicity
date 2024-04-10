@@ -18,6 +18,8 @@ func (r *SearchRepository) Search(ctx context.Context, search *domain.Search) ([
 	var searchBuffer bytes.Buffer
 
 	searchStructure := map[string]interface{}{
+		"from": search.Offset,
+		"size": search.Limit,
 		"query": map[string]interface{}{
 			"multi_match": map[string]interface{}{
 				"query":  search.Query,

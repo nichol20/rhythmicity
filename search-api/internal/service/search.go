@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"log/slog"
+	"strings"
 
 	"github.com/nichol20/rhythmicity/search-api/internal/domain"
 	"github.com/nichol20/rhythmicity/search-api/internal/pb"
@@ -15,9 +16,30 @@ type SearchGrpcService struct {
 	pb.UnimplementedSearchServer
 }
 
-func (s *SearchGrpcService) Search(ctx context.Context, searchRequest *pb.SearchRequest) (*pb.SearchResponse, error) {
+func (s *SearchGrpcService) Search(ctx context.Context, req *pb.SearchRequest) (*pb.SearchResponse, error) {
+	const defaultLimit uint32 = 20
+
+	offset := uint32(0)
+	limit := defaultLimit
+	kind := "all"
+
+	if req != nil {
+		if req.Offset != nil && *req.Offset > 0 {
+			offset = *req.Offset
+		}
+		if req.Limit != nil && *req.Limit > 0 && *req.Limit < defaultLimit {
+			limit = *req.Limit
+		}
+		if req.Kind != nil {
+			kind = strings.ToLower(req.Kind.String())
+		}
+	}
+
 	search := domain.Search{
-		Query: searchRequest.Query,
+		Query:  req.Query,
+		Offset: offset,
+		Limit:  limit,
+		Kind:   kind,
 	}
 
 	var tracks []*pb.Track

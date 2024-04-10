@@ -11,14 +11,24 @@ message Track {
     string albumName = 4;
     string lyrics = 5;
     bool explicit = 6;
-    int64 playCount = 7;
+    uint64 playCount = 7;
     repeated string genres = 8;
     repeated string styles = 9;
     string  imageUrl = 10;
 }
 
 message SearchRequest {
+    enum Kind {
+        ALL = 0;
+        ARTIST = 1;
+        ALBUM = 2;
+        TRACK = 3;
+    }
+
     string query = 1;
+    optional uint32  offset = 2;
+    optional uint32 limit = 3;
+    optional Kind kind = 4;
 }
 
 message SearchResponse {
