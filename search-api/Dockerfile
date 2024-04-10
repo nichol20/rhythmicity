@@ -1,9 +1,14 @@
 FROM golang:1.21.5
 
-WORKDIR /go/src
+WORKDIR /app
 ENV PATH="/go/bin:${PATH}"
 ENV GO111MODULE=on
 ENV CGO_ENABLED=1
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY *.go ./
 
 RUN apt-get update && \
     apt-get install build-essential protobuf-compiler -y && \

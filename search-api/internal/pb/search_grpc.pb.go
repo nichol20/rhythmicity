@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Search_Search_FullMethodName = "/Search/Search"
+	Search_Search_FullMethodName = "/rhythmicity.search_api.Search/Search"
 )
 
 // SearchClient is the client API for Search service.
@@ -96,7 +96,7 @@ func _Search_Search_Handler(srv interface{}, ctx context.Context, dec func(inter
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Search_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "Search",
+	ServiceName: "rhythmicity.search_api.Search",
 	HandlerType: (*SearchServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

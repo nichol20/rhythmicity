@@ -7,28 +7,21 @@ import (
 	"fmt"
 
 	"github.com/elastic/go-elasticsearch/v8"
-	"github.com/nichol20/rhythmicity/search-api/domain/model"
+	"github.com/nichol20/rhythmicity/search-api/internal/domain"
 )
 
 type SearchRepository struct {
 	ESClient *elasticsearch.Client
 }
 
-func (r *SearchRepository) Search(ctx context.Context, search *model.Search) ([]*model.Hit, error) {
+func (r *SearchRepository) Search(ctx context.Context, search *domain.Search) ([]*domain.Hit, error) {
 	var searchBuffer bytes.Buffer
 
 	searchStructure := map[string]interface{}{
 		"query": map[string]interface{}{
-			"function_score": map[string]interface{}{
-				"multi_match": map[string]interface{}{
-					"query":  search.Query,
-					"fields": []string{"artistNames", "trackName", "lyrics", "albumName"},
-				},
-				"field_value_factor": map[string]interface{}{
-					"field":   "playCount",
-					"factor":  1.2,
-					"missing": 1,
-				},
+			"multi_match": map[string]interface{}{
+				"query":  search.Query,
+				"fields": []string{"artistNames", "trackName", "lyrics", "albumName"},
 			},
 		},
 	}
@@ -48,9 +41,14 @@ func (r *SearchRepository) Search(ctx context.Context, search *model.Search) ([]
 	if err != nil {
 		return nil, fmt.Errorf("error searching: %s", err)
 	}
+
+	if res.IsError() {
+		return nil, fmt.Errorf("error in search response: %+v", res)
+	}
+
 	defer res.Body.Close()
 
-	var searchResponse = model.SearchResponse{}
+	var searchResponse = domain.SearchResponse{}
 
 	if err = json.NewDecoder(res.Body).Decode(&searchResponse); err != nil {
 		return nil, fmt.Errorf("error parsing the response body: %s", err)

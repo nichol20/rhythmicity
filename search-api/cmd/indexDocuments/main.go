@@ -9,11 +9,12 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"runtime"
 
 	"github.com/elastic/go-elasticsearch/v8/esutil"
 	"github.com/joho/godotenv"
-	"github.com/nichol20/rhythmicity/search-api/domain/model"
-	"github.com/nichol20/rhythmicity/search-api/infrastructure/db"
+	"github.com/nichol20/rhythmicity/search-api/internal/db"
+	"github.com/nichol20/rhythmicity/search-api/internal/domain"
 )
 
 func main() {
@@ -21,8 +22,18 @@ func main() {
 	client := db.ConnectWithElasticsearch()
 	ctx := context.Background()
 
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		log.Fatal("Unable to get the current filename")
+	}
+	dirname := filepath.Dir(filename)
+	absPath, err := filepath.Abs(dirname + "/../../internal/data/tracks.json")
+	if err != nil {
+		log.Fatalf("Error when converting to absolute path: %s", err)
+	}
+
 	// Open file
-	tracksFile, err := os.Open(filepath.Join("data", "tracks.json"))
+	tracksFile, err := os.Open(absPath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -35,7 +46,7 @@ func main() {
 	}
 
 	// Parse the JSON content
-	var tracks []model.Track
+	var tracks []domain.Track
 
 	if err := json.Unmarshal(content, &tracks); err != nil {
 		log.Fatal(err)

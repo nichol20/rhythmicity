@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package rhythmicity.search_api;
+
 option go_package = "github.com/nichol20/rhythmicity/search-api/application/grpc/pb";
 
 message Track {

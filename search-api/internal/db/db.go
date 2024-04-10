@@ -4,12 +4,23 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
+	"runtime"
 
 	"github.com/elastic/go-elasticsearch/v8"
 )
 
 func ConnectWithElasticsearch() *elasticsearch.Client {
-	cert, err := os.ReadFile("./certs/ca/ca.crt")
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		log.Fatal("Unable to get the current filename")
+	}
+	dirname := filepath.Dir(filename)
+	absPath, err := filepath.Abs(dirname + "/certs/ca/ca.crt")
+	if err != nil {
+		log.Fatalf("Error when converting to absolute path: %s", err)
+	}
+	cert, err := os.ReadFile(absPath)
 
 	if err != nil {
 		log.Fatalf("Error reading cert: %s", err)

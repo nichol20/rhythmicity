@@ -1,4 +1,4 @@
-package model
+package domain
 
 type Track struct {
 	ID          string   `json:"id"`

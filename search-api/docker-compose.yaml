@@ -153,5 +153,5 @@ services:
     ports:
       - "50051:50051"
     volumes:
-      - certs:/go/src/certs
-      - .:/go/src
+      - certs:/app/internal/db/certs
+      - .:/app

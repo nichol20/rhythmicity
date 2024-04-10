@@ -1,20 +1,22 @@
-package grpc
+package service
 
 import (
 	"context"
-	"fmt"
+	"log/slog"
 
-	"github.com/nichol20/rhythmicity/search-api/application/grpc/pb"
-	"github.com/nichol20/rhythmicity/search-api/domain/model"
+	"github.com/nichol20/rhythmicity/search-api/internal/domain"
+	"github.com/nichol20/rhythmicity/search-api/internal/pb"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type SearchGrpcService struct {
-	SearchRepository model.SearchRepositoryInterface
+	SearchRepository domain.SearchRepositoryInterface
 	pb.UnimplementedSearchServer
 }
 
 func (s *SearchGrpcService) Search(ctx context.Context, searchRequest *pb.SearchRequest) (*pb.SearchResponse, error) {
-	search := model.Search{
+	search := domain.Search{
 		Query: searchRequest.Query,
 	}
 
@@ -22,7 +24,8 @@ func (s *SearchGrpcService) Search(ctx context.Context, searchRequest *pb.Search
 
 	hits, err := s.SearchRepository.Search(ctx, &search)
 	if err != nil {
-		return nil, fmt.Errorf("error when trying to search: %s", err)
+		slog.Error(err.Error())
+		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
 
 	for _, hit := range hits {
