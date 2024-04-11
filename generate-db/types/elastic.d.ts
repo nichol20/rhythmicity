@@ -11,7 +11,6 @@ interface TrackDocument {
   albumName: string;
   explict: boolean;
   playCount: number;
-  popularity: number;
   durationMs: number;
   genres: string[];
   styles: string[];
