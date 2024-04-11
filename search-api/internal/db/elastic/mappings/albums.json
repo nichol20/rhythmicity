@@ -1,0 +1,30 @@
+{
+  "mappings": {
+    "properties": {
+      "id": { "type": "keyword" },
+      "name": { "type": "text" },
+      "genres": { "type": "keyword" },
+      "styles": { "type": "keyword" },
+      "totalTracks": { "type": "integer" },
+      "releaseDate": { "type": "date" },
+      "popularity": { "type": "integer" },
+      "type": { "type": "keyword" },
+      "images": {
+        "type": "nested",
+        "properties": {
+          "height": { "type": "integer" },
+          "url": { "type": "keyword" },
+          "width": { "type": "integer" }
+        }
+      },
+      "artistNames": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword"
+          }
+        }
+      }
+    }
+  }
+}

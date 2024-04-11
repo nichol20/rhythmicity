@@ -1,12 +1,8 @@
 {
   "mappings": {
     "properties": {
-      "id": {
-        "type": "keyword"
-      },
-      "trackName": {
-        "type": "text"
-      },
+      "id": { "type": "keyword" },
+      "name": { "type": "text" },
       "artistNames": {
         "type": "text",
         "fields": {
@@ -23,24 +19,21 @@
           }
         }
       },
-      "lyrics": {
-        "type": "text"
+      "lyrics": { "type": "text" },
+      "explicit": { "type": "boolean" },
+      "play_count": { "type": "integer" },
+      "duration_ms": { "type": "integer" },
+      "genres": { "type": "keyword" },
+      "styles": { "type": "keyword" },
+      "images": {
+        "type": "nested",
+        "properties": {
+          "height": { "type": "integer" },
+          "url": { "type": "keyword" },
+          "width": { "type": "integer" }
+        }
       },
-      "explicit": {
-        "type": "boolean"
-      },
-      "play_count": {
-        "type": "integer"
-      },
-      "genres": {
-        "type": "keyword"
-      },
-      "styles": {
-        "type": "keyword"
-      },
-      "image_url": {
-        "type": "keyword"
-      }
+      "type": { "type": "keyword" }
     }
   }
 }
