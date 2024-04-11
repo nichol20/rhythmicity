@@ -2,7 +2,7 @@ package domain
 
 type Track struct {
 	ID          string   `json:"id"`
-	TrackName   string   `json:"trackName"`
+	Name        string   `json:"name"`
 	ArtistNames []string `json:"artistNames"`
 	AlbumName   string   `json:"albumName"`
 	Lyrics      string   `json:"lyrics"`
