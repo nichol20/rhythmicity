@@ -21,8 +21,8 @@
       },
       "lyrics": { "type": "text" },
       "explicit": { "type": "boolean" },
-      "play_count": { "type": "integer" },
-      "duration_ms": { "type": "integer" },
+      "playCount": { "type": "integer" },
+      "durationMs": { "type": "integer" },
       "genres": { "type": "keyword" },
       "styles": { "type": "keyword" },
       "images": {
