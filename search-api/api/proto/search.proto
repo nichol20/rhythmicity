@@ -64,9 +64,9 @@ message Filters {
 message SearchRequest {
     enum Kind {
         ALL = 0;
-        ARTIST = 1;
-        ALBUM = 2;
-        TRACK = 3;
+        ARTISTS = 1;
+        ALBUMS = 2;
+        TRACKS = 3;
     }
 
     string query = 1;
