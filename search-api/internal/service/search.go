@@ -7,6 +7,7 @@ import (
 
 	"github.com/nichol20/rhythmicity/search-api/internal/domain"
 	"github.com/nichol20/rhythmicity/search-api/internal/pb"
+	"github.com/nichol20/rhythmicity/search-api/internal/utils"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -43,6 +44,9 @@ func (s *SearchGrpcService) Search(ctx context.Context, req *pb.SearchRequest) (
 	}
 
 	var tracks []*pb.Track
+	var artists []*pb.Artist
+	var albums []*pb.Album
+	var bestResult *pb.BestResult
 
 	hits, err := s.SearchRepository.Search(ctx, &search)
 	if err != nil {
@@ -50,22 +54,92 @@ func (s *SearchGrpcService) Search(ctx context.Context, req *pb.SearchRequest) (
 		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
 
-	for _, hit := range hits {
-		tracks = append(tracks, &pb.Track{
-			Id:          hit.Source.ID,
-			TrackName:   hit.Source.TrackName,
-			ArtistNames: hit.Source.ArtistNames,
-			AlbumName:   hit.Source.AlbumName,
-			Lyrics:      hit.Source.Lyrics,
-			Explicit:    hit.Source.Explicit,
-			PlayCount:   hit.Source.PlayCount,
-			Genres:      hit.Source.Genres,
-			Styles:      hit.Source.Styles,
-			ImageUrl:    hit.Source.ImageUrl,
-		})
+	for i, hit := range hits {
+		if (*hit.Source).(map[string]any)["type"] == "track" {
+			track, err := utils.TypeConverter[domain.Track](*hit.Source)
+			if err == nil {
+				pbTrack := &pb.Track{
+					Id:          track.ID,
+					Name:        track.Name,
+					ArtistNames: track.ArtistNames,
+					AlbumName:   track.AlbumName,
+					Lyrics:      track.Lyrics,
+					Explicit:    track.Explicit,
+					PlayCount:   track.PlayCount,
+					DurationMs:  track.DurationMs,
+					Genres:      track.Genres,
+					Styles:      track.Styles,
+					Images:      utils.ImagesToMessage(track.Images),
+					Type:        track.Type,
+				}
+				if i == 0 {
+					bestResult = &pb.BestResult{
+						BestResult: &pb.BestResult_Track{Track: pbTrack},
+					}
+				}
+				tracks = append(tracks, pbTrack)
+			}
+			if err != nil {
+				slog.Error("Error converting hit.Source to domain.Track: %s", err)
+			}
+		}
+
+		if (*hit.Source).(map[string]any)["type"] == "artist" {
+			artist, err := utils.TypeConverter[domain.Artist](*hit.Source)
+			if err == nil {
+				pbArtist := &pb.Artist{
+					Id:         artist.ID,
+					Name:       artist.Name,
+					Genres:     artist.Genres,
+					Styles:     artist.Styles,
+					Images:     utils.ImagesToMessage(artist.Images),
+					Popularity: artist.Popularity,
+					Type:       artist.Type,
+				}
+				if i == 0 {
+					bestResult = &pb.BestResult{
+						BestResult: &pb.BestResult_Artist{Artist: pbArtist},
+					}
+				}
+				artists = append(artists, pbArtist)
+			}
+			if err != nil {
+				slog.Error("Error converting hit.Source to domain.Artist: %s", err)
+			}
+		}
+
+		if (*hit.Source).(map[string]any)["type"] == "album" {
+			album, err := utils.TypeConverter[domain.Album](*hit.Source)
+			if err == nil {
+				pbAlbum := &pb.Album{
+					Id:          album.ID,
+					Name:        album.Name,
+					ArtistNames: album.ArtistNames,
+					Genres:      album.Genres,
+					Styles:      album.Styles,
+					ReleaseDate: album.ReleaseDate,
+					TotalTracks: album.TotalTracks,
+					Images:      utils.ImagesToMessage(album.Images),
+					Popularity:  album.Popularity,
+					Type:        album.Type,
+				}
+				if i == 0 {
+					bestResult = &pb.BestResult{
+						BestResult: &pb.BestResult_Album{Album: pbAlbum},
+					}
+				}
+				albums = append(albums, pbAlbum)
+			}
+			if err != nil {
+				slog.Error("Error converting hit.Source to domain.Album: %s", err)
+			}
+		}
 	}
 
 	return &pb.SearchResponse{
-		Tracks: tracks,
+		BestResult: bestResult,
+		Tracks:     tracks,
+		Artists:    artists,
+		Albums:     albums,
 	}, nil
 }

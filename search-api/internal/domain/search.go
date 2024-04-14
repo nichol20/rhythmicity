@@ -2,15 +2,21 @@ package domain
 
 import "context"
 
+type Filters struct {
+	Genres []string `json:"genres"`
+	Styles []string `json:"styles"`
+}
+
 type Search struct {
-	Query  string `json:"query"`
-	Offset uint32 `json:"offset"`
-	Limit  uint32 `json:"limit"`
-	Kind   string `json:"kind"`
+	Query   string  `json:"query"`
+	Offset  uint32  `json:"offset"`
+	Limit   uint32  `json:"limit"`
+	Kind    string  `json:"kind"`
+	Filters Filters `json:"filters"`
 }
 
 type Hit struct {
-	Source *Track `json:"_source"`
+	Source *interface{} `json:"_source"`
 }
 
 type SearchResponse struct {

@@ -4,17 +4,61 @@ package rhythmicity.search_api;
 
 option go_package = "github.com/nichol20/rhythmicity/search-api/application/grpc/pb";
 
+message Image {
+    uint32 width = 1;
+    uint32 height = 2;
+    string url = 3;
+}
+
 message Track {
     string id = 1;
-    string trackName = 2;
+    string name = 2;
     repeated string artistNames = 3;
     string albumName = 4;
     string lyrics = 5;
     bool explicit = 6;
     uint64 playCount = 7;
-    repeated string genres = 8;
-    repeated string styles = 9;
-    string  imageUrl = 10;
+    uint32 durationMs = 8;
+    repeated string genres = 9;
+    repeated string styles = 10;
+    repeated Image images = 11;
+    string type = 12;
+}
+
+message Artist {
+    string id = 1;
+    string name = 2;
+    repeated string genres = 3;
+    repeated string styles = 4;
+    repeated Image images = 5;
+    uint32 popularity = 6;
+    string type = 7;
+}
+
+message Album {
+    string id = 1;
+    string name = 2;
+    repeated string artistNames = 3;
+    repeated string genres = 4;
+    repeated string styles = 5;
+    string releaseDate = 6;
+    uint32 totalTracks = 7;
+    repeated Image images = 8;
+    uint32 popularity = 9;
+    string type = 10;
+}
+
+message BestResult {
+    oneof bestResult {
+        Track track = 1;
+        Artist artist = 2;
+        Album album = 3;
+    }
+}
+
+message Filter {
+    repeated string genres = 1;
+    repeated string styles = 2;
 }
 
 message SearchRequest {
@@ -29,10 +73,14 @@ message SearchRequest {
     optional uint32  offset = 2;
     optional uint32 limit = 3;
     optional Kind kind = 4;
+    optional Filter filter = 5;
 }
 
 message SearchResponse {
-    repeated Track tracks = 1;
+    BestResult bestResult = 1;
+    repeated Track tracks = 2;
+    repeated Artist artists = 3;
+    repeated Album albums = 4;
 }
 
 service Search {

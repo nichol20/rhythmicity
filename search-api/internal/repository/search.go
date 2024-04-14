@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/nichol20/rhythmicity/search-api/internal/domain"
@@ -16,16 +17,47 @@ type SearchRepository struct {
 
 func (r *SearchRepository) Search(ctx context.Context, search *domain.Search) ([]*domain.Hit, error) {
 	var searchBuffer bytes.Buffer
+	indexName := r.getIndexNameByKind(search.Kind)
+	var query string
+	queries := strings.Split(search.Query, " ")
 
-	searchStructure := map[string]interface{}{
+	for _, q := range queries {
+		query += "*" + q + "*"
+	}
+
+	filter := []map[string]any{
+		{
+			"terms": map[string]any{},
+		},
+	}
+
+	if len(search.Filters.Genres) > 0 {
+		filter[0]["terms"].(map[string]any)["genres"] = search.Filters.Genres
+	}
+
+	if len(search.Filters.Styles) > 0 {
+		filter[0]["terms"].(map[string]any)["styles"] = search.Filters.Styles
+	}
+
+	searchStructure := map[string]any{
 		"from": search.Offset,
 		"size": search.Limit,
-		"query": map[string]interface{}{
-			"multi_match": map[string]interface{}{
-				"query":  search.Query,
-				"fields": []string{"artistNames", "trackName", "lyrics", "albumName"},
+		"query": map[string]any{
+			"bool": map[string]any{
+				"must": []map[string]any{
+					{
+						"query_string": map[string]any{
+							"query":  query,
+							"fields": []string{"artistNames", "name^2", "lyrics", "albumName"},
+						},
+					},
+				},
 			},
 		},
+	}
+
+	if len(search.Filters.Genres) > 0 || len(search.Filters.Styles) > 0 {
+		searchStructure["query"].(map[string]any)["bool"].(map[string]any)["filter"] = filter
 	}
 
 	if err := json.NewEncoder(&searchBuffer).Encode(searchStructure); err != nil {
@@ -34,7 +66,7 @@ func (r *SearchRepository) Search(ctx context.Context, search *domain.Search) ([
 
 	res, err := r.ESClient.Search(
 		r.ESClient.Search.WithContext(ctx),
-		r.ESClient.Search.WithIndex("tracks"),
+		r.ESClient.Search.WithIndex(indexName),
 		r.ESClient.Search.WithBody(&searchBuffer),
 		r.ESClient.Search.WithTrackTotalHits(true),
 		r.ESClient.Search.WithPretty(),
@@ -57,4 +89,17 @@ func (r *SearchRepository) Search(ctx context.Context, search *domain.Search) ([
 	}
 
 	return searchResponse.Hits.Hits, nil
+}
+
+func (r *SearchRepository) getIndexNameByKind(kind string) string {
+	switch kind {
+	case "artists":
+		return "artists"
+	case "albums":
+		return "albums"
+	case "tracks":
+		return "tracks"
+	default:
+		return "_all"
+	}
 }
