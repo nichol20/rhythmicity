@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --exec ts-node ./src/app.ts",
-    "protogen": "npx proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=src/proto/ src/proto/*.proto"
+    "protogen": "npx proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=src/proto/gen src/proto/*/*.proto"
   },
   "keywords": [],
   "author": "",
