@@ -56,7 +56,7 @@ message BestResult {
     }
 }
 
-message Filter {
+message Filters {
     repeated string genres = 1;
     repeated string styles = 2;
 }
@@ -73,7 +73,7 @@ message SearchRequest {
     optional uint32  offset = 2;
     optional uint32 limit = 3;
     optional Kind kind = 4;
-    optional Filter filter = 5;
+    optional Filters filters = 5;
 }
 
 message SearchResponse {

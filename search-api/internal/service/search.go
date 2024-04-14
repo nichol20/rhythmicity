@@ -41,6 +41,10 @@ func (s *SearchGrpcService) Search(ctx context.Context, req *pb.SearchRequest) (
 		Offset: offset,
 		Limit:  limit,
 		Kind:   kind,
+		Filters: domain.Filters{
+			Genres: req.Filters.Genres,
+			Styles: req.Filters.Styles,
+		},
 	}
 
 	var tracks []*pb.Track
