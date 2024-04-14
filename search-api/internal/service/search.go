@@ -23,6 +23,8 @@ func (s *SearchGrpcService) Search(ctx context.Context, req *pb.SearchRequest) (
 	offset := uint32(0)
 	limit := defaultLimit
 	kind := "all"
+	var genres []string
+	var styles []string
 
 	if req != nil {
 		if req.Offset != nil && *req.Offset > 0 {
@@ -34,6 +36,10 @@ func (s *SearchGrpcService) Search(ctx context.Context, req *pb.SearchRequest) (
 		if req.Kind != nil {
 			kind = strings.ToLower(req.Kind.String())
 		}
+		if req.Filters != nil {
+			genres = req.Filters.Genres
+			styles = req.Filters.Styles
+		}
 	}
 
 	search := domain.Search{
@@ -42,8 +48,8 @@ func (s *SearchGrpcService) Search(ctx context.Context, req *pb.SearchRequest) (
 		Limit:  limit,
 		Kind:   kind,
 		Filters: domain.Filters{
-			Genres: req.Filters.Genres,
-			Styles: req.Filters.Styles,
+			Genres: genres,
+			Styles: styles,
 		},
 	}
 
