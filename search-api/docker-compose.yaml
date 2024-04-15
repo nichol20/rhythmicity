@@ -68,6 +68,11 @@ services:
       interval: 1s
       timeout: 5s
       retries: 120
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
 
   es01:
     depends_on:
@@ -112,6 +117,11 @@ services:
       interval: 10s
       timeout: 10s
       retries: 120
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
 
   kibana:
     depends_on:
@@ -144,6 +154,11 @@ services:
       interval: 10s
       timeout: 10s
       retries: 120
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
 
   search-api:
     build: .
@@ -155,3 +170,8 @@ services:
     volumes:
       - certs:/app/internal/db/certs
       - .:/app
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G

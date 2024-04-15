@@ -6,6 +6,7 @@ import searchApiSearchRouter from "./routes/searchApi/search";
 import acceptOnlyNginx from "./middlewares/acceptOnlyNginx";
 import cors from "cors";
 import "dotenv/config";
+import { errorHandler } from "./middlewares/errorHandler";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -29,6 +30,8 @@ app.get("/", async (req, res) => {
 app.get("/health-check", (req, res) => {
   res.send("Everything is alright!😉");
 });
+
+app.use(errorHandler);
 
 app.listen(port, () => {
   if (!process.env.NGINX_IP) {

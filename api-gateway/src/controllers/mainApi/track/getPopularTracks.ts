@@ -1,17 +1,22 @@
-import { Request, Response } from "express";
-import { trackClient } from "../../../servers/mainApi";
+import { NextFunction, Request, Response } from "express"
+import { trackClient } from "../../../servers/mainApi"
+import { InternalServerError } from "../../../helpers/apiError"
 
-export default function getPopularTracks(req: Request, res: Response) {
+export default function getPopularTracks(
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
     let limit = Number(req.query.limit)
-    
-    if(isNaN(limit)) {
+
+    if (isNaN(limit)) {
         limit = 20
     }
 
     trackClient.GetPopularTracks({ limit }, (err, value) => {
-        if(err) {
+        if (err) {
             console.error("Error invoking GetPopularTracks: " + err)
-            return res.status(500).json({ message: 'internal server error'})
+            return next(new InternalServerError())
         }
         return res.status(200).json(value?.tracks)
     })
