@@ -25,18 +25,22 @@ func (r *SearchRepository) Search(ctx context.Context, search *domain.Search) ([
 		query += "*" + q + "*"
 	}
 
-	filter := []map[string]any{
-		{
-			"terms": map[string]any{},
-		},
-	}
+	filter := []map[string]any{}
 
 	if len(search.Filters.Genres) > 0 {
-		filter[0]["terms"].(map[string]any)["genres"] = search.Filters.Genres
+		filter = append(filter, map[string]any{
+			"terms": map[string]any{
+				"genres": search.Filters.Genres,
+			},
+		})
 	}
 
 	if len(search.Filters.Styles) > 0 {
-		filter[0]["terms"].(map[string]any)["styles"] = search.Filters.Styles
+		filter = append(filter, map[string]any{
+			"terms": map[string]any{
+				"styles": search.Filters.Styles,
+			},
+		})
 	}
 
 	searchStructure := map[string]any{
@@ -56,9 +60,7 @@ func (r *SearchRepository) Search(ctx context.Context, search *domain.Search) ([
 		},
 	}
 
-	if len(search.Filters.Genres) > 0 || len(search.Filters.Styles) > 0 {
-		searchStructure["query"].(map[string]any)["bool"].(map[string]any)["filter"] = filter
-	}
+	searchStructure["query"].(map[string]any)["bool"].(map[string]any)["filter"] = filter
 
 	if err := json.NewEncoder(&searchBuffer).Encode(searchStructure); err != nil {
 		return nil, fmt.Errorf("error encoding query: %s", err)
