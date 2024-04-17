@@ -2,17 +2,17 @@
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
 
-import { collectionBackground, logo } from '@/assets'
+import { collectionBackground } from '@/assets'
 import { Card } from '@/components/Card'
 import { Carousel } from '@/components/Carousel'
 import { Header } from '@/components/Header'
 import { usePlayback } from '@/contexts/PlaybackContext'
-
-import styles from '@/styles/Collection.module.scss'
-import { https } from '@/utils/http'
 import { Album } from '@/types/album'
 import { Artist } from '@/types/artist'
 import { Track } from '@/types/track'
+import { getPopularAlbums, getPopularArtists, getPopularTracks } from '@/utils/api'
+
+import styles from '@/styles/Collection.module.scss'
 
 export default function CollectionPage() {
     const [popularAlbums, setPopularAlbums] = useState<Album[]>([])
@@ -25,24 +25,15 @@ export default function CollectionPage() {
     }, [setShowPlaybackBar])
 
     useEffect(() => {
-        const getPopularAlbums = async () => {
-            const res = await https.get<Album[]>("/popular/albums")
-            setPopularAlbums(res.data)
+        const fetchData = async () => {
+            const albums = await getPopularAlbums()
+            setPopularAlbums(albums)
+            const artists = await getPopularArtists()
+            setPopularArtists(artists)
+            const tracks = await getPopularTracks()
+            setPopularTracks(tracks)
         }
-
-        const getPopularArtists = async () => {
-            const res = await https.get<Artist[]>("/popular/artists")
-            setPopularArtists(res.data)
-        }
-
-        const getPopularTracks = async () => {
-            const res = await https.get<Track[]>("/popular/tracks")
-            setPopularTracks(res.data)
-        }
-
-        getPopularAlbums()
-        getPopularArtists()
-        getPopularTracks()
+        fetchData()
     }, [])
 
     return (
