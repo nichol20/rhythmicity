@@ -1,11 +1,13 @@
 'use client'
+import { useEffect } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+
 import { homeBackground } from '@/assets'
 import { Header } from '@/components/Header'
 import { usePlayback } from '@/contexts/PlaybackContext'
+
 import styles from '@/styles/Home.module.scss'
-import Image from 'next/image'
-import Link from 'next/link'
-import { useEffect } from 'react'
 
 export default function Home() {
   const { setShowPlaybackBar } = usePlayback()

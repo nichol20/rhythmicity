@@ -9,7 +9,7 @@ interface CarouselProps {
 }
 
 export const Carousel = ({ children, max }: CarouselProps) => {
-    const [items] = useState(Children.toArray(children))
+    const [items, setItems] = useState(Children.toArray(children))
     const [displayItems, setDisplayItems] = useState<any[]>([])
     const carouselRef = useRef<HTMLDivElement>(null)
     const [numberOfVisibleItems, setNumberOfVisibleItems] = useState(max)
@@ -33,6 +33,10 @@ export const Carousel = ({ children, max }: CarouselProps) => {
             window.removeEventListener('resize', calculateVisibleItems)
         }
     }, [max])
+
+    useEffect(() => {
+        setItems(Children.toArray(children))
+    }, [children])
 
     useEffect(() => {
         setDisplayItems(items.slice(0, numberOfVisibleItems))

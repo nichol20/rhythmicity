@@ -5,7 +5,7 @@ import Image, { StaticImageData } from 'next/image';
 import { playIcon } from '@/assets';
 
 interface CardProps {
-    image: StaticImageData
+    image: StaticImageData | string
     title: string
     description: string
     isArtist?: boolean
@@ -19,7 +19,7 @@ export const Card = ({ image, title, description, isArtist = false, isPlayable =
             <div className={styles.container}>
                 <div className={styles.imageBox} data-card-type={isArtist ? "artist" : ""}>
                     <div className={styles.boxContent}>
-                        <Image src={image} alt={title} />
+                        <Image src={image} alt={title} width={300} height={300} />
                     </div>
                 </div>
                 <div className={styles.details}>
