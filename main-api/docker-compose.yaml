@@ -96,6 +96,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "1.5GB"
 
   main-api:
     build: .
@@ -103,10 +108,15 @@ services:
       db:
         condition: service_healthy
     ports:
-      - "50051:50051"
+      - "50052:50051"
     volumes:
       - certs:/app/internal/db/certs
       - .:/app
+    deploy:
+      resources:
+        limits:
+          cpus: "0.4"
+          memory: "0.6GB"
 
 volumes:
   postgres-db:
