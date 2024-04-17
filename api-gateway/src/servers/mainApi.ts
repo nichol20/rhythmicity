@@ -10,7 +10,7 @@ type ProtoGrpcType = AlbumProtoGrpcType &
   ArtistProtoGrpcType;
 
 const protoDir = path.resolve(__dirname, "../proto/mainApi");
-const serverUrl = process.env.MAIN_API_URL || "localhost:50051";
+const serverUrl = process.env.MAIN_API_URL || "host.docker.internal:50052";
 
 const protoFiles = [
   `${protoDir}/album.proto`,
