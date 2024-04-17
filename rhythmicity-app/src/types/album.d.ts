@@ -13,3 +13,16 @@ export interface Album {
   styles: string[];
   spotify: SpotifyAlbum;
 }
+
+export interface SearchedAlbum {
+  id: string
+  name: string
+  artistNames: string[]
+  genres: string[]
+  styles: string[]
+  releaseDate: string
+  totalTracks: number
+  images: Image[]
+  popularity: number
+  type: string
+}

@@ -1,42 +1,57 @@
-import { Spotify, Image } from "./common";
+import { Spotify, Image } from "./common"
 
 export interface SpotifyTrack extends Spotify {
-  title: string;
-  durationMs: number;
-  albumImages: Image[];
+  title: string
+  durationMs: number
+  albumImages: Image[]
 }
 
 export interface YoutubeStatistcs {
-  viewCount: string;
-  likeCount: string;
-  favoriteCount: string;
-  commentCount: string;
+  viewCount: string
+  likeCount: string
+  favoriteCount: string
+  commentCount: string
 }
 
 export interface YoutubeThumbnails {
-  default: Image;
-  medium: Image;
-  high: Image;
-  standard: Image;
-  maxres: Image;
+  default: Image
+  medium: Image
+  high: Image
+  standard: Image
+  maxres: Image
 }
 
 export interface Youtube {
-  id: string;
-  title: string;
-  durationMs: number;
-  publishedAt: string;
-  statistics: YoutubeStatistcs;
-  thumbnails: YoutubeThumbnails;
+  id: string
+  title: string
+  durationMs: number
+  publishedAt: string
+  statistics: YoutubeStatistcs
+  thumbnails: YoutubeThumbnails
 }
 
 export interface Track {
-  id: uuid;
-  genres: string[];
-  styles: string[];
-  explicit: boolean;
-  playCount: number;
-  spotify: SpotifyTrack;
-  youtube: Youtube;
-  lyrics: string;
+  id: string
+  genres: string[]
+  styles: string[]
+  explicit: boolean
+  playCount: number
+  spotify: SpotifyTrack
+  youtube: Youtube
+  lyrics: string
+}
+
+export interface SearchedTrack {
+  id: string
+  name: string
+  artistNames: string[]
+  albumName: string
+  lyrics: string
+  explicit: boolean
+  playCount: number
+  durationMs: number
+  genres: string[]
+  styles: string[]
+  images: Image[]
+  type: string
 }
