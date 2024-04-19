@@ -1,6 +1,7 @@
-import { Album, SearchedAlbum } from "@/types/album"
-import { Artist, SearchedArtist } from "@/types/artist"
-import { SearchedTrack, Track } from "@/types/track"
+import { Album } from "@/types/album"
+import { Artist } from "@/types/artist"
+import { BestResult, SearchedAlbum, SearchedArtist, SearchedTrack } from "@/types/search"
+import { Track } from "@/types/track"
 import { https } from "@/utils/http"
 
 export const getPopularAlbums = async (): Promise<Album[]> => {
@@ -22,27 +23,27 @@ export interface SearchResponse {
     albums: SearchedAlbum[]
     artists: SearchedArtist[]
     tracks: SearchedTrack[]
-    bestResult: SearchedAlbum | SearchedArtist | SearchedTrack
+    bestResult: BestResult | null
 }
 
 export enum QueryKind {
-    ALL,
-    ARTISTS,
-    ALBUMS,
-    TRACKS
+    ALL = "ALL",
+    ARTISTS = "ARTISTS",
+    ALBUMS = "ALBUMS",
+    TRACKS = "TRACKS"
 }
 
 export interface SearchFilters {
-    genres: string[]
-    styles: string[]
+    genres?: string[]
+    styles?: string[]
 }
 
 export interface SearchOptions {
     query: string
-    offset: number
-    limit: number
-    kind: QueryKind
-    filters: SearchFilters
+    offset?: number
+    limit?: number
+    kind?: QueryKind
+    filters?: SearchFilters
 }
 
 export const search = async (options: SearchOptions): Promise<SearchResponse> => {

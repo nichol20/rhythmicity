@@ -40,18 +40,3 @@ export interface Track {
   youtube: Youtube
   lyrics: string
 }
-
-export interface SearchedTrack {
-  id: string
-  name: string
-  artistNames: string[]
-  albumName: string
-  lyrics: string
-  explicit: boolean
-  playCount: number
-  durationMs: number
-  genres: string[]
-  styles: string[]
-  images: Image[]
-  type: string
-}

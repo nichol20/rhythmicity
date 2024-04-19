@@ -12,7 +12,7 @@ interface Search {
 }
 
 export const searchSchema = Joi.object<Search>({
-  query: Joi.string().required(),
+  query: Joi.string().required().min(0),
   limit: Joi.number(),
   offset: Joi.number(),
   kind: Joi.string().valid("ALL", "TRACKS", "ARTISTS", "ALBUMS"),

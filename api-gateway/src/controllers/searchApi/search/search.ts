@@ -1,12 +1,14 @@
-import { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import { searchClient } from "../../../servers/searchApi"
 import { searchSchema } from "../../../validators/searchApi/search"
+import { InternalServerError } from "../../../helpers/apiError"
 
-export default function search(req: Request, res: Response) {
+export default function search(req: Request, res: Response, next: NextFunction) {
     const { error: validationErr, value } = searchSchema.validate(req.body)
     if (validationErr) {
         return res.status(400).json({ message: validationErr.message })
     }
+
     searchClient.Search(
         {
             query: value.query,
@@ -17,8 +19,7 @@ export default function search(req: Request, res: Response) {
         },
         (err, value) => {
             if (err) {
-                console.log(err)
-                return res.status(500).json({ message: "internal server error" })
+                return next(new InternalServerError())
             }
 
             return res.status(200).json(value)

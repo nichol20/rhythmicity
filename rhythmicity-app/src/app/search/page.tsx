@@ -10,8 +10,9 @@ import { TrackList, TrackRow } from '@/components/TrackList'
 import { usePlayback } from '@/contexts/PlaybackContext'
 
 import styles from '@/styles/Search.module.scss'
-import { useEffect } from 'react'
-
+import { useCallback, useEffect, useState } from 'react'
+import { QueryKind, SearchResponse, search } from '@/utils/api'
+import { BestResult } from '@/types/search'
 const kinds = ['all', 'tracks', 'artists', 'albums']
 
 export default function SearchPage() {
@@ -21,16 +22,35 @@ export default function SearchPage() {
     const { setShowPlaybackBar } = usePlayback()
     const searchQuery = searchParams.get('q') || ""
     const kindParam = searchParams.get("kind") || "all"
+    const [searchResponse, setSearchResponse] = useState<SearchResponse>({ albums: [], artists: [], tracks: [], bestResult: null })
 
-    const handleSearch = (query: string) => {
+    const getKind = useCallback((): QueryKind => {
+        switch (kindParam) {
+            case "albums":
+                return QueryKind.ALBUMS
+            case "artists":
+                return QueryKind.ARTISTS
+            case "tracks":
+                return QueryKind.TRACKS
+            default:
+                return QueryKind.ALL
+        }
+    }, [kindParam])
+
+    const handleSearch = useCallback(async (query: string) => {
         const params = new URLSearchParams(searchParams.toString())
-        if (query) {
-            params.set("q", query)
-        } else {
+
+        const searchRes = await search({
+            query: query,
+            kind: getKind()
+        })
+        setSearchResponse(searchRes)
+        params.set("q", query)
+        if (!query) {
             params.delete("q")
         }
         router.replace(`${pathname}?${params.toString()}`)
-    }
+    }, [getKind, pathname, router, searchParams])
 
     const handleKindSelection = (kind: string) => {
         const params = new URLSearchParams(searchParams.toString())
@@ -42,6 +62,17 @@ export default function SearchPage() {
         return kindParam === kind ? styles.active : ""
     }
 
+    const getBestResultImage = (result: BestResult): string => {
+        if (result.bestResult === "track") {
+            return result.track.images[0].url
+        } else if (result.bestResult === "artist") {
+            return result.artist.images[0].url
+        } else if (result.bestResult === "album") {
+            return result.album.images[0].url
+        }
+        return ""
+    }
+
     useEffect(() => {
         setShowPlaybackBar(true)
     }, [setShowPlaybackBar])
@@ -50,7 +81,7 @@ export default function SearchPage() {
         <div className={styles.searchPage}>
             <Header />
             <div className={styles.content}>
-                <SearchInput onSearch={handleSearch} defaultValue={searchQuery} delay={1000} />
+                <SearchInput onChange={handleSearch} defaultValue={searchQuery} delay={500} />
                 <div className={styles.kinds}>
                     {kinds.map((k, i) => (
                         <button
@@ -62,7 +93,14 @@ export default function SearchPage() {
                 </div>
 
                 <div className={styles.results}>
-                    <Card description='description' image={logo} title='title' isArtist={false} isPlayable kind='big' />
+                    {searchResponse.bestResult &&
+                        <Card
+                            description={"searchResponse.bestResult.type"}
+                            image={getBestResultImage(searchResponse.bestResult)}
+                            title={"searchResponse.bestResult"}
+                            isArtist={false}
+                            isPlayable kind='big'
+                        />}
                     <TrackList>
                         <TrackRow
                             album='nome do album'
