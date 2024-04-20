@@ -11,7 +11,7 @@ export enum PlayerState {
     CUED = 5
 }
 
-interface Player {
+export interface Player {
     playVideo: () => void
     pauseVideo: () => void
     getPlayerState: () => PlayerState
@@ -23,13 +23,14 @@ interface Player {
     isMuted(): boolean
     setVolume(volume: number): void
     getVolume(): number
+    cueVideoById(videoId: string, startSeconds: number): void
 }
 
-interface PlayerEvent {
+export interface PlayerEvent {
     target: Player
 }
 
-interface PlayerOptions {
+export interface PlayerOptions {
     videoId: string
     height: string
     width: string
@@ -51,12 +52,13 @@ declare global {
 
 interface YouTubePlayerProps {
     videoId: string
+    onStateChange: PlayerOptions["events"]["onStateChange"]
 }
 
 export interface YouTubePlayerRef extends Player { }
 
 export const YouTubePlayer = memo(forwardRef<YouTubePlayerRef, YouTubePlayerProps>(
-    function YoutubePlayer({ videoId }, ref) {
+    function YoutubePlayer({ videoId, onStateChange }, ref) {
         const playerRef = useRef<Player | null>(null)
         const [isReady, setIsReady] = useState(false)
 
@@ -69,20 +71,22 @@ export const YouTubePlayer = memo(forwardRef<YouTubePlayerRef, YouTubePlayerProp
             window.onYouTubeIframeAPIReady = () => {
                 playerRef.current = new window.YT.Player('player', {
                     videoId,
-                    width: '0',
-                    height: '0',
+                    width: '300',
+                    height: '300',
                     events: {
                         onReady: event => {
                             setIsReady(true)
-                        }
+                        },
+                        onStateChange
                     }
                 })
+                console.log(playerRef.current)
             }
 
             return () => {
                 window.onYouTubeIframeAPIReady = null
             }
-        }, [videoId])
+        }, [videoId, onStateChange])
 
         const playVideo = () => playerRef.current!.playVideo()
         const pauseVideo = () => playerRef.current!.pauseVideo()
@@ -95,6 +99,7 @@ export const YouTubePlayer = memo(forwardRef<YouTubePlayerRef, YouTubePlayerProp
         const isMuted = () => playerRef.current!.isMuted()
         const getVolume = () => playerRef.current!.getVolume()
         const setVolume = (volume: number) => playerRef.current!.setVolume(volume)
+        const cueVideoById = (videoId: string, startSeconds: number) => playerRef.current!.cueVideoById(videoId, startSeconds)
 
         useImperativeHandle(ref, () => ({
             playVideo: isReady ? playVideo : () => { },
@@ -107,7 +112,8 @@ export const YouTubePlayer = memo(forwardRef<YouTubePlayerRef, YouTubePlayerProp
             unMute: isReady ? unMute : () => { },
             isMuted: isReady ? isMuted : () => false,
             getVolume: isReady ? getVolume : () => 1,
-            setVolume: isReady ? setVolume : () => { }
+            setVolume: isReady ? setVolume : () => { },
+            cueVideoById: isReady ? cueVideoById : () => { }
         }))
 
         return <div id="player"></div>

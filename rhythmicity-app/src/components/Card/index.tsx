@@ -8,12 +8,13 @@ interface CardProps {
     image: StaticImageData | string
     title: string
     description: string
+    onPlay?: () => void
     isArtist?: boolean
     isPlayable?: boolean
     kind?: 'normal' | 'big'
 }
 
-export const Card = ({ image, title, description, isArtist = false, isPlayable = false, kind = "normal" }: CardProps) => {
+export const Card = ({ image, title, description, onPlay, isArtist = false, isPlayable = false, kind = "normal" }: CardProps) => {
     return (
         <div className={styles.card} data-kind={kind}>
             <div className={styles.container}>
@@ -28,7 +29,7 @@ export const Card = ({ image, title, description, isArtist = false, isPlayable =
                 </div>
             </div>
             {isPlayable && (
-                <button className={styles.playBtn}>
+                <button className={styles.playBtn} onClick={onPlay}>
                     <Image src={playIcon} alt="play" />
                 </button>
             )}

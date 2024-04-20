@@ -50,3 +50,14 @@ export const search = async (options: SearchOptions): Promise<SearchResponse> =>
     const res = await https.post<SearchResponse>("/search", options)
     return res.data
 }
+
+export interface PlaybackResponse {
+    youtubeId: string
+}
+
+export const playback = async (trackId: string): Promise<PlaybackResponse> => {
+    const res = await https.post<PlaybackResponse>("/playback", {
+        trackId
+    })
+    return res.data
+}

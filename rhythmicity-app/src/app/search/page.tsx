@@ -12,14 +12,15 @@ import { usePlayback } from '@/contexts/PlaybackContext'
 import styles from '@/styles/Search.module.scss'
 import { useCallback, useEffect, useState } from 'react'
 import { QueryKind, SearchResponse, search } from '@/utils/api'
-import { BestResult } from '@/types/search'
+import { BestResult, SearchedAlbum, SearchedArtist, SearchedTrack } from '@/types/search'
+import { secondsToMinutes } from '@/utils/conversion'
 const kinds = ['all', 'tracks', 'artists', 'albums']
 
 export default function SearchPage() {
     const router = useRouter()
     const pathname = usePathname()
     const searchParams = useSearchParams()
-    const { setShowPlaybackBar } = usePlayback()
+    const { setShowPlaybackBar, addTrackToQueue } = usePlayback()
     const searchQuery = searchParams.get('q') || ""
     const kindParam = searchParams.get("kind") || "all"
     const [searchResponse, setSearchResponse] = useState<SearchResponse>({ albums: [], artists: [], tracks: [], bestResult: null })
@@ -73,6 +74,45 @@ export default function SearchPage() {
         return ""
     }
 
+    const getBestResultType = (result: BestResult): string => {
+        if (result.bestResult === "track") {
+            return result.track.type
+        } else if (result.bestResult === "artist") {
+            return result.artist.type
+        } else if (result.bestResult === "album") {
+            return result.album.type
+        }
+        return ""
+    }
+
+    const getBestResultTitle = (result: BestResult): string => {
+        if (result.bestResult === "track") {
+            return result.track.name
+        } else if (result.bestResult === "artist") {
+            return result.artist.name
+        } else if (result.bestResult === "album") {
+            return result.album.name
+        }
+        return ""
+    }
+
+    const getBestResult = (result: BestResult) => {
+        if (result.bestResult === "track") {
+            return result.track
+        } else if (result.bestResult === "artist") {
+            return result.artist
+        } else if (result.bestResult === "album") {
+            return result.album
+        }
+        return null
+    }
+
+    const handlePlay = (obj: SearchedTrack | SearchedAlbum | SearchedArtist) => {
+        if (obj.type === "track") {
+            addTrackToQueue(obj)
+        }
+    }
+
     useEffect(() => {
         setShowPlaybackBar(true)
     }, [setShowPlaybackBar])
@@ -95,58 +135,34 @@ export default function SearchPage() {
                 <div className={styles.results}>
                     {searchResponse.bestResult &&
                         <Card
-                            description={"searchResponse.bestResult.type"}
+                            description={getBestResultType(searchResponse.bestResult)}
                             image={getBestResultImage(searchResponse.bestResult)}
-                            title={"searchResponse.bestResult"}
+                            title={getBestResultTitle(searchResponse.bestResult)}
+                            onPlay={() => {
+                                if (searchResponse.bestResult) {
+                                    const bestResult = getBestResult(searchResponse.bestResult)
+                                    if (bestResult) {
+                                        handlePlay(bestResult)
+                                    }
+                                }
+                            }}
                             isArtist={false}
-                            isPlayable kind='big'
+                            isPlayable
+                            kind='big'
                         />}
                     <TrackList>
-                        <TrackRow
-                            album='nome do album'
-                            artists={['joão', 'fernanda', 'henrique']}
-                            explicit={true}
-                            image={logo}
-                            index={1}
-                            time='7:30'
-                            title='titulo'
-                        />
-                        <TrackRow
-                            album='nome do album'
-                            artists={['joão', 'fernanda', 'henrique']}
-                            explicit={true}
-                            image={logo}
-                            index={2}
-                            time='7:30'
-                            title='titulo'
-                        />
-                        <TrackRow
-                            album='nome do album'
-                            artists={['joão', 'fernanda', 'henrique']}
-                            explicit={true}
-                            image={logo}
-                            index={3}
-                            time='7:30'
-                            title='titulo'
-                        />
-                        <TrackRow
-                            album='nome do album'
-                            artists={['joão', 'fernanda', 'henrique']}
-                            explicit={true}
-                            image={logo}
-                            index={4}
-                            time='7:30'
-                            title='titulo'
-                        />
-                        <TrackRow
-                            album='nome do album'
-                            artists={['joão', 'fernanda', 'henrique']}
-                            explicit={true}
-                            image={logo}
-                            index={5}
-                            time='7:30'
-                            title='titulo'
-                        />
+                        {searchResponse.tracks.map((track, i) => (
+                            <TrackRow
+                                key={track.id}
+                                album={track.albumName}
+                                artists={track.artistNames}
+                                explicit={track.explicit}
+                                image={track.images[0].url}
+                                index={i}
+                                time={secondsToMinutes(track.durationMs)}
+                                title={track.name}
+                            />
+                        ))}
                     </TrackList>
                 </div>
             </div>

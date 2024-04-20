@@ -34,6 +34,7 @@
 .trackRow {
     cursor: pointer;
     border-radius: 4px;
+    width: 100%;
 
     &:hover {
         background-color: $colors-transparent-bg-hover;

@@ -68,11 +68,6 @@ services:
       interval: 1s
       timeout: 5s
       retries: 120
-    deploy:
-      resources:
-        limits:
-          cpus: "0.5"
-          memory: 512M
 
   es01:
     depends_on:
@@ -120,8 +115,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "1"
-          memory: 1G
+          cpus: "0.50"
+          memory: 1.5G
 
   kibana:
     depends_on:
@@ -173,5 +168,5 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "1"
-          memory: 1G
+          cpus: "0.5"
+          memory: 1.5G

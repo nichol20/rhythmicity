@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   api-gateway:
-    build: 
+    build:
       context: .
       args:
         NODE_VERSION: ${NODE_VERSION}
@@ -11,7 +11,9 @@ services:
       - .:/app
     networks:
       - proxynet
-    
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
 networks:
   proxynet:
     name: nginx_proxy

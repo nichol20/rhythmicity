@@ -26,7 +26,7 @@ export const TrackRow = ({ album, artists, index, image, explicit, time, title }
             </div>
             <div className={`${styles.titleCol} ${styles.col}`}>
                 <div className={styles.content}>
-                    <Image src={image} alt={title} />
+                    <Image src={image} alt={title} width={40} height={40} />
                     <div className={styles.infoBox}>
                         <span className={styles.title}>{title}</span>
                         <span className={styles.description}>

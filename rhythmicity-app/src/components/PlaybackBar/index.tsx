@@ -1,24 +1,27 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import styles from './style.module.scss'
-import { YouTubePlayerRef, YouTubePlayer } from '../YoutubePlayer'
+import { YouTubePlayerRef, YouTubePlayer, PlayerEvent, PlayerState } from '../YoutubePlayer'
 import { TimeBar } from './TimeBar'
 import { Controls } from './Controls/index'
 import { Options } from './Options'
 import { collectionBackground } from '@/assets'
 import { usePlayback } from '@/contexts/PlaybackContext'
 import { Track } from '@/types/track'
+import { SearchedTrack } from '@/types/search'
+import { playback } from '@/utils/api'
 
 interface PlaybackBarProps {
-    track?: Track
+    track?: Track | SearchedTrack | null
 }
 
 export const PlaybackBar = ({ track }: PlaybackBarProps) => {
     const youtubePlayerRef = useRef<YouTubePlayerRef>(null)
-    const { } = usePlayback()
+    const { playNext } = usePlayback()
     const [currentTime, setCurrentTime] = useState(0)
     const [finalTime, setFinalTime] = useState(0)
     const [isHoldingTimeBar, setIsHoldingTimeBar] = useState(false)
+    const [currentYoutubeId, setCurrentYoutubeId] = useState("")
 
     const handleTimeBarChange = (seconds: number, allowSeekAhead: boolean = false) => {
         setCurrentTime(seconds)
@@ -34,7 +37,66 @@ export const PlaybackBar = ({ track }: PlaybackBarProps) => {
         handleTimeBarChange(currentTime, true)
     }
 
+
+    const handleStateChange = (event: PlayerEvent) => {
+        if (event.target.getPlayerState() === PlayerState.ENDED) {
+            playNext()
+        }
+    }
+
+    const getTrackImage = () => {
+        if (track) {
+            if ("youtube" in track) {
+                return track.spotify.albumImages[2]
+            }
+
+            return track.images[2]
+        }
+
+        return null
+    }
+
+    const getTrackName = () => {
+        if (track) {
+            if ("youtube" in track) {
+                return track.spotify.title
+            }
+
+            return track.name
+        }
+
+        return ""
+    }
+
+    const getAlbumName = () => {
+        if (track) {
+            if ("youtube" in track) {
+                return "Album"
+            }
+
+            return track.albumName
+        }
+
+        return ""
+    }
+
     useEffect(() => {
+        const getYoutubeId = async () => {
+            if (track) {
+                const data = await playback(track.id)
+                setCurrentYoutubeId(data.youtubeId)
+            }
+        }
+        getYoutubeId()
+    }, [track])
+
+    useEffect(() => {
+        const playVideo = () => {
+            if (youtubePlayerRef.current) {
+                youtubePlayerRef.current.cueVideoById(currentYoutubeId, 0)
+                youtubePlayerRef.current.playVideo()
+            }
+        }
         const getVideoDuration = () => {
             if (youtubePlayerRef.current) {
                 const duration = youtubePlayerRef.current.getDuration()
@@ -45,8 +107,9 @@ export const PlaybackBar = ({ track }: PlaybackBarProps) => {
             }
             setTimeout(getVideoDuration, 100)
         }
+        playVideo()
         getVideoDuration()
-    }, [])
+    }, [currentYoutubeId])
 
     useEffect(() => {
         const getVideoCurrentTime = () => {
@@ -72,18 +135,28 @@ export const PlaybackBar = ({ track }: PlaybackBarProps) => {
         return () => clearInterval(interval)
     }, [finalTime, isHoldingTimeBar])
 
+    console.log(currentYoutubeId)
     return (
         <footer className={styles.playbackBar}>
-            <YouTubePlayer videoId='yCzlKA5EajQ' ref={youtubePlayerRef} />
+            <YouTubePlayer videoId={currentYoutubeId} ref={youtubePlayerRef} onStateChange={handleStateChange} />
             <div className={styles.content}>
                 <div className={styles.trackInfo}>
-                    <div className={styles.imageBox}>
-                        <Image src={collectionBackground} alt="" />
-                    </div>
-                    <div className={styles.info}>
-                        <span className={styles.name}></span>
-                        <span className={styles.albumName}>albumname</span>
-                    </div>
+                    {track && (
+                        <>
+                            <div className={styles.imageBox}>
+                                <Image
+                                    src={getTrackImage()?.url ?? ""}
+                                    width={getTrackImage()?.width}
+                                    height={getTrackImage()?.height}
+                                    alt=""
+                                />
+                            </div>
+                            <div className={styles.info}>
+                                <span className={styles.name}>{getTrackName()}</span>
+                                <span className={styles.albumName}>{getAlbumName()}</span>
+                            </div>
+                        </>
+                    )}
                 </div>
                 <div className={styles.playerControls}>
                     <Controls youtubePlayerRef={youtubePlayerRef} />
