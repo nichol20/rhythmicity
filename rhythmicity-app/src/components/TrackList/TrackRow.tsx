@@ -12,16 +12,21 @@ export interface TrackRowProps {
     artists: string[]
     image: string | StaticImageData
     explicit: boolean
+    onPlay?: () => void
 }
 
-export const TrackRow = ({ album, artists, index, image, explicit, time, title }: TrackRowProps) => {
+export const TrackRow = ({ album, artists, index, image, explicit, time, title, onPlay }: TrackRowProps) => {
     const [isHovered, setIsHovered] = useState(false)
 
     return (
         <div className={styles.trackRow} onMouseOver={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
             <div className={`${styles.indexCol} ${styles.col}`}>
                 {isHovered
-                    ? <Image src={playIcon} alt="play" className={styles.playIcon} />
+                    ? (
+                        <button className={styles.playBtn} onClick={onPlay}>
+                            <Image src={playIcon} alt="play" className={styles.playIcon} />
+                        </button>
+                    )
                     : <span className={styles.content}>{index}</span>}
             </div>
             <div className={`${styles.titleCol} ${styles.col}`}>

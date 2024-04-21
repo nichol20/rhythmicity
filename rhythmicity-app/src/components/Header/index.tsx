@@ -34,7 +34,7 @@ export const Header = () => {
   }, [scrollPos])
 
   return (
-    <div className={`${styles.header} ${visible ? '' : styles.hidden}`}>
+    <header className={`${styles.header} ${visible ? '' : styles.hidden}`}>
       <div className={styles.content}>
         <button className={styles.toggleMenu} onClick={toggleMenu}></button>
         <Link href='/' className={styles.logo}>
@@ -50,6 +50,6 @@ export const Header = () => {
           </Link>
         </div>
       </div>
-    </div>
+    </header>
   )
 }

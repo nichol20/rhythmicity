@@ -8,7 +8,7 @@ export interface BestResult {
   'track'?: (_rhythmicity_search_api_Track | null);
   'artist'?: (_rhythmicity_search_api_Artist | null);
   'album'?: (_rhythmicity_search_api_Album | null);
-  'bestResult'?: "track"|"artist"|"album";
+  'type'?: "track"|"artist"|"album";
 }
 
 export interface BestResult__Output {

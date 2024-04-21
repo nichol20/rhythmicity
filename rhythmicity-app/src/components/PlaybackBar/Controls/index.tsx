@@ -5,12 +5,14 @@ import { nextIcon, pauseIcon, playIcon, shuffleIcon, repeatIcon, repeatOneIcon }
 import { PlayerState, YouTubePlayerRef } from '@/components/YoutubePlayer'
 
 import styles from './styles.module.scss'
+import { usePlayback } from '@/contexts/PlaybackContext'
 
 interface ControlsProps {
     youtubePlayerRef: RefObject<YouTubePlayerRef>
 }
 
 export const Controls = ({ youtubePlayerRef }: ControlsProps) => {
+    const { playNext } = usePlayback()
     const [playBtnIcon, setPlayBtnIcon] = useState(playIcon)
     const [loopBtnIcon, setLoopBtnIcon] = useState(repeatIcon)
 
@@ -54,7 +56,7 @@ export const Controls = ({ youtubePlayerRef }: ControlsProps) => {
             <button className={styles.playBtn} onClick={handlePlayBtnClick}>
                 <Image src={playBtnIcon} alt="play" />
             </button>
-            <button className={styles.nextBtn}>
+            <button className={styles.nextBtn} onClick={playNext}>
                 <Image src={nextIcon} alt="next" />
             </button>
             <button className={styles.loopBtn} onClick={handleLoopBtnClick}>

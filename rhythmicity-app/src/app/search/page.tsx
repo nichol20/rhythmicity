@@ -2,8 +2,6 @@
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 
-import { logo } from '@/assets'
-import { Card } from '@/components/Card'
 import { Header } from '@/components/Header'
 import { SearchInput } from '@/components/SearchInput'
 import { TrackList, TrackRow } from '@/components/TrackList'
@@ -13,7 +11,9 @@ import styles from '@/styles/Search.module.scss'
 import { useCallback, useEffect, useState } from 'react'
 import { QueryKind, SearchResponse, search } from '@/utils/api'
 import { BestResult, SearchedAlbum, SearchedArtist, SearchedTrack } from '@/types/search'
-import { secondsToMinutes } from '@/utils/conversion'
+import { msToMinutes, secondsToMinutes } from '@/utils/conversion'
+import { BestResultCard } from '@/components/BestResultCard'
+import { Card } from '@/components/Card'
 const kinds = ['all', 'tracks', 'artists', 'albums']
 
 export default function SearchPage() {
@@ -63,50 +63,6 @@ export default function SearchPage() {
         return kindParam === kind ? styles.active : ""
     }
 
-    const getBestResultImage = (result: BestResult): string => {
-        if (result.bestResult === "track") {
-            return result.track.images[0].url
-        } else if (result.bestResult === "artist") {
-            return result.artist.images[0].url
-        } else if (result.bestResult === "album") {
-            return result.album.images[0].url
-        }
-        return ""
-    }
-
-    const getBestResultType = (result: BestResult): string => {
-        if (result.bestResult === "track") {
-            return result.track.type
-        } else if (result.bestResult === "artist") {
-            return result.artist.type
-        } else if (result.bestResult === "album") {
-            return result.album.type
-        }
-        return ""
-    }
-
-    const getBestResultTitle = (result: BestResult): string => {
-        if (result.bestResult === "track") {
-            return result.track.name
-        } else if (result.bestResult === "artist") {
-            return result.artist.name
-        } else if (result.bestResult === "album") {
-            return result.album.name
-        }
-        return ""
-    }
-
-    const getBestResult = (result: BestResult) => {
-        if (result.bestResult === "track") {
-            return result.track
-        } else if (result.bestResult === "artist") {
-            return result.artist
-        } else if (result.bestResult === "album") {
-            return result.album
-        }
-        return null
-    }
-
     const handlePlay = (obj: SearchedTrack | SearchedAlbum | SearchedArtist) => {
         if (obj.type === "track") {
             addTrackToQueue(obj)
@@ -133,37 +89,61 @@ export default function SearchPage() {
                 </div>
 
                 <div className={styles.results}>
-                    {searchResponse.bestResult &&
-                        <Card
-                            description={getBestResultType(searchResponse.bestResult)}
-                            image={getBestResultImage(searchResponse.bestResult)}
-                            title={getBestResultTitle(searchResponse.bestResult)}
-                            onPlay={() => {
-                                if (searchResponse.bestResult) {
-                                    const bestResult = getBestResult(searchResponse.bestResult)
-                                    if (bestResult) {
-                                        handlePlay(bestResult)
+                    <section className={styles.mainResults}>
+                        <div className={styles.bestResultBox}>
+                            <h3 className={styles.title}>Best Result</h3>
+                            {searchResponse.bestResult &&
+                                <BestResultCard bestResult={searchResponse.bestResult} onPlay={handlePlay} />}
+                        </div>
+                        <div className={styles.tracksBox}>
+                            <h3 className={styles.title}>Tracks</h3>
+                            <div className={styles.tracks}>
+                                {searchResponse.tracks.map((track, i) => {
+                                    if (i < 5) {
+                                        return <TrackRow
+                                            key={track.id}
+                                            album={track.albumName}
+                                            artists={track.artistNames}
+                                            explicit={track.explicit}
+                                            image={track.images[0].url}
+                                            index={i + 1}
+                                            time={msToMinutes(track.durationMs)}
+                                            title={track.name}
+                                            onPlay={() => handlePlay(track)}
+                                        />
                                     }
-                                }
-                            }}
-                            isArtist={false}
-                            isPlayable
-                            kind='big'
-                        />}
-                    <TrackList>
-                        {searchResponse.tracks.map((track, i) => (
-                            <TrackRow
-                                key={track.id}
-                                album={track.albumName}
-                                artists={track.artistNames}
-                                explicit={track.explicit}
-                                image={track.images[0].url}
-                                index={i}
-                                time={secondsToMinutes(track.durationMs)}
-                                title={track.name}
-                            />
-                        ))}
-                    </TrackList>
+                                })}
+                            </div>
+                        </div>
+                    </section>
+                    <section className={styles.albumResults}>
+                        <h3 className={styles.title}>Albums</h3>
+                        <div className={styles.albums}>
+                            {searchResponse.albums.map((album, i) => (
+                                <Card
+                                    key={album.id}
+                                    title={album.name}
+                                    image={album.images[0].url}
+                                    description={album.name}
+                                    isPlayable
+                                />
+                            ))}
+                        </div>
+                    </section>
+                    <section className={styles.artistResults}>
+                        <h3 className={styles.title}>Artists</h3>
+                        <div className={styles.artists}>
+                            {searchResponse.artists.map((artist, i) => (
+                                <Card
+                                    key={artist.id}
+                                    title={artist.name}
+                                    image={artist.images[0].url}
+                                    description={artist.name}
+                                    isPlayable
+                                />
+                            ))}
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>

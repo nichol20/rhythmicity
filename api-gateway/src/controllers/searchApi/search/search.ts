@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express"
 import { searchClient } from "../../../servers/searchApi"
 import { searchSchema } from "../../../validators/searchApi/search"
-import { InternalServerError } from "../../../helpers/apiError"
+import { BadRequestError, InternalServerError } from "../../../helpers/apiError"
 
 export default function search(req: Request, res: Response, next: NextFunction) {
     const { error: validationErr, value } = searchSchema.validate(req.body)
     if (validationErr) {
-        return res.status(400).json({ message: validationErr.message })
+        throw new BadRequestError(validationErr.message)
     }
 
     searchClient.Search(

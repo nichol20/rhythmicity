@@ -4,7 +4,6 @@ import styles from './style.module.scss'
 import Image from "next/image";
 import { closeIcon, searchIcon } from "@/assets";
 import { useDebounce } from "@/hooks/useDebounce";
-import { debounce } from "@/utils/debounce";
 
 interface SearchInputProps {
     onChange: (value: string) => void

@@ -49,7 +49,7 @@ message Album {
 }
 
 message BestResult {
-    oneof bestResult {
+    oneof type {
         Track track = 1;
         Artist artist = 2;
         Album album = 3;

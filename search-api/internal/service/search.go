@@ -84,7 +84,7 @@ func (s *SearchGrpcService) Search(ctx context.Context, req *pb.SearchRequest) (
 				}
 				if i == 0 {
 					bestResult = &pb.BestResult{
-						BestResult: &pb.BestResult_Track{Track: pbTrack},
+						Type: &pb.BestResult_Track{Track: pbTrack},
 					}
 				}
 				tracks = append(tracks, pbTrack)
@@ -108,7 +108,7 @@ func (s *SearchGrpcService) Search(ctx context.Context, req *pb.SearchRequest) (
 				}
 				if i == 0 {
 					bestResult = &pb.BestResult{
-						BestResult: &pb.BestResult_Artist{Artist: pbArtist},
+						Type: &pb.BestResult_Artist{Artist: pbArtist},
 					}
 				}
 				artists = append(artists, pbArtist)
@@ -135,7 +135,7 @@ func (s *SearchGrpcService) Search(ctx context.Context, req *pb.SearchRequest) (
 				}
 				if i == 0 {
 					bestResult = &pb.BestResult{
-						BestResult: &pb.BestResult_Album{Album: pbAlbum},
+						Type: &pb.BestResult_Album{Album: pbAlbum},
 					}
 				}
 				albums = append(albums, pbAlbum)

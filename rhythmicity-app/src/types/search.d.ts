@@ -40,11 +40,17 @@ export interface SearchedTrack {
 
 type BestResult = {
     album: SearchedAlbum
-    bestResult: "album"
+    artist: undefined
+    track: undefined
+    type: "album"
 } | {
+    album: undefined
     artist: SearchedArtist
-    bestResult: "artist"
+    track: undefined
+    type: "artist"
 } | {
+    album: undefined
+    artist: undefined
     track: SearchedTrack
-    bestResult: "track"
+    type: "track"
 }

@@ -71,8 +71,8 @@ export const YouTubePlayer = memo(forwardRef<YouTubePlayerRef, YouTubePlayerProp
             window.onYouTubeIframeAPIReady = () => {
                 playerRef.current = new window.YT.Player('player', {
                     videoId,
-                    width: '300',
-                    height: '300',
+                    width: '0',
+                    height: '0',
                     events: {
                         onReady: event => {
                             setIsReady(true)
@@ -105,7 +105,7 @@ export const YouTubePlayer = memo(forwardRef<YouTubePlayerRef, YouTubePlayerProp
             playVideo: isReady ? playVideo : () => { },
             pauseVideo: isReady ? pauseVideo : () => { },
             seekTo: isReady ? seekTo : () => { },
-            getPlayerState: isReady ? getPlayerState : () => PlayerState.CUED,
+            getPlayerState: isReady ? getPlayerState : () => PlayerState.UNSTARTED,
             getCurrentTime: isReady ? getCurrentTime : () => 0,
             getDuration: isReady ? getDuration : () => 0,
             mute: isReady ? mute : () => { },
