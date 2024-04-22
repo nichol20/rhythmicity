@@ -1,0 +1,19 @@
+@use '../../../styles/' as *;
+
+section .title {
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    color: $colors-primary-txt;
+    font-weight: 800;
+}
+
+.resultsBox {
+    width: 100%;
+
+    .results {
+        display: grid;
+        grid-gap: 10px; 
+        // grid-template-columns: repeat(var(--column-count), minmax(0, 1fr));
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+}

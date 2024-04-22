@@ -68,6 +68,11 @@ services:
       interval: 1s
       timeout: 5s
       retries: 120
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
 
   es01:
     depends_on:
@@ -153,7 +158,7 @@ services:
       resources:
         limits:
           cpus: "0.5"
-          memory: 512M
+          memory: 800M
 
   search-api:
     build: .

@@ -22,8 +22,10 @@ func (r *SearchRepository) Search(ctx context.Context, search *domain.Search) ([
 	queries := strings.Split(search.Query, " ")
 
 	for _, q := range queries {
-		query += "*" + q + "*"
+		query += "*" + q + "* "
 	}
+
+	fmt.Println(query)
 
 	filter := []map[string]any{}
 

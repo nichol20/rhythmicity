@@ -100,7 +100,7 @@ services:
       resources:
         limits:
           cpus: "0.5"
-          memory: "1.5GB"
+          memory: 512M
 
   main-api:
     build: .

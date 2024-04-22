@@ -42,7 +42,10 @@
 }
 
 .results {
+    @include mixins-display-flex();
+    flex-direction: column;
     padding: 20px;
+    gap: 20px;
 }
 
 .mainResults {
@@ -67,18 +70,4 @@ section .title {
 
 .tracksBox {
     flex: 1;
-}
-
-.albumResults {
-    .albums {
-        @include mixins-display-flex(flex-start);
-        gap: 10px;
-    }
-}
-
-.artistResults {
-    .artists {
-        @include mixins-display-flex(flex-start);
-        gap: 10px;
-    }
 }

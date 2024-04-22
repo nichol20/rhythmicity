@@ -4,23 +4,24 @@ import { useRouter } from 'next/navigation'
 
 import { Header } from '@/components/Header'
 import { SearchInput } from '@/components/SearchInput'
-import { TrackList, TrackRow } from '@/components/TrackList'
+import { TrackRow } from '@/components/TrackList'
 import { usePlayback } from '@/contexts/PlaybackContext'
 
 import styles from '@/styles/Search.module.scss'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { QueryKind, SearchResponse, search } from '@/utils/api'
-import { BestResult, SearchedAlbum, SearchedArtist, SearchedTrack } from '@/types/search'
-import { msToMinutes, secondsToMinutes } from '@/utils/conversion'
-import { BestResultCard } from '@/components/BestResultCard'
-import { Card } from '@/components/Card'
+import { SearchedAlbum, SearchedArtist, SearchedTrack } from '@/types/search'
+import { msToMinutes } from '@/utils/conversion'
+import { BestResultCard } from '@/components/SearchResults/BestResultCard'
+import { ResultCards } from '@/components/SearchResults/ResultCards'
+import { MainResults } from '@/components/SearchResults/MainResults'
 const kinds = ['all', 'tracks', 'artists', 'albums']
 
 export default function SearchPage() {
     const router = useRouter()
     const pathname = usePathname()
     const searchParams = useSearchParams()
-    const { setShowPlaybackBar, addTrackToQueue } = usePlayback()
+    const { addTrackToQueue } = usePlayback(true)
     const searchQuery = searchParams.get('q') || ""
     const kindParam = searchParams.get("kind") || "all"
     const [searchResponse, setSearchResponse] = useState<SearchResponse>({ albums: [], artists: [], tracks: [], bestResult: null })
@@ -63,16 +64,6 @@ export default function SearchPage() {
         return kindParam === kind ? styles.active : ""
     }
 
-    const handlePlay = (obj: SearchedTrack | SearchedAlbum | SearchedArtist) => {
-        if (obj.type === "track") {
-            addTrackToQueue(obj)
-        }
-    }
-
-    useEffect(() => {
-        setShowPlaybackBar(true)
-    }, [setShowPlaybackBar])
-
     return (
         <div className={styles.searchPage}>
             <Header />
@@ -89,61 +80,9 @@ export default function SearchPage() {
                 </div>
 
                 <div className={styles.results}>
-                    <section className={styles.mainResults}>
-                        <div className={styles.bestResultBox}>
-                            <h3 className={styles.title}>Best Result</h3>
-                            {searchResponse.bestResult &&
-                                <BestResultCard bestResult={searchResponse.bestResult} onPlay={handlePlay} />}
-                        </div>
-                        <div className={styles.tracksBox}>
-                            <h3 className={styles.title}>Tracks</h3>
-                            <div className={styles.tracks}>
-                                {searchResponse.tracks.map((track, i) => {
-                                    if (i < 5) {
-                                        return <TrackRow
-                                            key={track.id}
-                                            album={track.albumName}
-                                            artists={track.artistNames}
-                                            explicit={track.explicit}
-                                            image={track.images[0].url}
-                                            index={i + 1}
-                                            time={msToMinutes(track.durationMs)}
-                                            title={track.name}
-                                            onPlay={() => handlePlay(track)}
-                                        />
-                                    }
-                                })}
-                            </div>
-                        </div>
-                    </section>
-                    <section className={styles.albumResults}>
-                        <h3 className={styles.title}>Albums</h3>
-                        <div className={styles.albums}>
-                            {searchResponse.albums.map((album, i) => (
-                                <Card
-                                    key={album.id}
-                                    title={album.name}
-                                    image={album.images[0].url}
-                                    description={album.name}
-                                    isPlayable
-                                />
-                            ))}
-                        </div>
-                    </section>
-                    <section className={styles.artistResults}>
-                        <h3 className={styles.title}>Artists</h3>
-                        <div className={styles.artists}>
-                            {searchResponse.artists.map((artist, i) => (
-                                <Card
-                                    key={artist.id}
-                                    title={artist.name}
-                                    image={artist.images[0].url}
-                                    description={artist.name}
-                                    isPlayable
-                                />
-                            ))}
-                        </div>
-                    </section>
+                    <MainResults bestResult={searchResponse.bestResult} tracks={searchResponse.tracks} />
+                    <ResultCards results={searchResponse.albums} title='Albums' />
+                    <ResultCards results={searchResponse.artists} title='Artists' />
                 </div>
             </div>
         </div>

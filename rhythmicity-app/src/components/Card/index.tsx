@@ -12,11 +12,21 @@ interface CardProps {
     isArtist?: boolean
     isPlayable?: boolean
     kind?: 'normal' | 'big'
+    className?: string
 }
 
-export const Card = ({ image, title, description, onPlay, isArtist = false, isPlayable = false, kind = "normal" }: CardProps) => {
+export const Card = ({
+    image,
+    title,
+    description,
+    onPlay,
+    isArtist = false,
+    isPlayable = false,
+    kind = "normal",
+    className
+}: CardProps) => {
     return (
-        <div className={styles.card} data-kind={kind}>
+        <div className={`${styles.card} ${className ?? ""}`} data-kind={kind}>
             <div className={styles.container}>
                 <div className={styles.imageBox} data-card-type={isArtist ? "artist" : ""}>
                     <div className={styles.boxContent}>
@@ -24,8 +34,8 @@ export const Card = ({ image, title, description, onPlay, isArtist = false, isPl
                     </div>
                 </div>
                 <div className={styles.details}>
-                    <h3 className={styles.title}>{title}</h3>
-                    <p className={styles.description}>{description}</p>
+                    <h5 className={styles.title}>{title}</h5>
+                    <span className={styles.description}>{description}</span>
                 </div>
             </div>
             {isPlayable && (
