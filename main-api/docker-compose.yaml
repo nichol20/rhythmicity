@@ -109,6 +109,15 @@ services:
         condition: service_healthy
     ports:
       - "50052:50051"
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_NAME: ${DB_NAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_ROOT_CERT: ${DB_ROOT_CERT}
+      DB_SSL_KEY: ${DB_SSL_KEY}
+      DB_SSL_CERT: ${DB_SSL_CERT}
     volumes:
       - certs:/app/internal/db/certs
       - .:/app

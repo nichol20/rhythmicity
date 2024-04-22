@@ -162,6 +162,9 @@ services:
         condition: service_healthy
     ports:
       - "50051:50051"
+    environment:
+      ELASTIC_USER: ${ELASTIC_USER}
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
     volumes:
       - certs:/app/internal/db/certs
       - .:/app
