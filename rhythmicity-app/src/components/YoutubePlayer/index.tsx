@@ -24,6 +24,7 @@ export interface Player {
     setVolume(volume: number): void
     getVolume(): number
     cueVideoById(videoId: string, startSeconds: number): void
+    loadVideoById(videoId: string, startSeconds: number): void
 }
 
 export interface PlayerEvent {
@@ -71,8 +72,8 @@ export const YouTubePlayer = memo(forwardRef<YouTubePlayerRef, YouTubePlayerProp
             window.onYouTubeIframeAPIReady = () => {
                 playerRef.current = new window.YT.Player('player', {
                     videoId,
-                    width: '0',
-                    height: '0',
+                    width: '300',
+                    height: '300',
                     events: {
                         onReady: event => {
                             setIsReady(true)
@@ -80,7 +81,6 @@ export const YouTubePlayer = memo(forwardRef<YouTubePlayerRef, YouTubePlayerProp
                         onStateChange
                     }
                 })
-                console.log(playerRef.current)
             }
 
             return () => {
@@ -100,6 +100,7 @@ export const YouTubePlayer = memo(forwardRef<YouTubePlayerRef, YouTubePlayerProp
         const getVolume = () => playerRef.current!.getVolume()
         const setVolume = (volume: number) => playerRef.current!.setVolume(volume)
         const cueVideoById = (videoId: string, startSeconds: number) => playerRef.current!.cueVideoById(videoId, startSeconds)
+        const loadVideoById = (videoId: string, startSeconds: number) => playerRef.current!.loadVideoById(videoId, startSeconds)
 
         useImperativeHandle(ref, () => ({
             playVideo: isReady ? playVideo : () => { },
@@ -113,7 +114,8 @@ export const YouTubePlayer = memo(forwardRef<YouTubePlayerRef, YouTubePlayerProp
             isMuted: isReady ? isMuted : () => false,
             getVolume: isReady ? getVolume : () => 1,
             setVolume: isReady ? setVolume : () => { },
-            cueVideoById: isReady ? cueVideoById : () => { }
+            cueVideoById: isReady ? cueVideoById : () => { },
+            loadVideoById: isReady ? loadVideoById : () => { }
         }))
 
         return <div id="player"></div>

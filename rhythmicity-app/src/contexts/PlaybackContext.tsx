@@ -41,11 +41,11 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
     const [queue, setQueue] = useState<(Track | SearchedTrack)[]>([])
 
     const addTrackToQueue = (track: Track | SearchedTrack) => {
+        console.log("added to queue")
         setQueue(prev => {
             if (prev.length === 0) {
                 setCurrentTrack(track)
             }
-
             return [...prev, track]
         })
     }
@@ -65,19 +65,19 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
     }
 
     const playNext = () => {
+        console.log("playNext")
         setQueue(prev => {
             if (prev.length > 1) {
-                prev.shift()
-                console.log(prev)
-                setCurrentTrack(prev[0])
-                return [...prev]
+                const next = prev.slice(1)
+                setCurrentTrack(next[0])
+                return [...next]
             }
             setCurrentTrack(null)
             return []
         })
     }
 
-    console.log(queue)
+    // console.log(queue)
 
     return (
         <PlaybackContext.Provider value={{

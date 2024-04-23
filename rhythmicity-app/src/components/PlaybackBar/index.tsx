@@ -17,7 +17,7 @@ interface PlaybackBarProps {
 
 export const PlaybackBar = ({ track }: PlaybackBarProps) => {
     const youtubePlayerRef = useRef<YouTubePlayerRef>(null)
-    const { playNext } = usePlayback()
+    const { playNext, cleanQueue } = usePlayback()
     const [currentTime, setCurrentTime] = useState(0)
     const [finalTime, setFinalTime] = useState(0)
     const [isHoldingTimeBar, setIsHoldingTimeBar] = useState(false)
@@ -39,6 +39,7 @@ export const PlaybackBar = ({ track }: PlaybackBarProps) => {
 
 
     const handleStateChange = (event: PlayerEvent) => {
+        console.log(event.target.getPlayerState())
         if (event.target.getPlayerState() === PlayerState.ENDED) {
             playNext()
         }
@@ -82,19 +83,21 @@ export const PlaybackBar = ({ track }: PlaybackBarProps) => {
 
     useEffect(() => {
         const getYoutubeId = async () => {
+            console.log(track)
             if (track) {
                 const data = await playback(track.id)
+                console.log(data)
                 setCurrentYoutubeId(data.youtubeId)
             }
         }
         getYoutubeId()
+        console.log("getYoutubeID")
     }, [track])
 
     useEffect(() => {
         const playVideo = () => {
             if (youtubePlayerRef.current) {
-                youtubePlayerRef.current.cueVideoById(currentYoutubeId, 0)
-                youtubePlayerRef.current.playVideo()
+                youtubePlayerRef.current.loadVideoById(currentYoutubeId, 0)
             }
         }
         const getVideoDuration = () => {
@@ -135,7 +138,7 @@ export const PlaybackBar = ({ track }: PlaybackBarProps) => {
         return () => clearInterval(interval)
     }, [finalTime, isHoldingTimeBar])
 
-    console.log(currentYoutubeId)
+    // console.log(currentYoutubeId)
     return (
         <footer className={styles.playbackBar}>
             <YouTubePlayer videoId={currentYoutubeId} ref={youtubePlayerRef} onStateChange={handleStateChange} />
