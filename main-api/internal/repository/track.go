@@ -30,8 +30,16 @@ func (r *TrackRepository) GetYoutubeId(ctx context.Context, trackID string) (str
 	return youtebeId, r.handleError(err)
 }
 
-func (r *TrackRepository) GetPopularTracks(ctx context.Context, limit int32) ([]domain.Track, error) {
-	tracksRow, err := r.queries.GetPopularTracks(ctx, limit)
+type GetPopularTracksParams struct {
+	Limit  uint32
+	Offset uint32
+}
+
+func (r *TrackRepository) GetPopularTracks(ctx context.Context, arg GetPopularTracksParams) ([]domain.Track, error) {
+	tracksRow, err := r.queries.GetPopularTracks(ctx, db.GetPopularTracksParams{
+		Limit:  int32(arg.Limit),
+		Offset: int32(arg.Offset),
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -85,8 +93,14 @@ func (r *TrackRepository) GetSeveralTracks(ctx context.Context, trackIDs []strin
 	return tracks, nil
 }
 
-func (r *TrackRepository) GetTracksByArtistId(ctx context.Context, artistID string) ([]domain.Track, error) {
-	uuid, err := uuid.Parse(artistID)
+type GetTracksByArtistIdParms struct {
+	Artistid string
+	Limit    uint32
+	Offset   uint32
+}
+
+func (r *TrackRepository) GetTracksByArtistId(ctx context.Context, arg GetTracksByArtistIdParms) ([]domain.Track, error) {
+	uuid, err := uuid.Parse(arg.Artistid)
 	if err != nil {
 		return nil, domain.ErrNotFound
 	}
@@ -95,7 +109,11 @@ func (r *TrackRepository) GetTracksByArtistId(ctx context.Context, artistID stri
 	} else if !exists {
 		return nil, domain.ErrNotFound
 	}
-	tracksRow, err := r.queries.GetTracksByArtistId(ctx, uuid)
+	tracksRow, err := r.queries.GetTracksByArtistId(ctx, db.GetTracksByArtistIdParams{
+		Artistid: uuid,
+		Limit:    int32(arg.Limit),
+		Offset:   int32(arg.Offset),
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -110,8 +128,14 @@ func (r *TrackRepository) GetTracksByArtistId(ctx context.Context, artistID stri
 	return tracks, nil
 }
 
-func (r *TrackRepository) GetTracksByAlbumId(ctx context.Context, albumID string) ([]domain.Track, error) {
-	uuid, err := uuid.Parse(albumID)
+type GetTracksByAlbumIdParams struct {
+	Albumid string
+	Limit   uint32
+	Offset  uint32
+}
+
+func (r *TrackRepository) GetTracksByAlbumId(ctx context.Context, arg GetTracksByAlbumIdParams) ([]domain.Track, error) {
+	uuid, err := uuid.Parse(arg.Albumid)
 	if err != nil {
 		return nil, domain.ErrNotFound
 	}
@@ -120,7 +144,11 @@ func (r *TrackRepository) GetTracksByAlbumId(ctx context.Context, albumID string
 	} else if !exists {
 		return nil, domain.ErrNotFound
 	}
-	tracksRow, err := r.queries.GetTracksByAlbumId(ctx, uuid)
+	tracksRow, err := r.queries.GetTracksByAlbumId(ctx, db.GetTracksByAlbumIdParams{
+		Albumid: uuid,
+		Limit:   int32(arg.Limit),
+		Offset:  int32(arg.Offset),
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -149,21 +177,21 @@ func (r *TrackRepository) createTrack(ctx context.Context, row interface{}) (*do
 		Genres:    details.Genres,
 		Styles:    details.Styles,
 		Explicit:  t.Explicit,
-		PlayCount: t.Playcount,
+		PlayCount: uint64(t.Playcount),
 		Lyrics:    t.Lyrics.String,
 		Spotify: domain.SpotifyTrack{
 			Title:       t.Spotifytitle,
-			DurationMS:  t.Spotifydurationms,
+			DurationMS:  uint32(t.Spotifydurationms),
 			AlbumImages: details.AlbumImages,
 			Spotify: domain.Spotify{
 				ID:         t.Spotifyid,
-				Popularity: t.Spotifypopularity,
+				Popularity: uint32(t.Spotifypopularity),
 			},
 		},
 		Youtube: domain.Youtube{
 			ID:          t.Youtubeid,
 			Title:       t.Youtubetitle,
-			DurationMs:  t.Youtubedurationms,
+			DurationMs:  uint32(t.Youtubedurationms),
 			PublishedAt: t.Youtubepublishedat.String(),
 			Thumbnails:  details.Thumbnails,
 			Statistics: domain.YoutubeStatistcs{
@@ -228,8 +256,8 @@ func (r *TrackRepository) getAlbumImages(ctx context.Context, albumID uuid.UUID)
 	var albumImages []domain.Image
 	for _, v := range albumImagesRow {
 		image := domain.Image{
-			Height: v.Height,
-			Width:  v.Width,
+			Height: uint32(v.Height),
+			Width:  uint32(v.Width),
 			Url:    v.Url,
 		}
 		albumImages = append(albumImages, image)
@@ -249,32 +277,32 @@ func (r *TrackRepository) getYoutubeThumbnails(ctx context.Context, trackID uuid
 		switch v.Type {
 		case "default":
 			thumbnails.Default = domain.Image{
-				Height: v.Height,
-				Width:  v.Width,
+				Height: uint32(v.Height),
+				Width:  uint32(v.Width),
 				Url:    v.Url,
 			}
 		case "medium":
 			thumbnails.Medium = domain.Image{
-				Height: v.Height,
-				Width:  v.Width,
+				Height: uint32(v.Height),
+				Width:  uint32(v.Width),
 				Url:    v.Url,
 			}
 		case "high":
 			thumbnails.High = domain.Image{
-				Height: v.Height,
-				Width:  v.Width,
+				Height: uint32(v.Height),
+				Width:  uint32(v.Width),
 				Url:    v.Url,
 			}
 		case "standard":
 			thumbnails.Standard = domain.Image{
-				Height: v.Height,
-				Width:  v.Width,
+				Height: uint32(v.Height),
+				Width:  uint32(v.Width),
 				Url:    v.Url,
 			}
 		case "maxres":
 			thumbnails.Maxres = domain.Image{
-				Height: v.Height,
-				Width:  v.Width,
+				Height: uint32(v.Height),
+				Width:  uint32(v.Width),
 				Url:    v.Url,
 			}
 		}

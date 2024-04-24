@@ -21,8 +21,16 @@ func NewArtistRepository(dbconn *sql.DB) *ArtistRepository {
 	}
 }
 
-func (r *ArtistRepository) GetPopularArtists(ctx context.Context, limit int32) ([]domain.Artist, error) {
-	artistsRow, err := r.queries.GetPopularArtists(ctx, limit)
+type GetPopularArtistsParams struct {
+	Limit  uint32
+	Offset uint32
+}
+
+func (r *ArtistRepository) GetPopularArtists(ctx context.Context, arg GetPopularArtistsParams) ([]domain.Artist, error) {
+	artistsRow, err := r.queries.GetPopularArtists(ctx, db.GetPopularArtistsParams{
+		Limit:  int32(arg.Limit),
+		Offset: int32(arg.Offset),
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -142,7 +150,7 @@ func (r *ArtistRepository) createArtist(ctx context.Context, row interface{}) (*
 			Images: details.Images,
 			Spotify: domain.Spotify{
 				ID:         a.Spotifyid.String,
-				Popularity: a.Spotifypopularity,
+				Popularity: uint32(a.Spotifypopularity),
 			},
 		},
 	}, nil
@@ -182,8 +190,8 @@ func (r *ArtistRepository) getSpotifyImages(ctx context.Context, artistID uuid.U
 	var images []domain.Image
 	for _, v := range imagesRow {
 		image := domain.Image{
-			Height: v.Height,
-			Width:  v.Width,
+			Height: uint32(v.Height),
+			Width:  uint32(v.Width),
 			Url:    v.Url,
 		}
 		images = append(images, image)

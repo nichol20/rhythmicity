@@ -16,7 +16,7 @@ INNER JOIN track_data_spotify sp ON t.spotifyId = sp.id
 INNER JOIN track_data_youtube y ON t.youtubeDataId = y.id
 INNER JOIN track_statistics_youtube sy ON y.id = sy.youtubeDataId 
 ORDER BY sp.popularity DESC 
-LIMIT $1;
+LIMIT $1 OFFSET $2;
 
 -- name: GetTrack :one
 SELECT 
@@ -71,7 +71,8 @@ INNER JOIN tracks t ON t.id = at.trackId
 INNER JOIN track_data_spotify sp ON t.spotifyId = sp.id
 INNER JOIN track_data_youtube y ON t.youtubeDataId = y.id
 INNER JOIN track_statistics_youtube sy ON y.id = sy.youtubeDataId
-WHERE at.artistId = $1;
+WHERE at.artistId = $1
+LIMIT $2 OFFSET $3;
 
 -- name: GetTracksByAlbumId :many
 SELECT 
@@ -84,4 +85,5 @@ FROM tracks t
 INNER JOIN track_data_spotify sp ON t.spotifyId = sp.id
 INNER JOIN track_data_youtube y ON t.youtubeDataId = y.id
 INNER JOIN track_statistics_youtube sy ON y.id = sy.youtubeDataId
-WHERE t.albumId = $1;
+WHERE t.albumId = $1
+LIMIT $2 OFFSET $3;

@@ -7,13 +7,14 @@ import (
 
 	"github.com/nichol20/rhythmicity/main-api/internal/domain"
 	"github.com/nichol20/rhythmicity/main-api/internal/pb"
+	"github.com/nichol20/rhythmicity/main-api/internal/repository"
 	"github.com/nichol20/rhythmicity/main-api/internal/utils"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 type ArtistRepositoryInterface interface {
-	GetPopularArtists(ctx context.Context, limit int32) ([]domain.Artist, error)
+	GetPopularArtists(ctx context.Context, arg repository.GetPopularArtistsParams) ([]domain.Artist, error)
 	GetArtist(ctx context.Context, artistID string) (*domain.Artist, error)
 	GetSeveralArtists(ctx context.Context, artistIDs []string) ([]domain.Artist, error)
 	GetArtistsByTrackId(ctx context.Context, trackID string) ([]domain.Artist, error)
@@ -26,12 +27,16 @@ type ArtistGRPCService struct {
 }
 
 func (s *ArtistGRPCService) GetPopularArtists(ctx context.Context, req *pb.GetPopularArtistsRequest) (*pb.MultipleArtists, error) {
-	max := int32(20)
-	limit := max
-	if req != nil && req.Limit != nil && *req.Limit > 0 && *req.Limit < max {
-		limit = *req.Limit
-	}
-	artists, err := s.ArtistRepository.GetPopularArtists(ctx, limit)
+	limit, offset := utils.CheckLimitAndOffset(utils.CheckLimitAndOffsetParams{
+		Limit:  req.Limit,
+		Offset: req.Offset,
+	})
+
+	artists, err := s.ArtistRepository.GetPopularArtists(ctx, repository.GetPopularArtistsParams{
+		Limit:  limit,
+		Offset: offset,
+	})
+
 	if err != nil {
 		slog.Error(err.Error())
 		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())

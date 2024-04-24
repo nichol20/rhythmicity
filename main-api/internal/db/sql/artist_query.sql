@@ -7,7 +7,7 @@ SELECT
 FROM artists a
 INNER JOIN artist_data_spotify sp ON a.spotifyId = sp.id
 ORDER BY sp.popularity DESC
-LIMIT $1;
+LIMIT $1 OFFSET $2;
 
 -- name: GetArtist :one
 SELECT 

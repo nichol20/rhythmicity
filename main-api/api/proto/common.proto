@@ -15,7 +15,7 @@ message RequestByIds {
 }
 
 message Image {
-    int32 height = 1;
+    uint32 height = 1;
     string url = 2;
-    int32 width = 3; 
+    uint32 width = 3; 
 }

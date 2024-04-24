@@ -10,3 +10,6 @@ gen-proto:
 
 clean-proto:
 	rm ./internal/pb/*.go
+
+gen-sqlc:
+	sqlc generate

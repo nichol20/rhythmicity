@@ -9,8 +9,8 @@ import "common.proto";
 message TrackSpotify {
     string id = 1;
     string title = 2;
-    int32 popularity = 3;
-    int32 durationMs = 4;
+    uint32 popularity = 3;
+    uint32 durationMs = 4;
     repeated Image albumImages = 5;
 }
 
@@ -32,7 +32,7 @@ message YoutubeStatistics {
 message Youtube {
     string id = 1;
     string title = 2;
-    int32 durationMs = 3;
+    uint32 durationMs = 3;
     string publishedAt = 4;
     YoutubeStatistics statistics = 5;
     YoutubeThumbnails thumbnails = 6;
@@ -40,13 +40,13 @@ message Youtube {
 
 message TrackMessage {
     string id = 1;
-    repeated string genres = 4;
-    repeated string styles = 5;
-    bool explicit = 6;
-    int64 playCount = 7;
-    TrackSpotify spotify = 8;
-    Youtube youtube = 9;
-    string lyrics = 10;
+    repeated string genres = 2;
+    repeated string styles = 3;
+    bool explicit = 4;
+    uint64 playCount = 5;
+    TrackSpotify spotify = 6;
+    Youtube youtube = 7;
+    string lyrics = 8;
 }
 
 message PlaybackResponse {
@@ -54,7 +54,20 @@ message PlaybackResponse {
 }
 
 message GetPopularTracksRequest {
-    optional int32 limit = 1;
+    optional uint32 limit = 1;
+    optional uint32 offset = 2;
+}
+
+message GetTracksByArtistIdRequest {
+    string id = 1;
+    optional uint32 limit = 2;
+    optional uint32 offset = 3;
+}
+
+message GetTracksByAlbumIdRequest {
+    string id = 1;
+    optional uint32 limit = 2;
+    optional uint32 offset = 3;
 }
 
 message MultipleTracks {
@@ -66,6 +79,6 @@ service Track {
     rpc GetPopularTracks(GetPopularTracksRequest) returns (MultipleTracks){};
     rpc GetTrack(RequestById) returns (TrackMessage){};
     rpc GetSeveralTracks(RequestByIds) returns (MultipleTracks){};
-    rpc GetTracksByArtistId(RequestById) returns (MultipleTracks){};
-    rpc GetTracksByAlbumId(RequestById) returns (MultipleTracks){};
+    rpc GetTracksByArtistId(GetTracksByArtistIdRequest) returns (MultipleTracks){};
+    rpc GetTracksByAlbumId(GetTracksByAlbumIdRequest) returns (MultipleTracks){};
 }

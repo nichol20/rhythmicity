@@ -21,8 +21,16 @@ func NewAlbumRepository(dbconn *sql.DB) *AlbumRepository {
 	}
 }
 
-func (r *AlbumRepository) GetPopularAlbums(ctx context.Context, limit int32) ([]domain.Album, error) {
-	albumsRow, err := r.queries.GetPopularAlbums(ctx, limit)
+type GetPopularAlbumsParams struct {
+	Limit  uint32
+	Offset uint32
+}
+
+func (r *AlbumRepository) GetPopularAlbums(ctx context.Context, arg GetPopularAlbumsParams) ([]domain.Album, error) {
+	albumsRow, err := r.queries.GetPopularAlbums(ctx, db.GetPopularAlbumsParams{
+		Limit:  int32(arg.Limit),
+		Offset: int32(arg.Offset),
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -128,7 +136,7 @@ func (r *AlbumRepository) createAlbum(ctx context.Context, row interface{}) (*do
 	return &domain.Album{
 		ID:          a.Albumid,
 		Name:        a.Name,
-		TotalTracks: a.Totaltracks,
+		TotalTracks: uint32(a.Totaltracks),
 		Genres:      details.Genres,
 		Styles:      details.Styles,
 		Spotify: domain.SpotifyAlbum{
@@ -136,7 +144,7 @@ func (r *AlbumRepository) createAlbum(ctx context.Context, row interface{}) (*do
 			ReleaseDate: a.Spotifyreleasedate.String(),
 			Spotify: domain.Spotify{
 				ID:         a.Spotifyid,
-				Popularity: a.Spotifypopularity,
+				Popularity: uint32(a.Spotifypopularity),
 			},
 		},
 	}, nil
@@ -179,8 +187,8 @@ func (r *AlbumRepository) getSpotifyImages(ctx context.Context, albumID uuid.UUI
 	var images []domain.Image
 	for _, v := range imagesRow {
 		image := domain.Image{
-			Height: v.Height,
-			Width:  v.Width,
+			Height: uint32(v.Height),
+			Width:  uint32(v.Width),
 			Url:    v.Url,
 		}
 		images = append(images, image)

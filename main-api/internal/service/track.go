@@ -7,6 +7,7 @@ import (
 
 	"github.com/nichol20/rhythmicity/main-api/internal/domain"
 	"github.com/nichol20/rhythmicity/main-api/internal/pb"
+	"github.com/nichol20/rhythmicity/main-api/internal/repository"
 	"github.com/nichol20/rhythmicity/main-api/internal/utils"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -14,11 +15,11 @@ import (
 
 type TrackRepositoryInterface interface {
 	GetYoutubeId(ctx context.Context, id string) (string, error)
-	GetPopularTracks(ctx context.Context, limit int32) ([]domain.Track, error)
+	GetPopularTracks(ctx context.Context, arg repository.GetPopularTracksParams) ([]domain.Track, error)
 	GetTrack(ctx context.Context, trackId string) (*domain.Track, error)
 	GetSeveralTracks(ctx context.Context, trackIDs []string) ([]domain.Track, error)
-	GetTracksByArtistId(ctx context.Context, artistID string) ([]domain.Track, error)
-	GetTracksByAlbumId(ctx context.Context, albumID string) ([]domain.Track, error)
+	GetTracksByArtistId(ctx context.Context, arg repository.GetTracksByArtistIdParms) ([]domain.Track, error)
+	GetTracksByAlbumId(ctx context.Context, arg repository.GetTracksByAlbumIdParams) ([]domain.Track, error)
 }
 
 type TrackGRPCService struct {
@@ -43,12 +44,16 @@ func (s *TrackGRPCService) Playback(ctx context.Context, req *pb.RequestById) (*
 }
 
 func (s *TrackGRPCService) GetPopularTracks(ctx context.Context, req *pb.GetPopularTracksRequest) (*pb.MultipleTracks, error) {
-	max := int32(20)
-	limit := max
-	if req != nil && req.Limit != nil && *req.Limit > 0 && *req.Limit < max {
-		limit = *req.Limit
-	}
-	tracks, err := s.TrackRepository.GetPopularTracks(ctx, limit)
+	limit, offset := utils.CheckLimitAndOffset(utils.CheckLimitAndOffsetParams{
+		Limit:  req.Limit,
+		Offset: req.Offset,
+	})
+
+	tracks, err := s.TrackRepository.GetPopularTracks(ctx, repository.GetPopularTracksParams{
+		Limit:  limit,
+		Offset: offset,
+	})
+
 	if err != nil {
 		slog.Error(err.Error())
 		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
@@ -78,8 +83,17 @@ func (s *TrackGRPCService) GetSeveralTracks(ctx context.Context, req *pb.Request
 	return s.tracksToMessage(tracks), nil
 }
 
-func (s *TrackGRPCService) GetTracksByArtistId(ctx context.Context, req *pb.RequestById) (*pb.MultipleTracks, error) {
-	tracks, err := s.TrackRepository.GetTracksByArtistId(ctx, req.Id)
+func (s *TrackGRPCService) GetTracksByArtistId(ctx context.Context, req *pb.GetTracksByArtistIdRequest) (*pb.MultipleTracks, error) {
+	limit, offset := utils.CheckLimitAndOffset(utils.CheckLimitAndOffsetParams{
+		Limit:  req.Limit,
+		Offset: req.Offset,
+	})
+
+	tracks, err := s.TrackRepository.GetTracksByArtistId(ctx, repository.GetTracksByArtistIdParms{
+		Artistid: req.Id,
+		Limit:    limit,
+		Offset:   offset,
+	})
 	if err != nil {
 		if errors.Is(err, domain.ErrNotFound) {
 			return nil, status.Errorf(codes.NotFound, "artist not found")
@@ -91,8 +105,18 @@ func (s *TrackGRPCService) GetTracksByArtistId(ctx context.Context, req *pb.Requ
 	return s.tracksToMessage(tracks), nil
 }
 
-func (s *TrackGRPCService) GetTracksByAlbumId(ctx context.Context, req *pb.RequestById) (*pb.MultipleTracks, error) {
-	tracks, err := s.TrackRepository.GetTracksByAlbumId(ctx, req.Id)
+func (s *TrackGRPCService) GetTracksByAlbumId(ctx context.Context, req *pb.GetTracksByAlbumIdRequest) (*pb.MultipleTracks, error) {
+	limit, offset := utils.CheckLimitAndOffset(utils.CheckLimitAndOffsetParams{
+		Limit:  req.Limit,
+		Offset: req.Offset,
+	})
+
+	tracks, err := s.TrackRepository.GetTracksByAlbumId(ctx, repository.GetTracksByAlbumIdParams{
+		Albumid: req.Id,
+		Limit:   limit,
+		Offset:  offset,
+	})
+
 	if err != nil {
 		if errors.Is(err, domain.ErrNotFound) {
 			return nil, status.Errorf(codes.NotFound, "album not found")
