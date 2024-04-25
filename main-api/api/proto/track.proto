@@ -30,12 +30,11 @@ message YoutubeStatistics {
 }
 
 message Youtube {
-    string id = 1;
-    string title = 2;
-    uint32 durationMs = 3;
-    string publishedAt = 4;
-    YoutubeStatistics statistics = 5;
-    YoutubeThumbnails thumbnails = 6;
+    string title = 1;
+    uint32 durationMs = 2;
+    string publishedAt = 3;
+    YoutubeStatistics statistics = 4;
+    YoutubeThumbnails thumbnails = 5;
 }
 
 message TrackMessage {

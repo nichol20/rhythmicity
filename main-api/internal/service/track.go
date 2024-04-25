@@ -155,7 +155,6 @@ func (s *TrackGRPCService) trackToMessage(track domain.Track) *pb.TrackMessage {
 			AlbumImages: utils.ImagesToMessage(track.Spotify.AlbumImages),
 		},
 		Youtube: &pb.Youtube{
-			Id:          track.Youtube.ID,
 			Title:       track.Youtube.Title,
 			DurationMs:  track.Youtube.DurationMs,
 			PublishedAt: track.Youtube.PublishedAt,
