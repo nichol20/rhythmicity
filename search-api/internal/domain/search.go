@@ -1,7 +1,5 @@
 package domain
 
-import "context"
-
 type Filters struct {
 	Genres []string `json:"genres"`
 	Styles []string `json:"styles"`
@@ -26,8 +24,4 @@ type SearchResponse struct {
 		} `json:"total"`
 		Hits []*Hit `json:"hits"`
 	} `json:"hits"`
-}
-
-type SearchRepositoryInterface interface {
-	Search(ctx context.Context, search *Search) ([]*Hit, error)
 }

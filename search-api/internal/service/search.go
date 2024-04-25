@@ -12,8 +12,15 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+type SearchRepositoryInterface interface {
+	SearchAll(ctx context.Context, search *domain.Search) ([]*domain.Hit, error)
+	SearchAlbum(ctx context.Context, search *domain.Search) ([]*domain.Hit, error)
+	SearchArtist(ctx context.Context, search *domain.Search) ([]*domain.Hit, error)
+	SearchTrack(ctx context.Context, search *domain.Search) ([]*domain.Hit, error)
+}
+
 type SearchGrpcService struct {
-	SearchRepository domain.SearchRepositoryInterface
+	SearchRepository SearchRepositoryInterface
 	pb.UnimplementedSearchServer
 }
 
@@ -57,11 +64,34 @@ func (s *SearchGrpcService) Search(ctx context.Context, req *pb.SearchRequest) (
 	var artists []*pb.Artist
 	var albums []*pb.Album
 	var bestResult *pb.BestResult
+	var hits []*domain.Hit
+	var err error
 
-	hits, err := s.SearchRepository.Search(ctx, &search)
-	if err != nil {
-		slog.Error(err.Error())
-		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
+	switch search.Kind {
+	case "albums":
+		hits, err = s.SearchRepository.SearchAlbum(ctx, &search)
+		if err != nil {
+			slog.Error(err.Error())
+			return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
+		}
+	case "artists":
+		hits, err = s.SearchRepository.SearchArtist(ctx, &search)
+		if err != nil {
+			slog.Error(err.Error())
+			return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
+		}
+	case "tracks":
+		hits, err = s.SearchRepository.SearchTrack(ctx, &search)
+		if err != nil {
+			slog.Error(err.Error())
+			return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
+		}
+	default:
+		hits, err = s.SearchRepository.SearchAll(ctx, &search)
+		if err != nil {
+			slog.Error(err.Error())
+			return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
+		}
 	}
 
 	for i, hit := range hits {

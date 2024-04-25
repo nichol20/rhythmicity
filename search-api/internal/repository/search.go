@@ -15,17 +15,33 @@ type SearchRepository struct {
 	ESClient *elasticsearch.Client
 }
 
-func (r *SearchRepository) Search(ctx context.Context, search *domain.Search) ([]*domain.Hit, error) {
-	var searchBuffer bytes.Buffer
-	indexName := r.getIndexNameByKind(search.Kind)
+func (r *SearchRepository) SearchAll(ctx context.Context, search *domain.Search) ([]*domain.Hit, error) {
+	searchStructure := r.mountSearchStructure(search)
+	return r.getHits(ctx, searchStructure, "_all")
+}
+
+func (r *SearchRepository) SearchAlbum(ctx context.Context, search *domain.Search) ([]*domain.Hit, error) {
+	searchStructure := r.mountSearchStructure(search)
+	return r.getHits(ctx, searchStructure, "albums")
+}
+
+func (r *SearchRepository) SearchArtist(ctx context.Context, search *domain.Search) ([]*domain.Hit, error) {
+	searchStructure := r.mountSearchStructure(search)
+	return r.getHits(ctx, searchStructure, "artists")
+}
+
+func (r *SearchRepository) SearchTrack(ctx context.Context, search *domain.Search) ([]*domain.Hit, error) {
+	searchStructure := r.mountSearchStructure(search)
+	return r.getHits(ctx, searchStructure, "tracks")
+}
+
+func (r *SearchRepository) mountSearchStructure(search *domain.Search) map[string]any {
 	var query string
 	queries := strings.Split(search.Query, " ")
 
 	for _, q := range queries {
 		query += "*" + q + "* "
 	}
-
-	fmt.Println(query)
 
 	filter := []map[string]any{}
 
@@ -64,6 +80,12 @@ func (r *SearchRepository) Search(ctx context.Context, search *domain.Search) ([
 
 	searchStructure["query"].(map[string]any)["bool"].(map[string]any)["filter"] = filter
 
+	return searchStructure
+}
+
+func (r *SearchRepository) getHits(ctx context.Context, searchStructure map[string]any, indexName string) ([]*domain.Hit, error) {
+	var searchBuffer bytes.Buffer
+
 	if err := json.NewEncoder(&searchBuffer).Encode(searchStructure); err != nil {
 		return nil, fmt.Errorf("error encoding query: %s", err)
 	}
@@ -73,7 +95,6 @@ func (r *SearchRepository) Search(ctx context.Context, search *domain.Search) ([
 		r.ESClient.Search.WithIndex(indexName),
 		r.ESClient.Search.WithBody(&searchBuffer),
 		r.ESClient.Search.WithTrackTotalHits(true),
-		r.ESClient.Search.WithPretty(),
 	)
 
 	if err != nil {
@@ -93,17 +114,4 @@ func (r *SearchRepository) Search(ctx context.Context, search *domain.Search) ([
 	}
 
 	return searchResponse.Hits.Hits, nil
-}
-
-func (r *SearchRepository) getIndexNameByKind(kind string) string {
-	switch kind {
-	case "artists":
-		return "artists"
-	case "albums":
-		return "albums"
-	case "tracks":
-		return "tracks"
-	default:
-		return "_all"
-	}
 }
