@@ -4,7 +4,6 @@ import type { YoutubeStatistics as _rhythmicity_main_api_YoutubeStatistics, Yout
 import type { YoutubeThumbnails as _rhythmicity_main_api_YoutubeThumbnails, YoutubeThumbnails__Output as _rhythmicity_main_api_YoutubeThumbnails__Output } from '../../rhythmicity/main_api/YoutubeThumbnails';
 
 export interface Youtube {
-  'id'?: (string);
   'title'?: (string);
   'durationMs'?: (number);
   'publishedAt'?: (string);
@@ -13,7 +12,6 @@ export interface Youtube {
 }
 
 export interface Youtube__Output {
-  'id'?: (string);
   'title'?: (string);
   'durationMs'?: (number);
   'publishedAt'?: (string);

@@ -3,6 +3,8 @@
 import type * as grpc from '@grpc/grpc-js'
 import type { MethodDefinition } from '@grpc/proto-loader'
 import type { GetPopularTracksRequest as _rhythmicity_main_api_GetPopularTracksRequest, GetPopularTracksRequest__Output as _rhythmicity_main_api_GetPopularTracksRequest__Output } from '../../rhythmicity/main_api/GetPopularTracksRequest';
+import type { GetTracksByAlbumIdRequest as _rhythmicity_main_api_GetTracksByAlbumIdRequest, GetTracksByAlbumIdRequest__Output as _rhythmicity_main_api_GetTracksByAlbumIdRequest__Output } from '../../rhythmicity/main_api/GetTracksByAlbumIdRequest';
+import type { GetTracksByArtistIdRequest as _rhythmicity_main_api_GetTracksByArtistIdRequest, GetTracksByArtistIdRequest__Output as _rhythmicity_main_api_GetTracksByArtistIdRequest__Output } from '../../rhythmicity/main_api/GetTracksByArtistIdRequest';
 import type { MultipleTracks as _rhythmicity_main_api_MultipleTracks, MultipleTracks__Output as _rhythmicity_main_api_MultipleTracks__Output } from '../../rhythmicity/main_api/MultipleTracks';
 import type { PlaybackResponse as _rhythmicity_main_api_PlaybackResponse, PlaybackResponse__Output as _rhythmicity_main_api_PlaybackResponse__Output } from '../../rhythmicity/main_api/PlaybackResponse';
 import type { RequestById as _rhythmicity_main_api_RequestById, RequestById__Output as _rhythmicity_main_api_RequestById__Output } from '../../rhythmicity/main_api/RequestById';
@@ -37,23 +39,23 @@ export interface TrackClient extends grpc.Client {
   getTrack(argument: _rhythmicity_main_api_RequestById, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_main_api_TrackMessage__Output>): grpc.ClientUnaryCall;
   getTrack(argument: _rhythmicity_main_api_RequestById, callback: grpc.requestCallback<_rhythmicity_main_api_TrackMessage__Output>): grpc.ClientUnaryCall;
   
-  GetTracksByAlbumId(argument: _rhythmicity_main_api_RequestById, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
-  GetTracksByAlbumId(argument: _rhythmicity_main_api_RequestById, metadata: grpc.Metadata, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
-  GetTracksByAlbumId(argument: _rhythmicity_main_api_RequestById, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
-  GetTracksByAlbumId(argument: _rhythmicity_main_api_RequestById, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
-  getTracksByAlbumId(argument: _rhythmicity_main_api_RequestById, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
-  getTracksByAlbumId(argument: _rhythmicity_main_api_RequestById, metadata: grpc.Metadata, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
-  getTracksByAlbumId(argument: _rhythmicity_main_api_RequestById, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
-  getTracksByAlbumId(argument: _rhythmicity_main_api_RequestById, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
+  GetTracksByAlbumId(argument: _rhythmicity_main_api_GetTracksByAlbumIdRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
+  GetTracksByAlbumId(argument: _rhythmicity_main_api_GetTracksByAlbumIdRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
+  GetTracksByAlbumId(argument: _rhythmicity_main_api_GetTracksByAlbumIdRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
+  GetTracksByAlbumId(argument: _rhythmicity_main_api_GetTracksByAlbumIdRequest, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
+  getTracksByAlbumId(argument: _rhythmicity_main_api_GetTracksByAlbumIdRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
+  getTracksByAlbumId(argument: _rhythmicity_main_api_GetTracksByAlbumIdRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
+  getTracksByAlbumId(argument: _rhythmicity_main_api_GetTracksByAlbumIdRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
+  getTracksByAlbumId(argument: _rhythmicity_main_api_GetTracksByAlbumIdRequest, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
   
-  GetTracksByArtistId(argument: _rhythmicity_main_api_RequestById, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
-  GetTracksByArtistId(argument: _rhythmicity_main_api_RequestById, metadata: grpc.Metadata, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
-  GetTracksByArtistId(argument: _rhythmicity_main_api_RequestById, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
-  GetTracksByArtistId(argument: _rhythmicity_main_api_RequestById, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
-  getTracksByArtistId(argument: _rhythmicity_main_api_RequestById, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
-  getTracksByArtistId(argument: _rhythmicity_main_api_RequestById, metadata: grpc.Metadata, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
-  getTracksByArtistId(argument: _rhythmicity_main_api_RequestById, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
-  getTracksByArtistId(argument: _rhythmicity_main_api_RequestById, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
+  GetTracksByArtistId(argument: _rhythmicity_main_api_GetTracksByArtistIdRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
+  GetTracksByArtistId(argument: _rhythmicity_main_api_GetTracksByArtistIdRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
+  GetTracksByArtistId(argument: _rhythmicity_main_api_GetTracksByArtistIdRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
+  GetTracksByArtistId(argument: _rhythmicity_main_api_GetTracksByArtistIdRequest, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
+  getTracksByArtistId(argument: _rhythmicity_main_api_GetTracksByArtistIdRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
+  getTracksByArtistId(argument: _rhythmicity_main_api_GetTracksByArtistIdRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
+  getTracksByArtistId(argument: _rhythmicity_main_api_GetTracksByArtistIdRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
+  getTracksByArtistId(argument: _rhythmicity_main_api_GetTracksByArtistIdRequest, callback: grpc.requestCallback<_rhythmicity_main_api_MultipleTracks__Output>): grpc.ClientUnaryCall;
   
   Playback(argument: _rhythmicity_main_api_RequestById, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_main_api_PlaybackResponse__Output>): grpc.ClientUnaryCall;
   Playback(argument: _rhythmicity_main_api_RequestById, metadata: grpc.Metadata, callback: grpc.requestCallback<_rhythmicity_main_api_PlaybackResponse__Output>): grpc.ClientUnaryCall;
@@ -73,9 +75,9 @@ export interface TrackHandlers extends grpc.UntypedServiceImplementation {
   
   GetTrack: grpc.handleUnaryCall<_rhythmicity_main_api_RequestById__Output, _rhythmicity_main_api_TrackMessage>;
   
-  GetTracksByAlbumId: grpc.handleUnaryCall<_rhythmicity_main_api_RequestById__Output, _rhythmicity_main_api_MultipleTracks>;
+  GetTracksByAlbumId: grpc.handleUnaryCall<_rhythmicity_main_api_GetTracksByAlbumIdRequest__Output, _rhythmicity_main_api_MultipleTracks>;
   
-  GetTracksByArtistId: grpc.handleUnaryCall<_rhythmicity_main_api_RequestById__Output, _rhythmicity_main_api_MultipleTracks>;
+  GetTracksByArtistId: grpc.handleUnaryCall<_rhythmicity_main_api_GetTracksByArtistIdRequest__Output, _rhythmicity_main_api_MultipleTracks>;
   
   Playback: grpc.handleUnaryCall<_rhythmicity_main_api_RequestById__Output, _rhythmicity_main_api_PlaybackResponse>;
   
@@ -85,7 +87,7 @@ export interface TrackDefinition extends grpc.ServiceDefinition {
   GetPopularTracks: MethodDefinition<_rhythmicity_main_api_GetPopularTracksRequest, _rhythmicity_main_api_MultipleTracks, _rhythmicity_main_api_GetPopularTracksRequest__Output, _rhythmicity_main_api_MultipleTracks__Output>
   GetSeveralTracks: MethodDefinition<_rhythmicity_main_api_RequestByIds, _rhythmicity_main_api_MultipleTracks, _rhythmicity_main_api_RequestByIds__Output, _rhythmicity_main_api_MultipleTracks__Output>
   GetTrack: MethodDefinition<_rhythmicity_main_api_RequestById, _rhythmicity_main_api_TrackMessage, _rhythmicity_main_api_RequestById__Output, _rhythmicity_main_api_TrackMessage__Output>
-  GetTracksByAlbumId: MethodDefinition<_rhythmicity_main_api_RequestById, _rhythmicity_main_api_MultipleTracks, _rhythmicity_main_api_RequestById__Output, _rhythmicity_main_api_MultipleTracks__Output>
-  GetTracksByArtistId: MethodDefinition<_rhythmicity_main_api_RequestById, _rhythmicity_main_api_MultipleTracks, _rhythmicity_main_api_RequestById__Output, _rhythmicity_main_api_MultipleTracks__Output>
+  GetTracksByAlbumId: MethodDefinition<_rhythmicity_main_api_GetTracksByAlbumIdRequest, _rhythmicity_main_api_MultipleTracks, _rhythmicity_main_api_GetTracksByAlbumIdRequest__Output, _rhythmicity_main_api_MultipleTracks__Output>
+  GetTracksByArtistId: MethodDefinition<_rhythmicity_main_api_GetTracksByArtistIdRequest, _rhythmicity_main_api_MultipleTracks, _rhythmicity_main_api_GetTracksByArtistIdRequest__Output, _rhythmicity_main_api_MultipleTracks__Output>
   Playback: MethodDefinition<_rhythmicity_main_api_RequestById, _rhythmicity_main_api_PlaybackResponse, _rhythmicity_main_api_RequestById__Output, _rhythmicity_main_api_PlaybackResponse__Output>
 }

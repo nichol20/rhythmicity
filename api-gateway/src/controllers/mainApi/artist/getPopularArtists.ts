@@ -1,19 +1,16 @@
 import { NextFunction, Request, Response } from "express"
 import { artistClient } from "../../../servers/mainApi"
 import { InternalServerError } from "../../../helpers/apiError"
+import { checkLimitAndOffset } from "../../../utils/request"
 
 export default function getPopularArtists(
     req: Request,
     res: Response,
     next: NextFunction
 ) {
-    let limit = Number(req.query.limit)
+    const [limit, offset] = checkLimitAndOffset(req.query.limit, req.query.offset)
 
-    if (isNaN(limit)) {
-        limit = 20
-    }
-
-    artistClient.GetPopularArtists({ limit }, (err, value) => {
+    artistClient.GetPopularArtists({ limit, offset }, (err, value) => {
         if (err) {
             console.error("Error invoking GetPopularArtists: ", err)
             return next(new InternalServerError())

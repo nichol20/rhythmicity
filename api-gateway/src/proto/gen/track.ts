@@ -12,6 +12,8 @@ export interface ProtoGrpcType {
     main_api: {
       Empty: MessageTypeDefinition
       GetPopularTracksRequest: MessageTypeDefinition
+      GetTracksByAlbumIdRequest: MessageTypeDefinition
+      GetTracksByArtistIdRequest: MessageTypeDefinition
       Image: MessageTypeDefinition
       MultipleTracks: MessageTypeDefinition
       PlaybackResponse: MessageTypeDefinition
