@@ -22,7 +22,6 @@ export interface YoutubeThumbnails {
 }
 
 export interface Youtube {
-  id: string
   title: string
   durationMs: number
   publishedAt: string
@@ -38,5 +37,5 @@ export interface Track {
   playCount: number
   spotify: SpotifyTrack
   youtube: Youtube
-  lyrics: string
+  lyrics: string | null
 }

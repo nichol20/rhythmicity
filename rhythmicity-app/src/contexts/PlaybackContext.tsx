@@ -1,5 +1,6 @@
 'use client'
 import { PlaybackBar } from "@/components/PlaybackBar";
+import { PlayerState } from "@/components/YoutubePlayer";
 import { Album } from "@/types/album";
 import { Artist } from "@/types/artist";
 import { SearchedAlbum, SearchedArtist, SearchedTrack } from "@/types/search";
@@ -10,6 +11,9 @@ import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useEffe
 interface PlaybackContext {
     showPlaybackBar: boolean
     setShowPlaybackBar: Dispatch<SetStateAction<boolean>>
+    currentPlayerState: PlayerState
+    setCurrentPlayerState: Dispatch<SetStateAction<PlayerState>>
+    queue: (Track | SearchedTrack)[]
     playNext: () => void
     cleanQueue: () => void
     addTrackToQueue: (track: Track | SearchedTrack) => void
@@ -38,10 +42,10 @@ export const usePlayback = (showPlaybackBar: boolean = false) => {
 export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
     const [showPlaybackBar, setShowPlaybackBar] = useState(false)
     const [currentTrack, setCurrentTrack] = useState<Track | SearchedTrack | null>(null)
+    const [currentPlayerState, setCurrentPlayerState] = useState<PlayerState>(PlayerState.UNSTARTED)
     const [queue, setQueue] = useState<(Track | SearchedTrack)[]>([])
 
     const addTrackToQueue = (track: Track | SearchedTrack) => {
-        console.log("added to queue")
         setQueue(prev => {
             if (prev.length === 0) {
                 setCurrentTrack(track)
@@ -77,12 +81,13 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
         })
     }
 
-    // console.log(queue)
-
     return (
         <PlaybackContext.Provider value={{
             showPlaybackBar,
             setShowPlaybackBar,
+            currentPlayerState,
+            setCurrentPlayerState,
+            queue,
             playNext,
             cleanQueue,
             addTrackToQueue,

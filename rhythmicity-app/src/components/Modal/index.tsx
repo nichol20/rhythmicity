@@ -13,8 +13,8 @@ export const Modal = ({ className, children, onClose }: ModalProps) => {
     className = className ? className : ''
 
     return (
-        <div className={`${styles.fixedBox} ${className}`}>
-            <div className={styles.modal}>
+        <div className={`${styles.fixedBox}`}>
+            <div className={`${styles.modal} ${className}`}>
                 <div className={styles.relativeBox}>
                     <div className={styles.header}>
                         <button className={styles.closeBtn} onClick={onClose}>

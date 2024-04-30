@@ -28,7 +28,7 @@ export interface SearchedTrack {
     name: string
     artistNames: string[]
     albumName: string
-    lyrics: string
+    lyrics: string | null
     explicit: boolean
     playCount: number
     durationMs: number

@@ -12,20 +12,25 @@ interface ControlsProps {
 }
 
 export const Controls = ({ youtubePlayerRef }: ControlsProps) => {
-    const { playNext } = usePlayback()
-    const [playBtnIcon, setPlayBtnIcon] = useState(playIcon)
+    const { playNext, currentPlayerState } = usePlayback()
     const [loopBtnIcon, setLoopBtnIcon] = useState(repeatIcon)
+
+    const getPlayBtnIcon = () => {
+        if (currentPlayerState === PlayerState.PLAYING || currentPlayerState === PlayerState.BUFFERING) {
+            return pauseIcon
+        }
+
+        return playIcon
+    }
 
     const handlePlayBtnClick = () => {
         const currentState = youtubePlayerRef.current?.getPlayerState()
 
         if (currentState === PlayerState.PAUSED || currentState === PlayerState.CUED) {
-            setPlayBtnIcon(pauseIcon)
             youtubePlayerRef.current?.playVideo()
             return
         }
 
-        setPlayBtnIcon(playIcon)
         youtubePlayerRef.current?.pauseVideo()
     }
 
@@ -54,7 +59,7 @@ export const Controls = ({ youtubePlayerRef }: ControlsProps) => {
                 <Image src={nextIcon} alt="previous" />
             </button>
             <button className={styles.playBtn} onClick={handlePlayBtnClick}>
-                <Image src={playBtnIcon} alt="play" />
+                <Image src={getPlayBtnIcon()} alt="play" />
             </button>
             <button className={styles.nextBtn} onClick={playNext}>
                 <Image src={nextIcon} alt="next" />
