@@ -32,6 +32,8 @@
 .header {
     @include mixins-display-flex(flex-end);
     padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 5px;
     width: 100%;
 
     .closeBtn {
@@ -54,6 +56,12 @@
             @include mixins-white-filter();
         }
     }
+}
+
+.title {
+  color: $colors-primary-txt;
+  margin-right: auto;
+  font-size: 1.2em;
 }
 
 .relativeBox {

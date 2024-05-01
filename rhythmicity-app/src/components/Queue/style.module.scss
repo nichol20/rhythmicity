@@ -1,0 +1,73 @@
+@use "../../styles/" as *;
+
+.modal {
+    transform: none;
+    top: 10px;
+    right: 10px;
+    bottom: 10px;
+    left: auto;
+    min-width: auto;
+    max-width: none;
+    min-height: auto;
+    max-height: none;
+    width: 400px;
+    padding: 0;
+}
+
+.queue {
+    @include mixins-display-flex(flex-start, flex-start);
+    flex-direction: column;
+    overflow-y: scroll;
+    width: 100%;
+    padding-left: 20px;
+    padding-bottom: 20px;
+    padding-right: 12px;
+}
+
+.queueSection {
+    @include mixins-display-flex(flex-start, flex-start);
+    flex-direction: column;
+    width: 100%;
+}
+
+.queueSubtitle {
+    color: $colors-primary-txt;
+}
+
+.trackItem {
+    @include mixins-display-flex(space-between); 
+    cursor: pointer;
+    padding: 16px;
+    width: 100%;
+    border-radius: 6px;
+
+    &:hover {
+        background-color: $colors-transparent-bg-hover;
+    }
+}
+
+.info {
+    @include mixins-display-flex();
+    gap: 10px;
+}
+
+.imgBox {
+    width: 48px;
+    height: 48px;
+}
+
+.description {
+    @include mixins-display-flex(flex-start, flex-start);
+    flex-direction: column;
+    gap: 5px;
+    
+    .name {
+        color: $colors-primary-txt;
+    }
+
+    .genres {
+        @include mixins-display-flex();
+        gap: 4px;
+        color: $colors-secondary-txt;
+    }
+}

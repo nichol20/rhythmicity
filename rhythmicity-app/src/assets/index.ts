@@ -20,3 +20,4 @@ export { default as volumeIcon } from "./images/volume.svg";
 export { default as volumeDownIcon } from "./images/volume-down.svg";
 export { default as volumeOffIcon } from "./images/volume-off.svg";
 export { default as lyricsIcon } from "./images/lyrics.png";
+export { default as queueIcon } from './images/queue-music.svg'

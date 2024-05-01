@@ -6,9 +6,10 @@ interface ModalProps {
     className?: string
     children: React.ReactNode
     onClose: () => void
+    title?: string
 }
 
-export const Modal = ({ className, children, onClose }: ModalProps) => {
+export const Modal = ({ className, children, onClose, title }: ModalProps) => {
 
     className = className ? className : ''
 
@@ -17,6 +18,7 @@ export const Modal = ({ className, children, onClose }: ModalProps) => {
             <div className={`${styles.modal} ${className}`}>
                 <div className={styles.relativeBox}>
                     <div className={styles.header}>
+                        <span className={styles.title}>{title}</span>
                         <button className={styles.closeBtn} onClick={onClose}>
                             <Image src={closeIcon} alt="close" />
                         </button>

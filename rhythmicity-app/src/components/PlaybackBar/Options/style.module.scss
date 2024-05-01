@@ -8,3 +8,21 @@
     @include mixins-display-flex(center);
     gap: 10px;
 }
+
+.option {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+
+    > img {
+        width: 100%;
+        height: 100%;
+        @include mixins-gray-filter();
+
+        &:hover {
+            @include mixins-white-filter();
+        }
+    }
+}

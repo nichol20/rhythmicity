@@ -5,7 +5,6 @@ import { YouTubePlayerRef, YouTubePlayer, PlayerEvent, PlayerState } from '../Yo
 import { TimeBar } from './TimeBar'
 import { Controls } from './Controls/index'
 import { Options } from './Options'
-import { collectionBackground } from '@/assets'
 import { usePlayback } from '@/contexts/PlaybackContext'
 import { Track } from '@/types/track'
 import { SearchedTrack } from '@/types/search'
@@ -17,7 +16,7 @@ interface PlaybackBarProps {
 
 export const PlaybackBar = ({ track }: PlaybackBarProps) => {
     const youtubePlayerRef = useRef<YouTubePlayerRef>(null)
-    const { playNext, cleanQueue } = usePlayback()
+    const { playNext, setCurrentPlayerState } = usePlayback()
     const [currentTime, setCurrentTime] = useState(0)
     const [finalTime, setFinalTime] = useState(0)
     const [isHoldingTimeBar, setIsHoldingTimeBar] = useState(false)
@@ -40,6 +39,7 @@ export const PlaybackBar = ({ track }: PlaybackBarProps) => {
 
     const handleStateChange = (event: PlayerEvent) => {
         console.log(event.target.getPlayerState())
+        setCurrentPlayerState(event.target.getPlayerState())
         if (event.target.getPlayerState() === PlayerState.ENDED) {
             playNext()
         }
