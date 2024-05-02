@@ -22,6 +22,16 @@
     padding-left: 20px;
     padding-bottom: 20px;
     padding-right: 12px;
+    min-height: 100%;
+}
+
+.addToQueueMessage {
+    color: $colors-primary-txt;
+    font-size: 1.2em;
+    height: 100%;
+    width: 100%;
+    @include mixins-display-flex();
+
 }
 
 .queueSection {
