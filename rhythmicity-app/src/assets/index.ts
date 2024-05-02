@@ -6,6 +6,8 @@ export { default as searchIcon } from "./images/search.svg";
 export { default as closeIcon } from "./images/close.svg";
 export { default as menuIcon } from "./images/menu.svg";
 export { default as watchIcon } from "./images/watch.svg";
+export { default as verticalEllipsisIcon } from "./images/vertical-ellipsis.svg"
+export { default as deleteIcon } from './images/delete.svg'
 
 // Player controls
 export { default as playIcon } from "./images/play.svg";

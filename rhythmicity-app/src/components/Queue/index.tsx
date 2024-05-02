@@ -2,8 +2,6 @@ import { SearchedTrack } from '@/types/search'
 import { Modal } from '../Modal'
 import styles from './style.module.scss'
 import { Track } from '@/types/track'
-import Image from 'next/image'
-import { ExplicitSign } from '../ExplicitSign'
 import { QueueTrackRow } from './QueueTrackRow'
 
 interface QueueProps {

@@ -4,12 +4,16 @@ import { Track } from "@/types/track";
 import styles from './style.module.scss'
 import Image from "next/image";
 import { ExplicitSign } from "../ExplicitSign";
+import { deleteIcon, verticalEllipsisIcon } from "@/assets";
+import { useState } from "react";
 
 interface QueueTrackRowProps {
     track: Track | SearchedTrack
 }
 
 export const QueueTrackRow = ({ track }: QueueTrackRowProps) => {
+    const [showOptionsBtn, setShowOptionsBtn] = useState(false)
+    const [showOptions, setShowOptions] = useState(false)
 
     const getImage = (track: SearchedTrack | Track) => {
         if ("spotify" in track) {
@@ -27,8 +31,16 @@ export const QueueTrackRow = ({ track }: QueueTrackRowProps) => {
         return track.name
     }
 
+    const handleMouseOver = () => {
+        setShowOptionsBtn(true)
+    }
+
+    const handleMoutseLeave = () => {
+        setShowOptionsBtn(false)
+    }
+
     return (
-        <div key={track.id} className={styles.trackItem}>
+        <div key={track.id} className={styles.trackItem} onMouseOver={handleMouseOver} onMouseLeave={handleMoutseLeave}>
             <div className={styles.info}>
                 <div className={styles.imgBox}>
                     <Image src={getImage(track)} alt={getName(track)} width={48} height={48} />
@@ -42,7 +54,21 @@ export const QueueTrackRow = ({ track }: QueueTrackRowProps) => {
                 </div>
             </div>
             <div className={styles.actions}>
-
+                {showOptionsBtn && (
+                    <button className={styles.optionsBtn} onClick={() => setShowOptions(prev => !prev)}>
+                        <Image src={verticalEllipsisIcon} alt="options" />
+                    </button>
+                )}
+                {showOptions && (
+                    <div className={styles.options}>
+                        <button className={styles.optionItem}>
+                            <div className={styles.optoinsImgBox}>
+                                <Image src={deleteIcon} alt="delete" />
+                            </div>
+                            <span className={styles.actionDescription}>Delete from queue</span>
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     )

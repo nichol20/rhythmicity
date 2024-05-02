@@ -46,7 +46,7 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
     const [currentTrack, setCurrentTrack] = useState<Track | SearchedTrack | null>(null)
     const [currentPlayerState, setCurrentPlayerState] = useState<PlayerState>(PlayerState.UNSTARTED)
     const [queue, setQueue] = useState<(Track | SearchedTrack)[]>([])
-    const [showQueue, setShowQueue] = useState(false)
+    const [showQueue, setShowQueue] = useState(true)
 
     const addTrackToQueue = (track: Track | SearchedTrack) => {
         setQueue(prev => {
