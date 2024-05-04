@@ -15,7 +15,7 @@ interface QueueTrackRowProps {
 export const QueueTrackRow = ({ track }: QueueTrackRowProps) => {
     const [showOptionsBtn, setShowOptionsBtn] = useState(false)
     const [showOptions, setShowOptions] = useState(false)
-    const { skipTo, deleteFromQueue } = usePlayback()
+    const { queueController } = usePlayback()
 
     const getImage = (track: SearchedTrack | Track) => {
         if ("spotify" in track) {
@@ -43,7 +43,7 @@ export const QueueTrackRow = ({ track }: QueueTrackRowProps) => {
 
     const deleteTrack = () => {
         setShowOptions(false)
-        deleteFromQueue(track.id)
+        queueController.delete(track.id)
     }
 
     return (
@@ -59,7 +59,7 @@ export const QueueTrackRow = ({ track }: QueueTrackRowProps) => {
                         alt={getName(track)}
                         width={48}
                         height={48}
-                        onClick={() => skipTo(track.id)}
+                        onClick={() => queueController.skipTo(track.id)}
                     />
                 </div>
                 <div className={styles.description}>

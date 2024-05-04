@@ -12,7 +12,7 @@ interface ControlsProps {
 }
 
 export const Controls = ({ youtubePlayerRef }: ControlsProps) => {
-    const { playNext, currentPlayerState } = usePlayback()
+    const { queueController, currentPlayerState } = usePlayback()
     const [loopBtnIcon, setLoopBtnIcon] = useState(repeatIcon)
 
     const getPlayBtnIcon = () => {
@@ -61,7 +61,7 @@ export const Controls = ({ youtubePlayerRef }: ControlsProps) => {
             <button className={styles.playBtn} onClick={handlePlayBtnClick}>
                 <Image src={getPlayBtnIcon()} alt="play" />
             </button>
-            <button className={styles.nextBtn} onClick={playNext}>
+            <button className={styles.nextBtn} onClick={queueController.playNext}>
                 <Image src={nextIcon} alt="next" />
             </button>
             <button className={styles.loopBtn} onClick={handleLoopBtnClick}>

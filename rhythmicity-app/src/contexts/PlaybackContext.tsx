@@ -9,6 +9,16 @@ import { Track } from "@/types/track";
 import { getTracksByAlbumId, getTracksByArtistId } from "@/utils/api";
 import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 
+interface QueueController {
+    playNext: () => void
+    skipTo: (trackId: string) => void
+    delete: (trackId: string) => void
+    clean: () => void
+    addTrack: (track: Track | SearchedTrack) => void
+    addAlbum: (album: Album | SearchedAlbum) => Promise<void>
+    addArtist: (artist: Artist | SearchedArtist) => Promise<void>
+}
+
 interface PlaybackContext {
     showPlaybackBar: boolean
     setShowPlaybackBar: Dispatch<SetStateAction<boolean>>
@@ -17,13 +27,7 @@ interface PlaybackContext {
     setCurrentPlayerState: Dispatch<SetStateAction<PlayerState>>
     currentTrack: SearchedTrack | Track | null
     queue: (Track | SearchedTrack)[]
-    playNext: () => void
-    skipTo: (trackId: string) => void
-    deleteFromQueue: (trackId: string) => void
-    cleanQueue: () => void
-    addTrackToQueue: (track: Track | SearchedTrack) => void
-    addAlbumToQueue: (album: Album | SearchedAlbum) => Promise<void>
-    addArtistToQueue: (artist: Artist | SearchedArtist) => Promise<void>
+    queueController: QueueController
 }
 
 interface PlaybackProviderProps {
@@ -485,13 +489,15 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
             setCurrentPlayerState,
             currentTrack,
             queue,
-            playNext,
-            skipTo,
-            deleteFromQueue,
-            cleanQueue,
-            addTrackToQueue,
-            addAlbumToQueue,
-            addArtistToQueue
+            queueController: {
+                playNext,
+                skipTo,
+                delete: deleteFromQueue,
+                clean: cleanQueue,
+                addTrack: addTrackToQueue,
+                addAlbum: addAlbumToQueue,
+                addArtist: addArtistToQueue
+            }
         }}>
             {children}
             {showPlaybackBar &&
