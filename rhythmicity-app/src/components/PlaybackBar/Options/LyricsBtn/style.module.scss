@@ -35,20 +35,7 @@
     padding-right: 15px;
     @include mixins-display-flex(flex-start, center);
     flex: 1;
+    padding: 15px;
 
-    &::-webkit-scrollbar {
-        width: 10px;
-    }
-  
-    &::-webkit-scrollbar-track {
-        background: transparent; 
-    }
-    
-    &::-webkit-scrollbar-thumb {
-        background: #888; 
-    }
-    
-    &::-webkit-scrollbar-thumb:hover {
-        background: #555; 
-    }
+    @include mixins-primary-scrollbar();
 }

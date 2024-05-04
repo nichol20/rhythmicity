@@ -46,6 +46,7 @@
     @include mixins-display-flex();
     flex-direction: column;
     padding: 20px;
+    width: 100%;
     gap: 20px;
 }
 

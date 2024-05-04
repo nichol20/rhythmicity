@@ -1,17 +1,16 @@
+import React, { useState } from 'react'
 import Image from 'next/image'
-import styles from './style.module.scss'
+
 import { lyricsIcon } from '@/assets'
 import { Modal } from '@/components/Modal'
-import React, { useState } from 'react'
+import { usePlayback } from '@/contexts/PlaybackContext'
 
-interface LyricsBtnProps {
-    lyrics?: string | null
-}
+import styles from './style.module.scss'
 
-export const LyricsBtn = ({ lyrics }: LyricsBtnProps) => {
+export const LyricsBtn = () => {
     const [showLyrics, setShowLyrics] = useState(false)
-
-    lyrics = lyrics ? lyrics : "We don't have the lyrics to this song. Sorry!"
+    const { currentTrack } = usePlayback()
+    const lyrics = currentTrack?.lyrics ? currentTrack.lyrics : "We don't have the lyrics to this song. Sorry!"
 
     return (
         <div className={styles.container}>

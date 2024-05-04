@@ -15,6 +15,7 @@ interface PlaybackContext {
     setShowQueue: Dispatch<SetStateAction<boolean>>
     currentPlayerState: PlayerState
     setCurrentPlayerState: Dispatch<SetStateAction<PlayerState>>
+    currentTrack: SearchedTrack | Track | null
     queue: (Track | SearchedTrack)[]
     playNext: () => void
     skipTo: (trackId: string) => void
@@ -409,7 +410,7 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
             "type": "track"
         }
     ])
-    const [showQueue, setShowQueue] = useState(true)
+    const [showQueue, setShowQueue] = useState(false)
 
     const addTrackToQueue = (track: Track | SearchedTrack) => {
         setQueue(prev => {
@@ -482,6 +483,7 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
             setShowQueue,
             currentPlayerState,
             setCurrentPlayerState,
+            currentTrack,
             queue,
             playNext,
             skipTo,
