@@ -5,6 +5,7 @@ import { TrackList, TrackRow } from '@/components/TrackList'
 import { msToMinutes } from '@/utils/conversion'
 import { usePlayback } from '@/contexts/PlaybackContext'
 import { Header } from '@/components/Header'
+import { Banner } from '@/components/Banner'
 
 interface AlbumPageProps {
     params: {
@@ -503,23 +504,19 @@ export default function AlbumPage({ params }: AlbumPageProps) {
     return (
         <div className={styles.albumPage}>
             <Header />
-            <div className={styles.banner}>
-                <div className={styles.pictureBox}>
-                    <Image src={album.spotify.images[0].url} alt={album.name} width={300} height={300} />
-                </div>
-                <div className={styles.info}>
-                    <span className={styles.type}>{album.type}</span>
-                    <h1 className={styles.name}>{album.name}</h1>
-                    <span className={styles.artistNames}>
-                        {album.artistIds.join(", ")}
-                    </span>
-                    <div className={styles.metadata}>
-                        <span className={styles.releaseDate}>{album.spotify.releaseDate}</span>
+            <Banner
+                description={album.genres.join(", ")}
+                picture={album.spotify.images[0].url}
+                title={album.name}
+                type={album.type}
+                metadata={(
+                    <>
+                        <span>{album.spotify.releaseDate}</span>
                         <span>•</span>
-                        <span className={styles.duration}>{album.totalTracks} songs, 40 min 19 sec</span>
-                    </div>
-                </div>
-            </div>
+                        <span>{album.totalTracks} songs, 40 min 19 sec</span>
+                    </>
+                )}
+            />
             <div className={styles.tracks}>
                 <TrackList>
                     {tracks.map((t, i) =>
