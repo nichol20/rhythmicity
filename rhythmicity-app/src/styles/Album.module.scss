@@ -1,0 +1,61 @@
+@use '../styles/' as *;
+
+.albumPage {
+    background-color: $colors-primary-bg;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.banner {
+    height: 50vh;
+    max-height: 400px;
+    min-height: 250px;
+    @include mixins-display-flex(center, flex-end);
+    gap: 20px;
+    padding: 20px;
+    width: 100%;
+}
+
+.pictureBox {
+    width: 16vw;
+    height: 16vw;
+    min-width: 128px;
+    min-height: 128px;
+    max-width: 400px;
+    max-height: 400px;
+    overflow: hidden;
+    border-radius: 8px;
+
+    img {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.info {
+    color: $colors-primary-txt;
+    @include mixins-display-flex(flex-end, flex-start);
+    flex-direction: column;
+    height: 100%;
+    gap: 10px;
+}
+
+.type {
+    font-size: 1em;
+    text-transform: capitalize;
+}
+
+.name {
+    font-size: 3.5em;
+    font-weight: 900;
+}
+
+.metadata {
+    @include mixins-display-flex();
+    gap: 5px;
+}
+
+.tracks {
+    padding-left: 24px;
+    padding-right: 24px;
+}
