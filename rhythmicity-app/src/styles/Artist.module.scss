@@ -1,0 +1,12 @@
+@use '../styles/' as *;
+
+.artistPage {
+    background-color: $colors-primary-bg;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.tracks {
+    padding-left: 24px;
+    padding-right: 24px;
+}
