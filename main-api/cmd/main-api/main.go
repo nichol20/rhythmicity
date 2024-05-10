@@ -19,20 +19,24 @@ func main() {
 	grpcServer := grpc.NewServer()
 
 	trackRepository := repository.NewTrackRepository(db)
+	artistRepository := repository.NewArtistRepository(db)
+	albumRepository := repository.NewAlbumRepository(db)
+
 	trackGRPCService := &service.TrackGRPCService{
-		TrackRepository: trackRepository,
+		TrackRepository:  trackRepository,
+		ArtistRepository: artistRepository,
+		AlbumRepository:  albumRepository,
 	}
 	pb.RegisterTrackServer(grpcServer, trackGRPCService)
 
-	artistRepository := repository.NewArtistRepository(db)
 	artistGRPCService := &service.ArtistGRPCService{
 		ArtistRepository: artistRepository,
 	}
 	pb.RegisterArtistServer(grpcServer, artistGRPCService)
 
-	albumRepository := repository.NewAlbumRepository(db)
 	albumGRPCService := &service.AlbumGRPCService{
-		AlbumRepository: albumRepository,
+		AlbumRepository:  albumRepository,
+		ArtistRepository: artistRepository,
 	}
 	pb.RegisterAlbumServer(grpcServer, albumGRPCService)
 

@@ -43,10 +43,24 @@ INNER JOIN artists a ON a.id = at.artistId
 INNER JOIN artist_data_spotify sp ON a.spotifyId = sp.id
 WHERE at.trackId = $1;
 
+-- name: GetSimplifiedArtistsByTrackId :many
+SELECT 
+	a.id artistId, a.name
+FROM artists_tracks at
+INNER JOIN artists a ON a.id = at.artistId
+WHERE at.trackId = $1;
+
 -- name: GetArtistsByAlbumId :many
 SELECT 
 	a.id artistId, a.name, a.spotifyId, sp.popularity spotifyPopularity
 FROM artists_albums aral
 INNER JOIN artists a ON aral.artistId = a.id
 INNER JOIN artist_data_spotify sp ON a.spotifyId = sp.id
+WHERE aral.albumId = $1;
+
+-- name: GetSimplifiedArtistsByAlbumId :many
+SELECT 
+	a.id artistId, a.name
+FROM artists_albums aral
+INNER JOIN artists a ON aral.artistId = a.id
 WHERE aral.albumId = $1;

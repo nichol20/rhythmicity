@@ -14,6 +14,9 @@ FROM albums a
 INNER JOIN album_data_spotify sp ON a.spotifyId = sp.id
 WHERE a.id = $1;
 
+-- name: GetSimplifiedAlbum :one
+SELECT id, name FROM albums WHERE id = $1;
+
 -- name: GetSeveralAlbums :many
 SELECT a.id albumId, a.name, a.totalTracks, a.spotifyId, sp.popularity spotifyPopularity, sp.releaseDate spotifyReleaseDate
 FROM albums a

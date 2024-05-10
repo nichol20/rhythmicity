@@ -320,3 +320,75 @@ func (q *Queries) GetSeveralArtists(ctx context.Context, dollar_1 []uuid.UUID) (
 	}
 	return items, nil
 }
+
+const getSimplifiedArtistsByAlbumId = `-- name: GetSimplifiedArtistsByAlbumId :many
+SELECT 
+	a.id artistId, a.name
+FROM artists_albums aral
+INNER JOIN artists a ON aral.artistId = a.id
+WHERE aral.albumId = $1
+`
+
+type GetSimplifiedArtistsByAlbumIdRow struct {
+	Artistid uuid.UUID
+	Name     string
+}
+
+func (q *Queries) GetSimplifiedArtistsByAlbumId(ctx context.Context, albumid uuid.UUID) ([]GetSimplifiedArtistsByAlbumIdRow, error) {
+	rows, err := q.db.QueryContext(ctx, getSimplifiedArtistsByAlbumId, albumid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetSimplifiedArtistsByAlbumIdRow
+	for rows.Next() {
+		var i GetSimplifiedArtistsByAlbumIdRow
+		if err := rows.Scan(&i.Artistid, &i.Name); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getSimplifiedArtistsByTrackId = `-- name: GetSimplifiedArtistsByTrackId :many
+SELECT 
+	a.id artistId, a.name
+FROM artists_tracks at
+INNER JOIN artists a ON a.id = at.artistId
+WHERE at.trackId = $1
+`
+
+type GetSimplifiedArtistsByTrackIdRow struct {
+	Artistid uuid.UUID
+	Name     string
+}
+
+func (q *Queries) GetSimplifiedArtistsByTrackId(ctx context.Context, trackid uuid.UUID) ([]GetSimplifiedArtistsByTrackIdRow, error) {
+	rows, err := q.db.QueryContext(ctx, getSimplifiedArtistsByTrackId, trackid)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetSimplifiedArtistsByTrackIdRow
+	for rows.Next() {
+		var i GetSimplifiedArtistsByTrackIdRow
+		if err := rows.Scan(&i.Artistid, &i.Name); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

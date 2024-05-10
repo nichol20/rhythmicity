@@ -19,6 +19,8 @@ type ArtistRepositoryInterface interface {
 	GetSeveralArtists(ctx context.Context, artistIDs []string) ([]domain.Artist, error)
 	GetArtistsByTrackId(ctx context.Context, trackID string) ([]domain.Artist, error)
 	GetArtistsByAlbumId(ctx context.Context, albumID string) ([]domain.Artist, error)
+	GetSimplifiedArtistsByTrackId(ctx context.Context, trackID string) ([]domain.SimplifiedArtist, error)
+	GetSimplifiedArtistsByAlbumId(ctx context.Context, albumID string) ([]domain.SimplifiedArtist, error)
 }
 
 type ArtistGRPCService struct {

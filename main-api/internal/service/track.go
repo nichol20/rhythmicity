@@ -23,7 +23,9 @@ type TrackRepositoryInterface interface {
 }
 
 type TrackGRPCService struct {
-	TrackRepository TrackRepositoryInterface
+	TrackRepository  TrackRepositoryInterface
+	ArtistRepository ArtistRepositoryInterface
+	AlbumRepository  AlbumRepositoryInterface
 	pb.UnimplementedTrackServer
 }
 
@@ -58,7 +60,13 @@ func (s *TrackGRPCService) GetPopularTracks(ctx context.Context, req *pb.GetPopu
 		slog.Error(err.Error())
 		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
-	return s.tracksToMessage(tracks), nil
+
+	message, err := s.tracksToMessage(ctx, tracks)
+	if err != nil {
+		slog.Error(err.Error())
+		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
+	}
+	return message, nil
 }
 
 func (s *TrackGRPCService) GetTrack(ctx context.Context, req *pb.RequestById) (*pb.TrackMessage, error) {
@@ -71,7 +79,13 @@ func (s *TrackGRPCService) GetTrack(ctx context.Context, req *pb.RequestById) (*
 		slog.Error(err.Error())
 		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
-	return s.trackToMessage(*track), nil
+
+	message, err := s.trackToMessage(ctx, *track)
+	if err != nil {
+		slog.Error(err.Error())
+		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
+	}
+	return message, nil
 }
 
 func (s *TrackGRPCService) GetSeveralTracks(ctx context.Context, req *pb.RequestByIds) (*pb.MultipleTracks, error) {
@@ -80,7 +94,13 @@ func (s *TrackGRPCService) GetSeveralTracks(ctx context.Context, req *pb.Request
 		slog.Error(err.Error())
 		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
-	return s.tracksToMessage(tracks), nil
+
+	message, err := s.tracksToMessage(ctx, tracks)
+	if err != nil {
+		slog.Error(err.Error())
+		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
+	}
+	return message, nil
 }
 
 func (s *TrackGRPCService) GetTracksByArtistId(ctx context.Context, req *pb.GetTracksByArtistIdRequest) (*pb.MultipleTracks, error) {
@@ -102,7 +122,12 @@ func (s *TrackGRPCService) GetTracksByArtistId(ctx context.Context, req *pb.GetT
 		slog.Error(err.Error())
 		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
-	return s.tracksToMessage(tracks), nil
+	message, err := s.tracksToMessage(ctx, tracks)
+	if err != nil {
+		slog.Error(err.Error())
+		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
+	}
+	return message, nil
 }
 
 func (s *TrackGRPCService) GetTracksByAlbumId(ctx context.Context, req *pb.GetTracksByAlbumIdRequest) (*pb.MultipleTracks, error) {
@@ -125,23 +150,55 @@ func (s *TrackGRPCService) GetTracksByAlbumId(ctx context.Context, req *pb.GetTr
 		slog.Error(err.Error())
 		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
-	return s.tracksToMessage(tracks), nil
+
+	message, err := s.tracksToMessage(ctx, tracks)
+	if err != nil {
+		slog.Error(err.Error())
+		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
+	}
+	return message, nil
 }
 
-func (s *TrackGRPCService) tracksToMessage(tracks []domain.Track) *pb.MultipleTracks {
+func (s *TrackGRPCService) tracksToMessage(ctx context.Context, tracks []domain.Track) (*pb.MultipleTracks, error) {
 	var tracksMessage []*pb.TrackMessage
 	for _, v := range tracks {
-		tracksMessage = append(tracksMessage, s.trackToMessage(v))
+		message, err := s.trackToMessage(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		tracksMessage = append(tracksMessage, message)
 	}
 
 	return &pb.MultipleTracks{
 		Tracks: tracksMessage,
-	}
+	}, nil
 }
 
-func (s *TrackGRPCService) trackToMessage(track domain.Track) *pb.TrackMessage {
+func (s *TrackGRPCService) trackToMessage(ctx context.Context, track domain.Track) (*pb.TrackMessage, error) {
+	artists, err := s.ArtistRepository.GetSimplifiedArtistsByTrackId(ctx, track.ID.String())
+	if err != nil {
+		return nil, err
+	}
+	var artistsMessage []*pb.SimplifiedArtist
+	for _, a := range artists {
+		artistsMessage = append(artistsMessage, &pb.SimplifiedArtist{
+			Id:   a.ID.String(),
+			Name: a.Name,
+		})
+	}
+
+	album, err := s.AlbumRepository.GetSimplifiedAlbum(ctx, track.AlbumID.String())
+	if err != nil {
+		return nil, err
+	}
+
 	return &pb.TrackMessage{
-		Id:        track.ID.String(),
+		Id: track.ID.String(),
+		Album: &pb.SimplifiedAlbum{
+			Id:   album.ID.String(),
+			Name: album.Name,
+		},
+		Artists:   artistsMessage,
 		Genres:    track.Genres,
 		Styles:    track.Styles,
 		Explicit:  track.Explicit,
@@ -192,5 +249,5 @@ func (s *TrackGRPCService) trackToMessage(track domain.Track) *pb.TrackMessage {
 				},
 			},
 		},
-	}
+	}, nil
 }

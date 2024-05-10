@@ -105,6 +105,32 @@ func (r *ArtistRepository) GetArtistsByTrackId(ctx context.Context, trackID stri
 	return artists, nil
 }
 
+func (r *ArtistRepository) GetSimplifiedArtistsByTrackId(ctx context.Context, trackID string) ([]domain.SimplifiedArtist, error) {
+	uuid, err := uuid.Parse(trackID)
+	if err != nil {
+		return nil, domain.ErrNotFound
+	}
+	if exists, err := r.queries.CheckIfTrackExists(ctx, uuid); err != nil {
+		return nil, err
+	} else if !exists {
+		return nil, domain.ErrNotFound
+	}
+	artistsRow, err := r.queries.GetArtistsByTrackId(ctx, uuid)
+	if err != nil {
+		return nil, err
+	}
+	var artists []domain.SimplifiedArtist
+	for _, v := range artistsRow {
+		artist := domain.SimplifiedArtist{
+			ID:   v.Artistid,
+			Name: v.Name,
+		}
+		artists = append(artists, artist)
+	}
+
+	return artists, nil
+}
+
 func (r *ArtistRepository) GetArtistsByAlbumId(ctx context.Context, albumID string) ([]domain.Artist, error) {
 	uuid, err := uuid.Parse(albumID)
 	if err != nil {
@@ -128,6 +154,32 @@ func (r *ArtistRepository) GetArtistsByAlbumId(ctx context.Context, albumID stri
 		artists = append(artists, *artist)
 	}
 	return artists, err
+}
+
+func (r *ArtistRepository) GetSimplifiedArtistsByAlbumId(ctx context.Context, albumID string) ([]domain.SimplifiedArtist, error) {
+	uuid, err := uuid.Parse(albumID)
+	if err != nil {
+		return nil, domain.ErrNotFound
+	}
+	if exists, err := r.queries.CheckIfAlbumExists(ctx, uuid); err != nil {
+		return nil, err
+	} else if !exists {
+		return nil, domain.ErrNotFound
+	}
+	artistsRow, err := r.queries.GetArtistsByAlbumId(ctx, uuid)
+	if err != nil {
+		return nil, err
+	}
+	var artists []domain.SimplifiedArtist
+	for _, v := range artistsRow {
+		artist := domain.SimplifiedArtist{
+			ID:   v.Artistid,
+			Name: v.Name,
+		}
+		artists = append(artists, artist)
+	}
+
+	return artists, nil
 }
 
 func (r *ArtistRepository) createArtist(ctx context.Context, row interface{}) (*domain.Artist, error) {

@@ -5,6 +5,7 @@ package rhythmicity.main_api;
 option go_package = "github.com/nichol20/rhythmicity/data-api/internal/pb";
 
 import "common.proto";
+import "artist.proto";
 
 message AlbumSpotify {
     string id = 1;
@@ -20,6 +21,12 @@ message AlbumMessage {
     repeated string styles = 4;
     uint32 totalTracks = 5;
     AlbumSpotify spotify = 6;
+    repeated SimplifiedArtist artists = 7;
+}
+
+message SimplifiedAlbum {
+    string id = 1;
+    string name = 2;
 }
 
 message GetPopularAlbumsRequest {

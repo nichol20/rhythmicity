@@ -14,3 +14,8 @@ type Artist struct {
 	Styles  []string      `json:"styles"`
 	Spotify SpotifyArtist `json:"spotify"`
 }
+
+type SimplifiedArtist struct {
+	ID   uuid.UUID `json:"id"`
+	Name string    `json:"name"`
+}

@@ -19,10 +19,12 @@ type AlbumRepositoryInterface interface {
 	GetSeveralAlbums(ctx context.Context, albumIDs []string) ([]domain.Album, error)
 	GetAlbumByTrackId(ctx context.Context, trackID string) (*domain.Album, error)
 	GetAlbumsByArtistId(ctx context.Context, artistID string) ([]domain.Album, error)
+	GetSimplifiedAlbum(ctx context.Context, albumID string) (*domain.SimplifiedAlbum, error)
 }
 
 type AlbumGRPCService struct {
-	AlbumRepository AlbumRepositoryInterface
+	AlbumRepository  AlbumRepositoryInterface
+	ArtistRepository ArtistRepositoryInterface
 	pb.UnimplementedAlbumServer
 }
 
@@ -41,7 +43,14 @@ func (s *AlbumGRPCService) GetPopularAlbums(ctx context.Context, req *pb.GetPopu
 		slog.Error(err.Error())
 		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
-	return s.albumsToMessage(albums), nil
+
+	message, err := s.albumsToMessage(ctx, albums)
+	if err != nil {
+		slog.Error(err.Error())
+		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
+	}
+
+	return message, nil
 }
 
 func (s *AlbumGRPCService) GetAlbum(ctx context.Context, req *pb.RequestById) (*pb.AlbumMessage, error) {
@@ -54,7 +63,12 @@ func (s *AlbumGRPCService) GetAlbum(ctx context.Context, req *pb.RequestById) (*
 		slog.Error(err.Error())
 		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
-	return s.albumToMessage(*album), nil
+	message, err := s.albumToMessage(ctx, *album)
+	if err != nil {
+		slog.Error(err.Error())
+		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
+	}
+	return message, nil
 }
 
 func (s *AlbumGRPCService) GetSeveralAlbums(ctx context.Context, req *pb.RequestByIds) (*pb.MultipleAlbums, error) {
@@ -63,7 +77,14 @@ func (s *AlbumGRPCService) GetSeveralAlbums(ctx context.Context, req *pb.Request
 		slog.Error(err.Error())
 		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
-	return s.albumsToMessage(albums), nil
+
+	message, err := s.albumsToMessage(ctx, albums)
+	if err != nil {
+		slog.Error(err.Error())
+		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
+	}
+
+	return message, nil
 }
 
 func (s *AlbumGRPCService) GetAlbumByTrackId(ctx context.Context, req *pb.RequestById) (*pb.AlbumMessage, error) {
@@ -76,7 +97,13 @@ func (s *AlbumGRPCService) GetAlbumByTrackId(ctx context.Context, req *pb.Reques
 		slog.Error(err.Error())
 		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
-	return s.albumToMessage(*album), nil
+
+	message, err := s.albumToMessage(ctx, *album)
+	if err != nil {
+		slog.Error(err.Error())
+		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
+	}
+	return message, nil
 }
 
 func (s *AlbumGRPCService) GetAlbumsByArtistId(ctx context.Context, req *pb.RequestById) (*pb.MultipleAlbums, error) {
@@ -89,23 +116,47 @@ func (s *AlbumGRPCService) GetAlbumsByArtistId(ctx context.Context, req *pb.Requ
 		slog.Error(err.Error())
 		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
-	return s.albumsToMessage(albums), nil
+
+	message, err := s.albumsToMessage(ctx, albums)
+	if err != nil {
+		slog.Error(err.Error())
+		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
+	}
+
+	return message, nil
 }
 
-func (s *AlbumGRPCService) albumsToMessage(albums []domain.Album) *pb.MultipleAlbums {
+func (s *AlbumGRPCService) albumsToMessage(ctx context.Context, albums []domain.Album) (*pb.MultipleAlbums, error) {
 	var albumsMessage []*pb.AlbumMessage
 	for _, v := range albums {
-		albumsMessage = append(albumsMessage, s.albumToMessage(v))
+		message, err := s.albumToMessage(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		albumsMessage = append(albumsMessage, message)
 	}
 
 	return &pb.MultipleAlbums{
 		Albums: albumsMessage,
-	}
+	}, nil
 }
 
-func (s *AlbumGRPCService) albumToMessage(album domain.Album) *pb.AlbumMessage {
+func (s *AlbumGRPCService) albumToMessage(ctx context.Context, album domain.Album) (*pb.AlbumMessage, error) {
+	artists, err := s.ArtistRepository.GetSimplifiedArtistsByAlbumId(ctx, album.ID.String())
+	if err != nil {
+		return nil, err
+	}
+	var artistsMessage []*pb.SimplifiedArtist
+	for _, a := range artists {
+		artistsMessage = append(artistsMessage, &pb.SimplifiedArtist{
+			Id:   a.ID.String(),
+			Name: a.Name,
+		})
+	}
+
 	return &pb.AlbumMessage{
 		Id:          album.ID.String(),
+		Artists:     artistsMessage,
 		Name:        album.Name,
 		Genres:      album.Genres,
 		Styles:      album.Styles,
@@ -116,5 +167,5 @@ func (s *AlbumGRPCService) albumToMessage(album domain.Album) *pb.AlbumMessage {
 			ReleaseData: album.Spotify.ReleaseDate,
 			Images:      utils.ImagesToMessage(album.Spotify.Images),
 		},
-	}
+	}, nil
 }

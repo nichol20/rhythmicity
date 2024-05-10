@@ -172,8 +172,10 @@ func (r *TrackRepository) createTrack(ctx context.Context, row interface{}) (*do
 	if err != nil {
 		return nil, err
 	}
+
 	return &domain.Track{
 		ID:        t.Trackid,
+		AlbumID:   t.Albumid,
 		Genres:    details.Genres,
 		Styles:    details.Styles,
 		Explicit:  t.Explicit,

@@ -17,6 +17,11 @@ type Album struct {
 	Spotify     SpotifyAlbum `json:"spotify"`
 }
 
+type SimplifiedAlbum struct {
+	ID   uuid.UUID `json:"id"`
+	Name string    `json:"name"`
+}
+
 type SetupAlbum struct {
 	Album
 	ArtistIds uuid.UUIDs `json:"artistIds"`

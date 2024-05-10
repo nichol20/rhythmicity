@@ -63,6 +63,27 @@ func (r *AlbumRepository) GetAlbum(ctx context.Context, albumID string) (*domain
 	return album, err
 }
 
+func (r *AlbumRepository) GetSimplifiedAlbum(ctx context.Context, albumID string) (*domain.SimplifiedAlbum, error) {
+	uuid, err := uuid.Parse(albumID)
+	if err != nil {
+		return nil, domain.ErrNotFound
+	}
+	if exists, err := r.queries.CheckIfAlbumExists(ctx, uuid); err != nil {
+		return nil, err
+	} else if !exists {
+		return nil, domain.ErrNotFound
+	}
+	albumRow, err := r.queries.GetSimplifiedAlbum(ctx, uuid)
+	if err != nil {
+		return nil, err
+	}
+
+	return &domain.SimplifiedAlbum{
+		ID:   albumRow.ID,
+		Name: albumRow.Name,
+	}, nil
+}
+
 func (r *AlbumRepository) GetSeveralAlbums(ctx context.Context, albumIDs []string) ([]domain.Album, error) {
 	filteredIDs := utils.IDsToUUIDs(albumIDs)
 	albumsRow, err := r.queries.GetSeveralAlbums(ctx, filteredIDs)

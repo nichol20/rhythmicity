@@ -20,6 +20,11 @@ message ArtistMessage {
     ArtistSpotify spotify = 5;
 }
 
+message SimplifiedArtist {
+    string id = 1;
+    string name = 2;
+}
+
 message GetPopularArtistsRequest {
     optional uint32 limit = 1;
     optional uint32 offset = 2;
