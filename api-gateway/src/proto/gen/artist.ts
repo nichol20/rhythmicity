@@ -19,6 +19,7 @@ export interface ProtoGrpcType {
       MultipleArtists: MessageTypeDefinition
       RequestById: MessageTypeDefinition
       RequestByIds: MessageTypeDefinition
+      SimplifiedArtist: MessageTypeDefinition
     }
   }
 }
