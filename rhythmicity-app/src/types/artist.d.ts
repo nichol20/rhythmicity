@@ -12,3 +12,7 @@ export interface Artist {
   spotify: SpotifyArtist;
 }
 
+export interface SimplifiedArtist {
+  id: string;
+  name: string;
+}

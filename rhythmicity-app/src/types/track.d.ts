@@ -1,3 +1,5 @@
+import { SimplifiedAlbum } from "./album"
+import { SimplifiedArtist } from "./artist"
 import { Spotify, Image } from "./common"
 
 export interface SpotifyTrack extends Spotify {
@@ -38,4 +40,6 @@ export interface Track {
   spotify: SpotifyTrack
   youtube: Youtube
   lyrics: string | null
+  album: SimplifiedAlbum
+  artists: SimplifiedArtist[]
 }

@@ -13,3 +13,8 @@ export interface Album {
   styles: string[];
   spotify: SpotifyAlbum;
 }
+
+export interface SimplifiedAlbum {
+  id: string;
+  name: string;
+}
