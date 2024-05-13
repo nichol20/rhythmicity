@@ -29,6 +29,21 @@ export const getTracksByArtistId = async (artistId: string): Promise<Track[]> =>
     return res.data
 }
 
+export const getTrack = async (trackId: string): Promise<Track> => {
+    const res = await https.get<Track>(`/tracks/${trackId}`)
+    return res.data
+}
+
+export const getArtist = async (artistId: string): Promise<Artist> => {
+    const res = await https.get<Artist>(`/artists/${artistId}`)
+    return res.data
+}
+
+export const getAlbum = async (albumId: string): Promise<Album> => {
+    const res = await https.get<Album>(`/albums/${albumId}`)
+    return res.data
+}
+
 export interface SearchResponse {
     albums: SearchedAlbum[]
     artists: SearchedArtist[]
