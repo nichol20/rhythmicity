@@ -62,6 +62,7 @@ export default function CollectionPage() {
                                 image={album.spotify.images[0].url}
                                 isPlayable
                                 title={album.name}
+                                href={`/albums/${album.id}`}
                                 description={album.genres.join(", ")}
                             />
                         ))}
@@ -76,6 +77,7 @@ export default function CollectionPage() {
                                 image={artist.spotify.images[0].url}
                                 isPlayable
                                 title={artist.name}
+                                href={`/artists/${artist.id}`}
                                 description={artist.genres.join(", ")}
                             />
                         ))}
@@ -90,6 +92,7 @@ export default function CollectionPage() {
                                 image={track.spotify.albumImages[0].url}
                                 isPlayable
                                 title={track.spotify.title}
+                                href={`/tracks/${track.id}`}
                                 description={track.genres.join(", ")}
                             />
                         ))}

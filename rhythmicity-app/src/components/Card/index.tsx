@@ -3,10 +3,12 @@ import React, { useState } from 'react';
 import styles from './style.module.scss'
 import Image, { StaticImageData } from 'next/image';
 import { playIcon } from '@/assets';
+import Link from 'next/link';
 
 interface CardProps {
     image: StaticImageData | string
     title: string
+    href: string
     description: string
     onPlay?: () => void
     isArtist?: boolean
@@ -18,6 +20,7 @@ interface CardProps {
 export const Card = ({
     image,
     title,
+    href,
     description,
     onPlay,
     isArtist = false,
@@ -26,7 +29,7 @@ export const Card = ({
     className
 }: CardProps) => {
     return (
-        <div className={`${styles.card} ${className ?? ""}`} data-kind={kind}>
+        <Link href={href} className={`${styles.card} ${className ?? ""}`} data-kind={kind}>
             <div className={styles.container}>
                 <div className={styles.imageBox} data-card-type={isArtist ? "artist" : ""}>
                     <div className={styles.boxContent}>
@@ -43,6 +46,6 @@ export const Card = ({
                     <Image src={playIcon} alt="play" />
                 </button>
             )}
-        </div>
+        </Link>
     );
 };

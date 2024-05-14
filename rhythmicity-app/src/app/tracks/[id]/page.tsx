@@ -55,7 +55,7 @@ export default function TrackPage({ params }: TrackPageProps) {
                         <TrackRow
                             key={t.id}
                             index={i}
-                            album={t.album.id}
+                            album={t.album.name}
                             artists={t.artists.map(a => a.name)}
                             explicit={t.explicit}
                             image={t.spotify.albumImages[0].url}

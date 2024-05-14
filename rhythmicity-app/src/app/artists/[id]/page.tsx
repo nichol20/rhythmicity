@@ -30,6 +30,7 @@ export default function ArtistPage({ params }: ArtistPageProps) {
             setTracks(ts)
 
         }
+        setData()
     }, [params.id])
 
     if (!artist) return <>Loading...</>
@@ -52,7 +53,7 @@ export default function ArtistPage({ params }: ArtistPageProps) {
                     {tracks?.map((t, i) =>
                         <TrackRow
                             key={t.id}
-                            album={t.album.id}
+                            album={t.album.name}
                             artists={[]}
                             explicit={t.explicit}
                             image={t.spotify.albumImages[0].url}

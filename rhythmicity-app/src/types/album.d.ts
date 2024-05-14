@@ -1,3 +1,4 @@
+import { SimplifiedArtist } from "./artist";
 import { Image, Spotify } from "./common";
 
 export interface SpotifyAlbum extends Spotify {
@@ -8,6 +9,7 @@ export interface SpotifyAlbum extends Spotify {
 export interface Album {
   id: string;
   name: string;
+  artists: SimplifiedArtist[]
   totalTracks: number;
   genres: string[];
   styles: string[];

@@ -39,7 +39,7 @@ export const TrackRow = ({ album, artists, index, image, explicit, time, title, 
                                 <ExplicitSign />
                             ) : null}
                             <span className={styles.artists}>
-                                {artists.join(', ')} dposajdpoasj pdjsaopd jaspojd poasj
+                                {artists.join(', ')}
                             </span>
                         </span>
                     </div>

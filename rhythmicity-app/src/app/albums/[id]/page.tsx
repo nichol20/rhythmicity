@@ -36,7 +36,8 @@ export default function AlbumPage({ params }: AlbumPageProps) {
         if (tracks) {
             const timeArray = tracks.map(t => t.youtube.durationMs)
             const totalMs = timeArray.reduce((acc, value) => acc + value, 0)
-            return msToMinutes(totalMs)
+            const [minutes, seconds] = msToMinutes(totalMs).split(":")
+            return `${minutes}min ${seconds}sec`
         }
 
         return ""
@@ -67,7 +68,7 @@ export default function AlbumPage({ params }: AlbumPageProps) {
                         <TrackRow
                             key={t.id}
                             album={album.name}
-                            artists={[]}
+                            artists={album.artists.map(a => a.name)}
                             explicit={t.explicit}
                             image={t.spotify.albumImages[0].url}
                             index={i}
