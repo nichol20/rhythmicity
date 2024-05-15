@@ -3,27 +3,39 @@ import styles from './style.module.scss'
 import { useState } from 'react'
 import { playIcon } from '@/assets'
 import { ExplicitSign } from '../ExplicitSign'
+import Link from 'next/link'
+import { usePlayback } from '@/contexts/PlaybackContext'
+import { Track } from '@/types/track'
+
+interface Content {
+    id: string
+    name: string
+}
 
 export interface TrackRowProps {
     index: number
-    title: string
-    album: string
+    track: Track
+    album: Content
     time: string
-    artists: string[]
+    artists: Content[]
     image: string | StaticImageData
     explicit: boolean
-    onPlay?: () => void
 }
 
-export const TrackRow = ({ album, artists, index, image, explicit, time, title, onPlay }: TrackRowProps) => {
+export const TrackRow = ({ album, artists, index, image, explicit, time, track }: TrackRowProps) => {
     const [isHovered, setIsHovered] = useState(false)
+    const { queueController } = usePlayback()
+
+    const handlePlay = () => {
+        queueController.addTrack(track)
+    }
 
     return (
         <div className={styles.trackRow} onMouseOver={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
             <div className={`${styles.indexCol} ${styles.col}`}>
                 {isHovered
                     ? (
-                        <button className={styles.playBtn} onClick={onPlay}>
+                        <button className={styles.playBtn} onClick={handlePlay}>
                             <Image src={playIcon} alt="play" className={styles.playIcon} />
                         </button>
                     )
@@ -31,22 +43,28 @@ export const TrackRow = ({ album, artists, index, image, explicit, time, title, 
             </div>
             <div className={`${styles.titleCol} ${styles.col}`}>
                 <div className={styles.content}>
-                    <Image src={image} alt={title} width={40} height={40} />
+                    <Image src={image} alt={track.spotify.title} width={40} height={40} />
                     <div className={styles.infoBox}>
-                        <span className={styles.title}>{title}</span>
+                        <Link href={`/tracks/${track.id}`} className={styles.title}>{track.spotify.title}</Link>
                         <span className={styles.description}>
                             {explicit ? (
                                 <ExplicitSign />
                             ) : null}
                             <span className={styles.artists}>
-                                {artists.join(', ')}
+                                {artists.map(a =>
+                                    <Link
+                                        key={a.id}
+                                        href={`/artists/${a.id}`}
+                                        className={styles.artistName}
+                                    >{a.name}</Link>
+                                )}
                             </span>
                         </span>
                     </div>
                 </div>
             </div>
             <div className={`${styles.albumCol} ${styles.col}`}>
-                <span className={styles.content}>{album}</span>
+                <Link href={`/albums/${album.id}`} className={styles.content}>{album.name}</Link>
             </div>
             <div className={`${styles.timeCol} ${styles.col}`}>
                 <span className={styles.content}>{time}</span>

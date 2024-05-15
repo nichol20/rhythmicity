@@ -4,15 +4,11 @@ import { useRouter } from 'next/navigation'
 
 import { Header } from '@/components/Header'
 import { SearchInput } from '@/components/SearchInput'
-import { TrackRow } from '@/components/TrackList'
 import { usePlayback } from '@/contexts/PlaybackContext'
 
 import styles from '@/styles/Search.module.scss'
 import { useCallback, useState } from 'react'
 import { QueryKind, SearchResponse, search } from '@/utils/api'
-import { SearchedAlbum, SearchedArtist, SearchedTrack } from '@/types/search'
-import { msToMinutes } from '@/utils/conversion'
-import { BestResultCard } from '@/components/SearchResults/BestResultCard'
 import { ResultCards } from '@/components/SearchResults/ResultCards'
 import { MainResults } from '@/components/SearchResults/MainResults'
 const kinds = ['all', 'tracks', 'artists', 'albums']

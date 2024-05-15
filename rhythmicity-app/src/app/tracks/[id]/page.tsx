@@ -55,12 +55,12 @@ export default function TrackPage({ params }: TrackPageProps) {
                         <TrackRow
                             key={t.id}
                             index={i}
-                            album={t.album.name}
-                            artists={t.artists.map(a => a.name)}
+                            album={t.album}
+                            artists={t.artists}
+                            track={t}
                             explicit={t.explicit}
                             image={t.spotify.albumImages[0].url}
                             time={msToMinutes(t.youtube.durationMs)}
-                            title={t.spotify.title}
                         />)}
                 </TrackList>
             </div>

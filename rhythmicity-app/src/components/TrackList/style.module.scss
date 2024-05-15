@@ -32,7 +32,6 @@
 }
 
 .trackRow {
-    cursor: pointer;
     border-radius: 4px;
     width: 100%;
 
@@ -106,8 +105,14 @@
                 font-size: 1.2em;
                 width: 100%;
                 text-overflow: ellipsis;
+                color: $colors-primary-txt;
                 overflow: hidden;
                 line-height: 16px;
+                text-decoration: none;
+
+                &:hover {
+                    text-decoration: underline;
+                }
             }
 
             .description {
@@ -120,6 +125,19 @@
                 .artists {
                     text-overflow: ellipsis;
                     overflow: hidden;
+
+                    :nth-child(n):not(:last-child)::after {
+                        content: ", ";
+                    }
+
+                    .artistName {
+                        color: $colors-primary-txt;
+                        text-decoration: none;
+
+                        &:hover {
+                            text-decoration: underline;
+                        }
+                    }
                 }
             }
         }
@@ -135,6 +153,12 @@
     .content {
         text-overflow: ellipsis;
         overflow: hidden;
+        color: $colors-primary-txt;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
     }
 }
 
