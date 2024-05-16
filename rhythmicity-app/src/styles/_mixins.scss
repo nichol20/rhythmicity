@@ -1,3 +1,5 @@
+@use "./colors";
+
 @mixin display-flex($justifyContent: center, $alignItems: center) {
     display: flex;
     justify-content: $justifyContent;
@@ -14,6 +16,49 @@
 
 @mixin green-filter() {
     filter: invert(52%) sepia(79%) saturate(438%) hue-rotate(89deg) brightness(94%) contrast(98%);
+}
+
+@mixin primary-btn {
+    color: colors.$primary-txt;
+    background-color: colors.$primary-btn-bg;
+    border: none;
+    cursor: pointer;
+    transition: 150ms background ease-in-out;
+
+    &:hover {
+        background-color: colors.$primary-btn-bg-hover;
+    }
+}
+
+@mixin secondary-btn {
+    color: colors.$primary-txt;
+    background-color: colors.$secondary-btn-bg;
+    border: none;
+    cursor: pointer;
+    transition: background 250ms ease-in-out;
+
+    &:hover {
+        background-color: colors.$secondary-btn-bg-hover;
+    }
+}
+
+@mixin primary-row-link {
+    color: colors.$primary-txt;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+@mixin secondary-row-link {
+    color: colors.$secondary-txt;
+    text-decoration: none;
+
+    &:hover {
+        color: colors.$primary-txt;
+        text-decoration: underline;
+    }
 }
 
 @mixin primary-scrollbar() {

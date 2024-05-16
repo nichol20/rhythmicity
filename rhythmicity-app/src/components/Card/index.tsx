@@ -28,6 +28,11 @@ export const Card = ({
     kind = "normal",
     className
 }: CardProps) => {
+    const handlePlay = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.preventDefault();
+        onPlay
+    }
+
     return (
         <Link href={href} className={`${styles.card} ${className ?? ""}`} data-kind={kind}>
             <div className={styles.container}>
@@ -42,7 +47,7 @@ export const Card = ({
                 </div>
             </div>
             {isPlayable && (
-                <button className={styles.playBtn} onClick={onPlay}>
+                <button className={styles.playBtn} onClick={handlePlay}>
                     <Image src={playIcon} alt="play" />
                 </button>
             )}

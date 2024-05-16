@@ -48,15 +48,7 @@
     .btn {
         padding: 10px 16px;
         border-radius: 10px;
-        color: $colors-primary-txt;
-        background-color: $colors-primary-btn-bg;
-        border: none;
-        cursor: pointer;
-        transition: 150ms background ease-in-out;
-        
-        &:hover {
-            background-color: $colors-primary-btn-bg-hover;
-        }
+        @include mixins-primary-btn();
     }
 }
 

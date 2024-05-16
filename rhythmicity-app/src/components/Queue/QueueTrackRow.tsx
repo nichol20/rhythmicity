@@ -7,6 +7,7 @@ import { ExplicitSign } from "../ExplicitSign";
 import { deleteIcon, verticalEllipsisIcon } from "@/assets";
 import { useState } from "react";
 import { usePlayback } from "@/contexts/PlaybackContext";
+import Link from "next/link";
 
 interface QueueTrackRowProps {
     track: Track | SearchedTrack
@@ -63,7 +64,7 @@ export const QueueTrackRow = ({ track }: QueueTrackRowProps) => {
                     />
                 </div>
                 <div className={styles.description}>
-                    <span className={styles.name}>{getName(track)}</span>
+                    <Link href={`/tracks/${track.id}`} className={styles.name}>{getName(track)}</Link>
                     <span className={styles.genres}>
                         {track.explicit && <ExplicitSign />}
                         {track.genres.join(', ')}

@@ -24,16 +24,8 @@
     > button {
         padding: 4px 10px;
         border-radius: 20px;
-        background-color: $colors-secondary-btn-bg;
-        border: none;
-        cursor: pointer;
         min-width: 50px;
-        color: $colors-primary-txt;
-        transition: background 250ms ease-in-out;
-
-        &:hover {
-            background-color: $colors-secondary-btn-bg-hover;
-        }
+        @include mixins-secondary-btn();
         
         &.active {
             background-color: white;
