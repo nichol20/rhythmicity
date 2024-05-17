@@ -17,11 +17,15 @@
           "width": { "type": "integer" }
         }
       },
-      "artistNames": {
-        "type": "text",
-        "fields": {
-          "keyword": {
-            "type": "keyword"
+      "artists": {
+        "type": "nested",
+        "properties": {
+          "id": { "type": "keyword" },
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": { "type": "keyword" }
+            }
           }
         }
       }

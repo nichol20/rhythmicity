@@ -11,11 +11,11 @@ export interface MainResultsProps {
 }
 
 export const MainResults = ({ bestResult, tracks }: MainResultsProps) => {
-    const { addTrackToQueue } = usePlayback()
+    const { queueController } = usePlayback()
 
     const handlePlay = (obj: SearchedTrack | SearchedAlbum | SearchedArtist) => {
         if (obj.type === "track") {
-            addTrackToQueue(obj)
+            queueController.addTrack(obj)
         }
     }
 
@@ -33,14 +33,13 @@ export const MainResults = ({ bestResult, tracks }: MainResultsProps) => {
                         if (i < 5) {
                             return <TrackRow
                                 key={track.id}
-                                album={track.albumName}
-                                artists={track.artistNames}
+                                album={track.album}
+                                artists={track.artists}
                                 explicit={track.explicit}
                                 image={track.images[0].url}
                                 index={i + 1}
                                 time={msToMinutes(track.durationMs)}
-                                title={track.name}
-                                onPlay={() => handlePlay(track)}
+                                track={track}
                             />
                         }
                     })}

@@ -1,13 +1,15 @@
 // Original file: src/proto/searchApi/search.proto
 
+import type { SimplifiedArtist as _rhythmicity_search_api_SimplifiedArtist, SimplifiedArtist__Output as _rhythmicity_search_api_SimplifiedArtist__Output } from '../../rhythmicity/search_api/SimplifiedArtist';
+import type { SimplifiedAlbum as _rhythmicity_search_api_SimplifiedAlbum, SimplifiedAlbum__Output as _rhythmicity_search_api_SimplifiedAlbum__Output } from '../../rhythmicity/search_api/SimplifiedAlbum';
 import type { Image as _rhythmicity_search_api_Image, Image__Output as _rhythmicity_search_api_Image__Output } from '../../rhythmicity/search_api/Image';
 import type { Long } from '@grpc/proto-loader';
 
 export interface Track {
   'id'?: (string);
   'name'?: (string);
-  'artistNames'?: (string)[];
-  'albumName'?: (string);
+  'artists'?: (_rhythmicity_search_api_SimplifiedArtist)[];
+  'album'?: (_rhythmicity_search_api_SimplifiedAlbum | null);
   'lyrics'?: (string);
   'explicit'?: (boolean);
   'playCount'?: (number | string | Long);
@@ -21,8 +23,8 @@ export interface Track {
 export interface Track__Output {
   'id'?: (string);
   'name'?: (string);
-  'artistNames'?: (string)[];
-  'albumName'?: (string);
+  'artists'?: (_rhythmicity_search_api_SimplifiedArtist__Output)[];
+  'album'?: (_rhythmicity_search_api_SimplifiedAlbum__Output);
   'lyrics'?: (string);
   'explicit'?: (boolean);
   'playCount'?: (Long);

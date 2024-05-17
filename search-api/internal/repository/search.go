@@ -70,7 +70,7 @@ func (r *SearchRepository) mountSearchStructure(search *domain.Search) map[strin
 					{
 						"query_string": map[string]any{
 							"query":  query,
-							"fields": []string{"artistNames", "name^2", "lyrics", "albumName"},
+							"fields": []string{"artists.name", "name^2", "lyrics", "album.name"},
 						},
 					},
 				},

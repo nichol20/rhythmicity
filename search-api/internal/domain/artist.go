@@ -1,5 +1,10 @@
 package domain
 
+type SimplifiedArtist struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
 type Artist struct {
 	ID         string   `json:"id"`
 	Name       string   `json:"name"`

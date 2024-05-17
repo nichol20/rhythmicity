@@ -10,21 +10,6 @@ message Image {
     string url = 3;
 }
 
-message Track {
-    string id = 1;
-    string name = 2;
-    repeated string artistNames = 3;
-    string albumName = 4;
-    string lyrics = 5;
-    bool explicit = 6;
-    uint64 playCount = 7;
-    uint32 durationMs = 8;
-    repeated string genres = 9;
-    repeated string styles = 10;
-    repeated Image images = 11;
-    string type = 12;
-}
-
 message Artist {
     string id = 1;
     string name = 2;
@@ -35,10 +20,15 @@ message Artist {
     string type = 7;
 }
 
+message SimplifiedArtist {
+    string id = 1;
+    string name = 2;
+}
+
 message Album {
     string id = 1;
     string name = 2;
-    repeated string artistNames = 3;
+    repeated SimplifiedArtist artists = 3;
     repeated string genres = 4;
     repeated string styles = 5;
     string releaseDate = 6;
@@ -46,6 +36,26 @@ message Album {
     repeated Image images = 8;
     uint32 popularity = 9;
     string type = 10;
+}
+
+message SimplifiedAlbum {
+    string id = 1;
+    string name = 2;
+}
+
+message Track {
+    string id = 1;
+    string name = 2;
+    repeated SimplifiedArtist artists = 3;
+    SimplifiedAlbum album = 4;
+    string lyrics = 5;
+    bool explicit = 6;
+    uint64 playCount = 7;
+    uint32 durationMs = 8;
+    repeated string genres = 9;
+    repeated string styles = 10;
+    repeated Image images = 11;
+    string type = 12;
 }
 
 message BestResult {

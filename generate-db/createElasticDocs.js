@@ -8,8 +8,21 @@ const createTrackDocuments = async () => {
     const trackDocs = tracks.map(track => ({
             id: track.id,
             name: track.spotify.title,
-            artistNames: track.artistIds.map(id => artists.find(art => art.id === id).name),
-            albumName: albums.find(alb => alb.id === track.albumId).name,
+            artists: track.artistIds.map(id => {
+                const artist = artists.find(art => art.id === id)
+                return {
+                    id: artist.id,
+                    name: artist.name
+                }
+            }),
+            album: function(){
+                const album = albums.find(alb => alb.id === track.albumId)
+
+                return {
+                    id: album.id,
+                    name: album.name
+                }
+            }(),
             explicit: track.explicit,
             playCount: track.playCount,
             popularity: track.spotify.popularity,
@@ -44,7 +57,13 @@ const createAlbumDocuments = async () => {
     const albumDocs = albums.map(album => ({
         id: album.id,
         name: album.name,
-        artistNames: album.artistIds.map(id => artists.find(art => art.id === id).name),
+        artists: album.artistIds.map(id => {
+            const artist = artists.find(art => art.id === id)
+            return {
+                id: artist.id,
+                name: artist.name
+            }
+        }),
         genres: album.genres,
         styles: album.styles,
         popularity: album.spotify.popularity,

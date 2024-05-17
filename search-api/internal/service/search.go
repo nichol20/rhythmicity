@@ -97,20 +97,33 @@ func (s *SearchGrpcService) Search(ctx context.Context, req *pb.SearchRequest) (
 	for i, hit := range hits {
 		if (*hit.Source).(map[string]any)["type"] == "track" {
 			track, err := utils.TypeConverter[domain.Track](*hit.Source)
+
+			var artists []*pb.SimplifiedArtist
+
+			for _, v := range track.Artists {
+				artists = append(artists, &pb.SimplifiedArtist{
+					Id:   v.ID,
+					Name: v.Name,
+				})
+			}
+
 			if err == nil {
 				pbTrack := &pb.Track{
-					Id:          track.ID,
-					Name:        track.Name,
-					ArtistNames: track.ArtistNames,
-					AlbumName:   track.AlbumName,
-					Lyrics:      track.Lyrics,
-					Explicit:    track.Explicit,
-					PlayCount:   track.PlayCount,
-					DurationMs:  track.DurationMs,
-					Genres:      track.Genres,
-					Styles:      track.Styles,
-					Images:      utils.ImagesToMessage(track.Images),
-					Type:        track.Type,
+					Id:      track.ID,
+					Name:    track.Name,
+					Artists: artists,
+					Album: &pb.SimplifiedAlbum{
+						Id:   track.Album.ID,
+						Name: track.Album.Name,
+					},
+					Lyrics:     track.Lyrics,
+					Explicit:   track.Explicit,
+					PlayCount:  track.PlayCount,
+					DurationMs: track.DurationMs,
+					Genres:     track.Genres,
+					Styles:     track.Styles,
+					Images:     utils.ImagesToMessage(track.Images),
+					Type:       track.Type,
 				}
 				if i == 0 {
 					bestResult = &pb.BestResult{
@@ -150,11 +163,21 @@ func (s *SearchGrpcService) Search(ctx context.Context, req *pb.SearchRequest) (
 
 		if (*hit.Source).(map[string]any)["type"] == "album" {
 			album, err := utils.TypeConverter[domain.Album](*hit.Source)
+
+			var artists []*pb.SimplifiedArtist
+
+			for _, v := range album.Artists {
+				artists = append(artists, &pb.SimplifiedArtist{
+					Id:   v.ID,
+					Name: v.Name,
+				})
+			}
+
 			if err == nil {
 				pbAlbum := &pb.Album{
 					Id:          album.ID,
 					Name:        album.Name,
-					ArtistNames: album.ArtistNames,
+					Artists:     artists,
 					Genres:      album.Genres,
 					Styles:      album.Styles,
 					ReleaseDate: album.ReleaseDate,

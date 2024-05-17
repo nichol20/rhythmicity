@@ -1,9 +1,11 @@
+import { SimplifiedAlbum } from "./album"
+import { SimplifiedArtist } from "./artist"
 import { Image } from "./common"
 
 export interface SearchedAlbum {
     id: string
     name: string
-    artistNames: string[]
+    artists: SimplifiedArtist[]
     genres: string[]
     styles: string[]
     releaseDate: string
@@ -26,8 +28,8 @@ export interface SearchedArtist {
 export interface SearchedTrack {
     id: string
     name: string
-    artistNames: string[]
-    albumName: string
+    artists: SimplifiedArtist[]
+    album: SimplifiedAlbum
     lyrics: string | null
     explicit: boolean
     playCount: number

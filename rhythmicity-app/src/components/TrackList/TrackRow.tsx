@@ -6,6 +6,7 @@ import { ExplicitSign } from '../ExplicitSign'
 import Link from 'next/link'
 import { usePlayback } from '@/contexts/PlaybackContext'
 import { Track } from '@/types/track'
+import { SearchedTrack } from '@/types/search'
 
 interface Content {
     id: string
@@ -14,7 +15,7 @@ interface Content {
 
 export interface TrackRowProps {
     index: number
-    track: Track
+    track: Track | SearchedTrack
     album: Content
     time: string
     artists: Content[]
@@ -30,6 +31,11 @@ export const TrackRow = ({ album, artists, index, image, explicit, time, track }
         queueController.addTrack(track)
     }
 
+    const getTrackTitle = () => {
+        if ("spotify" in track) return track.spotify.title
+        return track.name
+    }
+
     return (
         <div className={styles.trackRow} onMouseOver={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
             <div className={`${styles.indexCol} ${styles.col}`}>
@@ -43,9 +49,9 @@ export const TrackRow = ({ album, artists, index, image, explicit, time, track }
             </div>
             <div className={`${styles.titleCol} ${styles.col}`}>
                 <div className={styles.content}>
-                    <Image src={image} alt={track.spotify.title} width={40} height={40} />
+                    <Image src={image} alt={getTrackTitle()} width={40} height={40} />
                     <div className={styles.infoBox}>
-                        <Link href={`/tracks/${track.id}`} className={styles.title}>{track.spotify.title}</Link>
+                        <Link href={`/tracks/${track.id}`} className={styles.title}>{getTrackTitle()}</Link>
                         <span className={styles.description}>
                             {explicit ? (
                                 <ExplicitSign />

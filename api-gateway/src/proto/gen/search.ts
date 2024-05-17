@@ -18,6 +18,8 @@ export interface ProtoGrpcType {
       Search: SubtypeConstructor<typeof grpc.Client, _rhythmicity_search_api_SearchClient> & { service: _rhythmicity_search_api_SearchDefinition }
       SearchRequest: MessageTypeDefinition
       SearchResponse: MessageTypeDefinition
+      SimplifiedAlbum: MessageTypeDefinition
+      SimplifiedArtist: MessageTypeDefinition
       Track: MessageTypeDefinition
     }
   }

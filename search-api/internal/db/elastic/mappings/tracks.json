@@ -1,30 +1,33 @@
 {
   "mappings": {
     "properties": {
-      "id": { "type": "keyword" },
-      "name": { "type": "text" },
-      "artistNames": {
-        "type": "text",
-        "fields": {
-          "keyword": {
-            "type": "keyword"
+      "album": {
+        "properties": {
+          "id": { "type": "keyword" },
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": { "type": "keyword" }
+            }
           }
         }
       },
-      "albumName": {
-        "type": "text",
-        "fields": {
-          "keyword": {
-            "type": "keyword"
+      "artists": {
+        "type": "nested",
+        "properties": {
+          "id": { "type": "keyword" },
+          "name": {
+            "type": "text",
+            "fields": {
+              "keyword": { "type": "keyword" }
+            }
           }
         }
       },
-      "lyrics": { "type": "text" },
+      "duration_ms": { "type": "integer" },
       "explicit": { "type": "boolean" },
-      "playCount": { "type": "integer" },
-      "durationMs": { "type": "integer" },
       "genres": { "type": "keyword" },
-      "styles": { "type": "keyword" },
+      "id": { "type": "keyword" },
       "images": {
         "type": "nested",
         "properties": {
@@ -33,6 +36,10 @@
           "width": { "type": "integer" }
         }
       },
+      "lyrics": { "type": "text" },
+      "name": { "type": "text" },
+      "play_count": { "type": "integer" },
+      "styles": { "type": "keyword" },
       "type": { "type": "keyword" }
     }
   }
