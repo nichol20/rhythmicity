@@ -6,12 +6,12 @@ export interface AlbumSpotify {
   'id'?: (string);
   'popularity'?: (number);
   'images'?: (_rhythmicity_main_api_Image)[];
-  'releaseData'?: (string);
+  'releaseDate'?: (string);
 }
 
 export interface AlbumSpotify__Output {
   'id'?: (string);
   'popularity'?: (number);
   'images'?: (_rhythmicity_main_api_Image__Output)[];
-  'releaseData'?: (string);
+  'releaseDate'?: (string);
 }

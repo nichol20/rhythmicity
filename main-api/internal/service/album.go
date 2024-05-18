@@ -164,7 +164,7 @@ func (s *AlbumGRPCService) albumToMessage(ctx context.Context, album domain.Albu
 		Spotify: &pb.AlbumSpotify{
 			Id:          album.Spotify.ID,
 			Popularity:  album.Spotify.Popularity,
-			ReleaseData: album.Spotify.ReleaseDate,
+			ReleaseDate: album.Spotify.ReleaseDate,
 			Images:      utils.ImagesToMessage(album.Spotify.Images),
 		},
 	}, nil

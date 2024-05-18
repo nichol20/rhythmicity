@@ -11,7 +11,7 @@ message AlbumSpotify {
     string id = 1;
     uint32 popularity = 2;
     repeated Image images = 3;
-    string releaseData = 4;
+    string releaseDate = 4;
 }
 
 message AlbumMessage {
