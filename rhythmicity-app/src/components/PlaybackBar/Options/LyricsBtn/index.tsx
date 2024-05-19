@@ -19,12 +19,14 @@ export const LyricsBtn = () => {
             </button>
             {showLyrics && <Modal onClose={() => setShowLyrics(false)}>
                 <div className={styles.lyrics}>
-                    {lyrics.split('\n').map((line, index) => (
-                        <React.Fragment key={index}>
-                            {line}
-                            <br />
-                        </React.Fragment>
-                    ))}
+                    {lyrics.split("\\n").map((line, index) => {
+                        return (
+                            <React.Fragment key={index}>
+                                {line}
+                                <br />
+                            </React.Fragment>
+                        )
+                    })}
                 </div>
             </Modal>}
         </div>
