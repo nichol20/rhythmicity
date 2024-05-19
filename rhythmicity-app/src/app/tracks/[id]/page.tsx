@@ -54,7 +54,7 @@ export default function TrackPage({ params }: TrackPageProps) {
                     {tracks?.map((t, i) =>
                         <TrackRow
                             key={t.id}
-                            index={i}
+                            index={i + 1}
                             album={t.album}
                             artists={t.artists}
                             track={t}

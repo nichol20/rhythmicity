@@ -67,12 +67,12 @@ export default function AlbumPage({ params }: AlbumPageProps) {
                     {tracks?.map((t, i) =>
                         <TrackRow
                             key={t.id}
+                            index={i + 1}
                             album={album}
                             artists={album.artists}
                             track={t}
                             explicit={t.explicit}
                             image={t.spotify.albumImages[0].url}
-                            index={i}
                             time={msToMinutes(t.youtube.durationMs)}
                         />)}
                 </TrackList>
