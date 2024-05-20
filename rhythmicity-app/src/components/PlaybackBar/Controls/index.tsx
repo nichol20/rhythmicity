@@ -55,7 +55,7 @@ export const Controls = ({ youtubePlayerRef }: ControlsProps) => {
             <button className={styles.randomBtn} onClick={handleRandomBtnClick}>
                 <Image src={shuffleIcon} alt="random" />
             </button>
-            <button className={styles.previousBtn}>
+            <button className={styles.previousBtn} onClick={queueController.resetTime}>
                 <Image src={nextIcon} alt="previous" />
             </button>
             <button className={styles.playBtn} onClick={handlePlayBtnClick}>

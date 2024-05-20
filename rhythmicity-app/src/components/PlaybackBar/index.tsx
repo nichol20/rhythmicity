@@ -16,14 +16,19 @@ interface PlaybackBarProps {
 
 export const PlaybackBar = ({ track }: PlaybackBarProps) => {
     const youtubePlayerRef = useRef<YouTubePlayerRef>(null)
-    const { queueController, setCurrentPlayerState } = usePlayback()
-    const [currentTime, setCurrentTime] = useState(0)
+    const {
+        queueController,
+        setCurrentPlayerState,
+        setPlayerRef,
+        currentBarTime,
+        setCurrentBarTime
+    } = usePlayback()
     const [finalTime, setFinalTime] = useState(0)
     const [isHoldingTimeBar, setIsHoldingTimeBar] = useState(false)
     const [currentYoutubeId, setCurrentYoutubeId] = useState("")
 
     const handleTimeBarChange = (seconds: number, allowSeekAhead: boolean = false) => {
-        setCurrentTime(seconds)
+        setCurrentBarTime(seconds)
         youtubePlayerRef.current?.seekTo(seconds, allowSeekAhead)
     }
 
@@ -33,12 +38,11 @@ export const PlaybackBar = ({ track }: PlaybackBarProps) => {
 
     const handleTimeBarMouseUp = () => {
         setIsHoldingTimeBar(false)
-        handleTimeBarChange(currentTime, true)
+        handleTimeBarChange(currentBarTime, true)
     }
 
 
     const handleStateChange = (event: PlayerEvent) => {
-        console.log(event.target.getPlayerState())
         setCurrentPlayerState(event.target.getPlayerState())
         if (event.target.getPlayerState() === PlayerState.ENDED) {
             queueController.playNext()
@@ -75,7 +79,7 @@ export const PlaybackBar = ({ track }: PlaybackBarProps) => {
                 return "Album"
             }
 
-            return track.albumName
+            return track.album.name
         }
 
         return ""
@@ -83,15 +87,15 @@ export const PlaybackBar = ({ track }: PlaybackBarProps) => {
 
     useEffect(() => {
         const getYoutubeId = async () => {
-            console.log(track)
             if (track) {
                 const data = await playback(track.id)
-                console.log(data)
                 setCurrentYoutubeId(data.youtubeId)
+                return
             }
+
+            setCurrentYoutubeId("")
         }
         getYoutubeId()
-        console.log("getYoutubeID")
     }, [track])
 
     useEffect(() => {
@@ -119,7 +123,7 @@ export const PlaybackBar = ({ track }: PlaybackBarProps) => {
             if (youtubePlayerRef.current) {
                 let ct = Math.ceil(youtubePlayerRef.current.getCurrentTime())
                 ct = ct >= finalTime ? finalTime : ct
-                setCurrentTime(ct)
+                setCurrentBarTime(ct)
                 return ct
             }
 
@@ -136,7 +140,11 @@ export const PlaybackBar = ({ track }: PlaybackBarProps) => {
         }, 500)
 
         return () => clearInterval(interval)
-    }, [finalTime, isHoldingTimeBar])
+    }, [finalTime, isHoldingTimeBar, setCurrentBarTime])
+
+    useEffect(() => {
+        setPlayerRef(youtubePlayerRef)
+    }, [youtubePlayerRef, setPlayerRef])
 
     // console.log(currentYoutubeId)
     return (
@@ -165,7 +173,7 @@ export const PlaybackBar = ({ track }: PlaybackBarProps) => {
                     <Controls youtubePlayerRef={youtubePlayerRef} />
                     <div className={styles.timerBox}>
                         <TimeBar
-                            currentTime={currentTime}
+                            currentTime={currentBarTime}
                             finalTime={finalTime}
                             onChange={handleTimeBarChange}
                             onMouseDown={handleTimeBarMouseDown}

@@ -33,9 +33,10 @@
     resize: none;
     padding: 5px;
     padding-right: 15px;
-    @include mixins-display-flex(flex-start, center);
+    @include mixins-display-flex(flex-start, flex-start);
     flex: 1;
     padding: 15px;
+    line-height: 30px;
 
     @include mixins-primary-scrollbar();
 }

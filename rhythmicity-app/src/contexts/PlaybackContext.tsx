@@ -1,18 +1,20 @@
 'use client'
 import { PlaybackBar } from "@/components/PlaybackBar";
 import { Queue } from "@/components/Queue";
-import { PlayerState } from "@/components/YoutubePlayer";
+import { PlayerState, YouTubePlayerRef } from "@/components/YoutubePlayer";
 import { Album } from "@/types/album";
 import { Artist } from "@/types/artist";
 import { SearchedAlbum, SearchedArtist, SearchedTrack } from "@/types/search";
 import { Track } from "@/types/track";
 import { getTracksByAlbumId, getTracksByArtistId } from "@/utils/api";
-import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useEffect, useState } from "react";
+import { Dispatch, ReactNode, RefObject, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 
 interface QueueController {
+    playNow: (track: Track | SearchedTrack) => void
     playNext: () => void
     skipTo: (trackId: string) => void
     delete: (trackId: string) => void
+    resetTime: () => void
     clean: () => void
     addTrack: (track: Track | SearchedTrack) => void
     addAlbum: (album: Album | SearchedAlbum) => Promise<void>
@@ -25,7 +27,10 @@ interface PlaybackContext {
     setShowQueue: Dispatch<SetStateAction<boolean>>
     currentPlayerState: PlayerState
     setCurrentPlayerState: Dispatch<SetStateAction<PlayerState>>
+    currentBarTime: number
+    setCurrentBarTime: Dispatch<SetStateAction<number>>
     currentTrack: SearchedTrack | Track | null
+    setPlayerRef: Dispatch<SetStateAction<RefObject<YouTubePlayerRef> | null>>
     queue: (Track | SearchedTrack)[]
     queueController: QueueController
 }
@@ -52,8 +57,20 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
     const [showPlaybackBar, setShowPlaybackBar] = useState(false)
     const [currentTrack, setCurrentTrack] = useState<Track | SearchedTrack | null>(null)
     const [currentPlayerState, setCurrentPlayerState] = useState<PlayerState>(PlayerState.UNSTARTED)
+    const [currentBarTime, setCurrentBarTime] = useState(0)
     const [queue, setQueue] = useState<(Track | SearchedTrack)[]>([])
     const [showQueue, setShowQueue] = useState(false)
+    const [playerRef, setPlayerRef] = useState<RefObject<YouTubePlayerRef> | null>(null)
+
+    const playNow = (track: Track | SearchedTrack) => {
+        setCurrentTrack(track)
+        setQueue([track])
+    }
+
+    const resetTime = () => {
+        setCurrentBarTime(0)
+        playerRef?.current?.seekTo(0, true)
+    }
 
     const addTrackToQueue = (track: Track | SearchedTrack) => {
         setQueue(prev => {
@@ -107,15 +124,10 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
     }
 
     const playNext = () => {
-        console.log("playNext")
         setQueue(prev => {
-            if (prev.length > 1) {
-                const next = prev.slice(1)
-                setCurrentTrack(next[0])
-                return [...next]
-            }
-            setCurrentTrack(null)
-            return []
+            const next = prev.slice(1)
+            setCurrentTrack(next[0])
+            return [...next]
         })
     }
 
@@ -126,12 +138,17 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
             setShowQueue,
             currentPlayerState,
             setCurrentPlayerState,
+            currentBarTime,
+            setCurrentBarTime,
             currentTrack,
+            setPlayerRef,
             queue,
             queueController: {
                 playNext,
+                playNow,
                 skipTo,
                 delete: deleteFromQueue,
+                resetTime,
                 clean: cleanQueue,
                 addTrack: addTrackToQueue,
                 addAlbum: addAlbumToQueue,
