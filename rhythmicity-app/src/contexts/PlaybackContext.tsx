@@ -27,9 +27,14 @@ interface PlaybackContext {
     setShowQueue: Dispatch<SetStateAction<boolean>>
     currentPlayerState: PlayerState
     setCurrentPlayerState: Dispatch<SetStateAction<PlayerState>>
+
     currentBarTime: number
     setCurrentBarTime: Dispatch<SetStateAction<number>>
+    trackDuration: number
+    setTrackDuration: Dispatch<SetStateAction<number>>
+
     currentTrack: SearchedTrack | Track | null
+    playerRef: RefObject<YouTubePlayerRef> | null
     setPlayerRef: Dispatch<SetStateAction<RefObject<YouTubePlayerRef> | null>>
     queue: (Track | SearchedTrack)[]
     queueController: QueueController
@@ -58,6 +63,7 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
     const [currentTrack, setCurrentTrack] = useState<Track | SearchedTrack | null>(null)
     const [currentPlayerState, setCurrentPlayerState] = useState<PlayerState>(PlayerState.UNSTARTED)
     const [currentBarTime, setCurrentBarTime] = useState(0)
+    const [trackDuration, setTrackDuration] = useState(0)
     const [queue, setQueue] = useState<(Track | SearchedTrack)[]>([])
     const [showQueue, setShowQueue] = useState(false)
     const [playerRef, setPlayerRef] = useState<RefObject<YouTubePlayerRef> | null>(null)
@@ -126,8 +132,14 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
     const playNext = () => {
         setQueue(prev => {
             const next = prev.slice(1)
-            setCurrentTrack(next[0])
-            return [...next]
+            if (next[0]) {
+                setCurrentTrack(next[0])
+                return [...next]
+            }
+
+            setCurrentTrack(null)
+            setTrackDuration(0)
+            return []
         })
     }
 
@@ -140,7 +152,10 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
             setCurrentPlayerState,
             currentBarTime,
             setCurrentBarTime,
+            trackDuration,
+            setTrackDuration,
             currentTrack,
+            playerRef,
             setPlayerRef,
             queue,
             queueController: {

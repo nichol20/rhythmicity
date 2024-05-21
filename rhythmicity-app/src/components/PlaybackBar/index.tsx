@@ -20,27 +20,9 @@ export const PlaybackBar = ({ track }: PlaybackBarProps) => {
         queueController,
         setCurrentPlayerState,
         setPlayerRef,
-        currentBarTime,
-        setCurrentBarTime
+        setTrackDuration
     } = usePlayback()
-    const [finalTime, setFinalTime] = useState(0)
-    const [isHoldingTimeBar, setIsHoldingTimeBar] = useState(false)
     const [currentYoutubeId, setCurrentYoutubeId] = useState("")
-
-    const handleTimeBarChange = (seconds: number, allowSeekAhead: boolean = false) => {
-        setCurrentBarTime(seconds)
-        youtubePlayerRef.current?.seekTo(seconds, allowSeekAhead)
-    }
-
-    const handleTimeBarMouseDown = () => {
-        setIsHoldingTimeBar(true)
-    }
-
-    const handleTimeBarMouseUp = () => {
-        setIsHoldingTimeBar(false)
-        handleTimeBarChange(currentBarTime, true)
-    }
-
 
     const handleStateChange = (event: PlayerEvent) => {
         setCurrentPlayerState(event.target.getPlayerState())
@@ -108,7 +90,7 @@ export const PlaybackBar = ({ track }: PlaybackBarProps) => {
             if (youtubePlayerRef.current) {
                 const duration = youtubePlayerRef.current.getDuration()
                 if (duration) {
-                    setFinalTime(duration)
+                    setTrackDuration(duration)
                     return
                 }
             }
@@ -116,37 +98,12 @@ export const PlaybackBar = ({ track }: PlaybackBarProps) => {
         }
         playVideo()
         getVideoDuration()
-    }, [currentYoutubeId])
-
-    useEffect(() => {
-        const getVideoCurrentTime = () => {
-            if (youtubePlayerRef.current) {
-                let ct = Math.ceil(youtubePlayerRef.current.getCurrentTime())
-                ct = ct >= finalTime ? finalTime : ct
-                setCurrentBarTime(ct)
-                return ct
-            }
-
-            return 0
-        }
-
-        const interval = setInterval(() => {
-            if (!isHoldingTimeBar) {
-                const ct = getVideoCurrentTime()
-                if (ct >= finalTime) {
-                    clearInterval(interval)
-                }
-            }
-        }, 500)
-
-        return () => clearInterval(interval)
-    }, [finalTime, isHoldingTimeBar, setCurrentBarTime])
+    }, [currentYoutubeId, setTrackDuration])
 
     useEffect(() => {
         setPlayerRef(youtubePlayerRef)
     }, [youtubePlayerRef, setPlayerRef])
 
-    // console.log(currentYoutubeId)
     return (
         <footer className={styles.playbackBar}>
             <YouTubePlayer videoId={currentYoutubeId} ref={youtubePlayerRef} onStateChange={handleStateChange} />
@@ -172,13 +129,7 @@ export const PlaybackBar = ({ track }: PlaybackBarProps) => {
                 <div className={styles.playerControls}>
                     <Controls youtubePlayerRef={youtubePlayerRef} />
                     <div className={styles.timerBox}>
-                        <TimeBar
-                            currentTime={currentBarTime}
-                            finalTime={finalTime}
-                            onChange={handleTimeBarChange}
-                            onMouseDown={handleTimeBarMouseDown}
-                            onMouseUp={handleTimeBarMouseUp}
-                        />
+                        <TimeBar />
                     </div>
                 </div>
                 <div className={styles.playerOptions}>
