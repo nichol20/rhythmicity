@@ -13,6 +13,11 @@ services:
       - proxynet
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 500M
 
 networks:
   proxynet:
