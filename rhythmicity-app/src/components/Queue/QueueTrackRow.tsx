@@ -5,7 +5,7 @@ import styles from './style.module.scss'
 import Image from "next/image";
 import { ExplicitSign } from "../ExplicitSign";
 import { deleteIcon, verticalEllipsisIcon } from "@/assets";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePlayback } from "@/contexts/PlaybackContext";
 import Link from "next/link";
 
@@ -17,6 +17,22 @@ export const QueueTrackRow = ({ track }: QueueTrackRowProps) => {
     const [showOptionsBtn, setShowOptionsBtn] = useState(false)
     const [showOptions, setShowOptions] = useState(false)
     const { queueController } = usePlayback()
+    const optionsRef = useRef<HTMLDivElement>(null);
+
+    const handleClickOutside = (event: MouseEvent) => {
+        //@ts-ignore
+        if (optionsRef.current && !optionsRef.current.contains(event.target)) {
+            setShowOptions(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        }
+    }, []);
 
     const getImage = (track: SearchedTrack | Track) => {
         if ("spotify" in track) {
@@ -78,7 +94,7 @@ export const QueueTrackRow = ({ track }: QueueTrackRowProps) => {
                     </button>
                 )}
                 {showOptions && (
-                    <div className={styles.options}>
+                    <div className={styles.options} ref={optionsRef}>
                         <button className={styles.optionItem} onClick={deleteTrack}>
                             <div className={styles.optoinsImgBox}>
                                 <Image src={deleteIcon} alt="delete" />
