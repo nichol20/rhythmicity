@@ -17,7 +17,7 @@ export const LyricsBtn = () => {
             <button className={styles.lyricsBtn} onClick={() => setShowLyrics(true)}>
                 <Image src={lyricsIcon} alt="lyrics" />
             </button>
-            {showLyrics && <Modal onClose={() => setShowLyrics(false)}>
+            {showLyrics && <Modal close={() => setShowLyrics(false)}>
                 <div className={styles.lyrics}>
                     {lyrics.split("\\n").map((line, index) => {
                         return (

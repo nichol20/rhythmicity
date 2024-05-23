@@ -1,31 +1,34 @@
 import { closeIcon } from '@/assets'
 import styles from './style.module.scss'
 import Image from 'next/image'
+import { ClosableComponent } from '../ClosableElement'
 
 interface ModalProps {
     className?: string
     children: React.ReactNode
-    onClose: () => void
+    close: () => void
     title?: string
 }
 
-export const Modal = ({ className, children, onClose, title }: ModalProps) => {
+export const Modal = ({ className, children, close, title }: ModalProps) => {
 
     className = className ? className : ''
 
     return (
         <div className={`${styles.fixedBox}`}>
-            <div className={`${styles.modal} ${className}`}>
-                <div className={styles.relativeBox}>
-                    <div className={styles.header}>
-                        <span className={styles.title}>{title}</span>
-                        <button className={styles.closeBtn} onClick={onClose}>
-                            <Image src={closeIcon} alt="close" />
-                        </button>
+            <ClosableComponent isOpen={true} close={close}>
+                <div className={`${styles.modal} ${className}`}>
+                    <div className={styles.relativeBox}>
+                        <div className={styles.header}>
+                            <span className={styles.title}>{title}</span>
+                            <button className={styles.closeBtn} onClick={close}>
+                                <Image src={closeIcon} alt="close" />
+                            </button>
+                        </div>
+                        {children}
                     </div>
-                    {children}
                 </div>
-            </div>
+            </ClosableComponent>
         </div>
     )
 }

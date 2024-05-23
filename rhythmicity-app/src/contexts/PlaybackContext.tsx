@@ -174,7 +174,7 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
             {showPlaybackBar &&
                 <>
                     <PlaybackBar track={currentTrack} />
-                    {showQueue && <Queue tracks={queue} onClose={() => setShowQueue(false)} />}
+                    {showQueue && <Queue tracks={queue} close={() => setShowQueue(false)} />}
                 </>}
 
         </PlaybackContext.Provider>

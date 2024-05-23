@@ -6,13 +6,13 @@ import { QueueTrackRow } from './QueueTrackRow'
 
 interface QueueProps {
     tracks: (SearchedTrack | Track)[]
-    onClose: () => void
+    close: () => void
 }
 
-export const Queue = ({ tracks, onClose }: QueueProps) => {
+export const Queue = ({ tracks, close }: QueueProps) => {
 
     return (
-        <Modal className={styles.modal} onClose={onClose} title='Queue'>
+        <Modal className={styles.modal} close={close} title='Queue'>
             <div className={styles.queue}>
                 {tracks.length > 0
                     ? (<>
@@ -22,7 +22,7 @@ export const Queue = ({ tracks, onClose }: QueueProps) => {
                         </section>
                         <section className={styles.queueSection}>
                             <h4 className={styles.queueSubtitle}>Next</h4>
-                            {tracks.slice(1).map((t, i) => <QueueTrackRow track={t} key={t.id} />)}
+                            {tracks.slice(1).map(t => <QueueTrackRow track={t} key={t.id} />)}
                         </section>
                     </>)
                     : <span className={styles.addToQueueMessage}>Nothing here. Add a track to listen</span>

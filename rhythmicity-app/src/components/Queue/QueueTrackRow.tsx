@@ -8,6 +8,7 @@ import { deleteIcon, verticalEllipsisIcon } from "@/assets";
 import { useEffect, useRef, useState } from "react";
 import { usePlayback } from "@/contexts/PlaybackContext";
 import Link from "next/link";
+import { ClosableComponent } from "../ClosableElement";
 
 interface QueueTrackRowProps {
     track: Track | SearchedTrack
@@ -17,22 +18,6 @@ export const QueueTrackRow = ({ track }: QueueTrackRowProps) => {
     const [showOptionsBtn, setShowOptionsBtn] = useState(false)
     const [showOptions, setShowOptions] = useState(false)
     const { queueController } = usePlayback()
-    const optionsRef = useRef<HTMLDivElement>(null);
-
-    const handleClickOutside = (event: MouseEvent) => {
-        //@ts-ignore
-        if (optionsRef.current && !optionsRef.current.contains(event.target)) {
-            setShowOptions(false);
-        }
-    };
-
-    useEffect(() => {
-        document.addEventListener('mousedown', handleClickOutside);
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        }
-    }, []);
 
     const getImage = (track: SearchedTrack | Track) => {
         if ("spotify" in track) {
@@ -58,8 +43,12 @@ export const QueueTrackRow = ({ track }: QueueTrackRowProps) => {
         setShowOptionsBtn(false)
     }
 
-    const deleteTrack = () => {
+    const closeOptions = () => {
         setShowOptions(false)
+    }
+
+    const deleteTrack = () => {
+        closeOptions()
         queueController.delete(track.id)
     }
 
@@ -93,8 +82,8 @@ export const QueueTrackRow = ({ track }: QueueTrackRowProps) => {
                         <Image src={verticalEllipsisIcon} alt="options" />
                     </button>
                 )}
-                {showOptions && (
-                    <div className={styles.options} ref={optionsRef}>
+                <ClosableComponent isOpen={showOptions} close={closeOptions}>
+                    <div className={styles.options}>
                         <button className={styles.optionItem} onClick={deleteTrack}>
                             <div className={styles.optoinsImgBox}>
                                 <Image src={deleteIcon} alt="delete" />
@@ -102,7 +91,7 @@ export const QueueTrackRow = ({ track }: QueueTrackRowProps) => {
                             <span className={styles.actionDescription}>Delete from queue</span>
                         </button>
                     </div>
-                )}
+                </ClosableComponent>
             </div>
         </div>
     )
