@@ -1,0 +1,66 @@
+@use "../../styles/" as *;
+
+.rowOptions {
+    position: relative;
+    height: 100%;
+    @include mixins-display-flex();
+}
+
+.optionsBtn {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    border-radius: 100%;
+    background-color: transparent;
+    border: none;
+
+    img {
+        width: 100%;
+        height: 100%;
+        @include mixins-gray-filter();
+
+        &:hover {
+            @include mixins-white-filter();
+        }
+    }
+}
+
+.options {
+    position: absolute;
+    inset: auto 10px -25px auto;
+    @include mixins-display-flex(flex-start, flex-start);
+    flex-direction: column;
+    background-color: rgb(40, 40, 40);
+    border-radius: 4px;
+    overflow: hidden
+}
+
+.optionItem {
+    @include mixins-display-flex(flex-start);
+    gap: 5px;
+    padding: 8px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+}
+
+.imgBox {
+    width: 16px;
+    height: 16px;
+
+    img {
+        width: 100%;
+        height: 100%;
+        @include mixins-white-filter();
+    }
+}
+
+.description {
+    font-size: .875em;
+    text-wrap: nowrap;
+    color: $colors-primary-txt;
+}

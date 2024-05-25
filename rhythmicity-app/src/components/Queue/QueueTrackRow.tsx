@@ -1,14 +1,16 @@
+import Link from "next/link";
+import Image from "next/image";
+import { useState } from "react";
+
 import { SearchedTrack } from "@/types/search";
 import { Track } from "@/types/track";
-
-import styles from './style.module.scss'
-import Image from "next/image";
+import { usePlayback } from "@/contexts/PlaybackContext";
 import { ExplicitSign } from "../ExplicitSign";
 import { deleteIcon, verticalEllipsisIcon } from "@/assets";
-import { useEffect, useRef, useState } from "react";
-import { usePlayback } from "@/contexts/PlaybackContext";
-import Link from "next/link";
 import { ClosableComponent } from "../ClosableElement";
+import { RowOptions } from "../RowOptions";
+
+import styles from './style.module.scss'
 
 interface QueueTrackRowProps {
     track: Track | SearchedTrack
@@ -16,7 +18,6 @@ interface QueueTrackRowProps {
 
 export const QueueTrackRow = ({ track }: QueueTrackRowProps) => {
     const [showOptionsBtn, setShowOptionsBtn] = useState(false)
-    const [showOptions, setShowOptions] = useState(false)
     const { queueController } = usePlayback()
 
     const getImage = (track: SearchedTrack | Track) => {
@@ -43,12 +44,7 @@ export const QueueTrackRow = ({ track }: QueueTrackRowProps) => {
         setShowOptionsBtn(false)
     }
 
-    const closeOptions = () => {
-        setShowOptions(false)
-    }
-
     const deleteTrack = () => {
-        closeOptions()
         queueController.delete(track.id)
     }
 
@@ -76,23 +72,17 @@ export const QueueTrackRow = ({ track }: QueueTrackRowProps) => {
                     </span>
                 </div>
             </div>
-            <div className={styles.actions}>
-                {showOptionsBtn && (
-                    <button className={styles.optionsBtn} onClick={() => setShowOptions(prev => !prev)}>
-                        <Image src={verticalEllipsisIcon} alt="options" />
-                    </button>
-                )}
-                <ClosableComponent isOpen={showOptions} close={closeOptions}>
-                    <div className={styles.options}>
-                        <button className={styles.optionItem} onClick={deleteTrack}>
-                            <div className={styles.optoinsImgBox}>
-                                <Image src={deleteIcon} alt="delete" />
-                            </div>
-                            <span className={styles.actionDescription}>Delete from queue</span>
-                        </button>
-                    </div>
-                </ClosableComponent>
-            </div>
+            <RowOptions
+                showBtn={showOptionsBtn}
+                options={[
+                    {
+                        action: deleteTrack,
+                        description: "Delete from queue",
+                        icon: deleteIcon,
+                        name: "delete"
+                    }
+                ]}
+            />
         </div>
     )
 }

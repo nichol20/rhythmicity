@@ -5,9 +5,10 @@ interface ClosabeComponentProps {
     children: ReactNode
     isOpen: boolean
     close: () => void
+    className?: string
 }
 
-export const ClosableComponent = ({ children, isOpen, close }: ClosabeComponentProps) => {
+export const ClosableComponent = ({ children, isOpen, close, className }: ClosabeComponentProps) => {
     const elementRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
@@ -27,7 +28,7 @@ export const ClosableComponent = ({ children, isOpen, close }: ClosabeComponentP
 
     if (!isOpen) return <></>
 
-    return <div ref={elementRef}>
+    return <div ref={elementRef} className={className}>
         {children}
     </div>
 }

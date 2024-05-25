@@ -10,7 +10,8 @@
         [ index ] 16px 
         [ title ] minmax(120px,  4fr) 
         [ album ] minmax(120px, 2fr) 
-        [ time ] minmax(60px, 1fr);
+        [ time ] minmax(60px, 1fr)
+        [ options ] 16px;
     gap: 16px;
     padding: 4px 8px;
 
@@ -18,7 +19,8 @@
         grid-template-columns: 
             [ index ] 16px 
             [ title ] minmax(120px,  4fr) 
-            [ time ] minmax(60px, 1fr);
+            [ time ] minmax(60px, 1fr)
+            [ options ] 16px;;
     }
 }
 
@@ -29,6 +31,7 @@
 }
 
 .trackRow {
+    position: relative;
     border-radius: 4px;
     width: 100%;
 

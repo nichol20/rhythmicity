@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { usePlayback } from '@/contexts/PlaybackContext'
 import { Track } from '@/types/track'
 import { SearchedTrack } from '@/types/search'
+import { RowOptions } from '../RowOptions'
 
 interface Content {
     id: string
@@ -37,7 +38,11 @@ export const TrackRow = ({ album, artists, index, image, explicit, time, track }
     }
 
     return (
-        <div className={styles.trackRow} onMouseOver={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+        <div
+            className={styles.trackRow}
+            onMouseOver={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
             <div className={`${styles.indexCol} ${styles.col}`}>
                 {isHovered
                     ? (
@@ -74,6 +79,12 @@ export const TrackRow = ({ album, artists, index, image, explicit, time, track }
             </div>
             <div className={`${styles.timeCol} ${styles.col}`}>
                 <span className={styles.content}>{time}</span>
+            </div>
+            <div className={styles.col}>
+                <RowOptions
+                    showBtn={isHovered}
+                    options={[]}
+                />
             </div>
         </div>
     )
