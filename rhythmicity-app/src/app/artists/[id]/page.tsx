@@ -43,10 +43,7 @@ export default function ArtistPage({ params }: ArtistPageProps) {
                 picture={artist.spotify.images[0].url}
                 title={artist.name}
                 type={"Artist"}
-                metadata={(
-                    <>
-                    </>
-                )}
+                metadata={[]}
             />
             <div className={styles.tracks}>
                 <TrackList>

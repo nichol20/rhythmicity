@@ -41,13 +41,10 @@ export default function TrackPage({ params }: TrackPageProps) {
                 picture={track.spotify.albumImages[0].url}
                 title={track.spotify.title}
                 type={"Track"}
-                metadata={(
-                    <>
-                        <span>{track.artists.map(a => a.name).join(", ")}</span>
-                        <span>•</span>
-                        <span>{msToMinutes(track.youtube.durationMs)}</span>
-                    </>
-                )}
+                metadata={[
+                    track.artists.map(a => a.name).join(", "),
+                    msToMinutes(track.youtube.durationMs)
+                ]}
             />
             <div className={styles.tracks}>
                 <TrackList>

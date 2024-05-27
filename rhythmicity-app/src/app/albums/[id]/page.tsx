@@ -43,6 +43,15 @@ export default function AlbumPage({ params }: AlbumPageProps) {
         return ""
     }
 
+    const formatDate = () => {
+        if (album?.spotify.releaseDate) {
+            const date = new Date(album.spotify.releaseDate)
+            console.log(date.toDateString())
+            return `${date.getMonth()}-${date.getDate()}-${date.getFullYear()}`
+        }
+
+        return ""
+    }
 
     if (!album) return <>Loading...</>
 
@@ -54,13 +63,10 @@ export default function AlbumPage({ params }: AlbumPageProps) {
                 picture={album.spotify.images[0].url}
                 title={album.name}
                 type={"Album"}
-                metadata={(
-                    <>
-                        <span>{album.spotify.releaseDate}</span>
-                        <span>•</span>
-                        <span>{album.totalTracks} songs, {calculateTotalTime()}</span>
-                    </>
-                )}
+                metadata={[
+                    formatDate(),
+                    `${album.totalTracks} songs, ${calculateTotalTime()}`
+                ]}
             />
             <div className={styles.tracks}>
                 <TrackList>

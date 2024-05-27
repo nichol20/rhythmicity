@@ -9,7 +9,7 @@ interface BannerProps {
     type: string
     title: string
     description: string
-    metadata: ReactNode
+    metadata: string[]
 }
 
 export const Banner = ({ picture, type, title, description, metadata }: BannerProps) => {
@@ -25,7 +25,7 @@ export const Banner = ({ picture, type, title, description, metadata }: BannerPr
                     {description}
                 </span>
                 <div className={styles.metadata}>
-                    {metadata}
+                    {metadata.join(" • ")}
                 </div>
             </div>
         </div>
