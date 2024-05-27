@@ -1,7 +1,7 @@
 import Image, { StaticImageData } from 'next/image'
 import styles from './style.module.scss'
 import { useState } from 'react'
-import { playIcon } from '@/assets'
+import { addListIcon, playIcon } from '@/assets'
 import { ExplicitSign } from '../ExplicitSign'
 import Link from 'next/link'
 import { usePlayback } from '@/contexts/PlaybackContext'
@@ -29,7 +29,7 @@ export const TrackRow = ({ album, artists, index, image, explicit, time, track }
     const { queueController } = usePlayback()
 
     const handlePlay = () => {
-        queueController.addTrack(track)
+        queueController.playNow(track)
     }
 
     const getTrackTitle = () => {
@@ -43,7 +43,7 @@ export const TrackRow = ({ album, artists, index, image, explicit, time, track }
             onMouseOver={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <div className={`${styles.indexCol} ${styles.col}`}>
+            <div className={`${styles.indexRow} ${styles.row}`}>
                 {isHovered
                     ? (
                         <button className={styles.playBtn} onClick={handlePlay}>
@@ -52,7 +52,7 @@ export const TrackRow = ({ album, artists, index, image, explicit, time, track }
                     )
                     : <span className={styles.content}>{index}</span>}
             </div>
-            <div className={`${styles.titleCol} ${styles.col}`}>
+            <div className={`${styles.titleRow} ${styles.row}`}>
                 <div className={styles.content}>
                     <Image src={image} alt={getTrackTitle()} width={40} height={40} />
                     <div className={styles.infoBox}>
@@ -74,17 +74,24 @@ export const TrackRow = ({ album, artists, index, image, explicit, time, track }
                     </div>
                 </div>
             </div>
-            <div className={`${styles.albumCol} ${styles.col}`}>
+            <div className={`${styles.albumRow} ${styles.row}`}>
                 <Link href={`/albums/${album.id}`} className={styles.content}>{album.name}</Link>
             </div>
-            <div className={`${styles.timeCol} ${styles.col}`}>
+            <div className={`${styles.timeRow} ${styles.row}`}>
                 <span className={styles.content}>{time}</span>
-            </div>
-            <div className={styles.col}>
-                <RowOptions
-                    showBtn={isHovered}
-                    options={[]}
-                />
+                <div className={styles.options}>
+                    <RowOptions
+                        showBtn={isHovered}
+                        options={[
+                            {
+                                action: () => queueController.addTrack(track),
+                                description: "Add to queue",
+                                icon: addListIcon,
+                                name: "add to queue"
+                            }
+                        ]}
+                    />
+                </div>
             </div>
         </div>
     )

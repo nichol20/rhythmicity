@@ -25,10 +25,7 @@ export const RowOptions = ({ options, showBtn = true }: RowOptionsProps) => {
     return (
         <div className={styles.rowOptions}>
             {showBtn && (
-                <button className={styles.optionsBtn} onClick={() => setShowOptions(prev => {
-                    console.log(!prev)
-                    return !prev
-                })}>
+                <button className={styles.optionsBtn} onClick={() => setShowOptions(prev => !prev)}>
                     <Image src={verticalEllipsisIcon} alt="options" />
                 </button>
             )}
@@ -37,7 +34,10 @@ export const RowOptions = ({ options, showBtn = true }: RowOptionsProps) => {
                     <button
                         key={i}
                         className={styles.optionItem}
-                        onClick={action}
+                        onClick={() => {
+                            action()
+                            closeOptions()
+                        }}
                     >
                         <div className={styles.imgBox}>
                             <Image src={icon} alt={name} />
