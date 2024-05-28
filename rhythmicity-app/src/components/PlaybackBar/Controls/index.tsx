@@ -5,14 +5,14 @@ import { nextIcon, pauseIcon, playIcon, shuffleIcon, repeatIcon, repeatOneIcon }
 import { PlayerState, YouTubePlayerRef } from '@/components/YoutubePlayer'
 
 import styles from './styles.module.scss'
-import { usePlayback } from '@/contexts/PlaybackContext'
+import { PlaybackMode, usePlayback } from '@/contexts/PlaybackContext'
 
 interface ControlsProps {
     youtubePlayerRef: RefObject<YouTubePlayerRef>
 }
 
 export const Controls = ({ youtubePlayerRef }: ControlsProps) => {
-    const { queueController, currentPlayerState } = usePlayback()
+    const { queueController, currentPlayerState, playbackMode, setPlaybackMode } = usePlayback()
     const [loopBtnIcon, setLoopBtnIcon] = useState(repeatIcon)
 
     const getPlayBtnIcon = () => {
@@ -34,25 +34,54 @@ export const Controls = ({ youtubePlayerRef }: ControlsProps) => {
         youtubePlayerRef.current?.pauseVideo()
     }
 
-    const handleRandomBtnClick = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
-        event.currentTarget.classList.toggle(styles.active)
+    const handleRandomBtnClick = () => {
+        console.log(playbackMode)
+        if (playbackMode === PlaybackMode.RANDOM) {
+            setPlaybackMode(PlaybackMode.NORMAL)
+            return
+        }
+
+        setPlaybackMode(PlaybackMode.RANDOM)
     }
 
-    const handleLoopBtnClick = (event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
-        const btn = event.currentTarget
-        if (btn.classList.contains(styles.active) && loopBtnIcon === repeatIcon) {
-            setLoopBtnIcon(repeatOneIcon)
-        } else if (btn.classList.contains(styles.active) && loopBtnIcon === repeatOneIcon) {
-            setLoopBtnIcon(repeatIcon)
-            btn.classList.remove(styles.active)
-        } else {
-            btn.classList.add(styles.active)
+    const handleLoopBtnClick = () => {
+        if (playbackMode === PlaybackMode.NORMAL || playbackMode === PlaybackMode.RANDOM) {
+            setPlaybackMode(PlaybackMode.LOOP)
+            return
+        } else if (playbackMode === PlaybackMode.LOOP) {
+            setPlaybackMode(PlaybackMode.LOOPONE)
+            return
         }
+        setPlaybackMode(PlaybackMode.NORMAL)
+    }
+
+    const getLoopBtnIcon = () => {
+        if (playbackMode === PlaybackMode.LOOPONE) {
+            return repeatOneIcon
+        }
+
+        return repeatIcon
+    }
+
+    const getLoopBtnClass = () => {
+        if (playbackMode === PlaybackMode.LOOPONE || playbackMode === PlaybackMode.LOOP) {
+            return `${styles.loopBtn} ${styles.active}`
+        }
+
+        return `${styles.loopBtn}`
+    }
+
+    const getRandomBtnClass = () => {
+        if (playbackMode === PlaybackMode.RANDOM) {
+            return `${styles.randomBtn} ${styles.active}`
+        }
+
+        return `${styles.randomBtn}`
     }
 
     return (
         <div className={styles.controls}>
-            <button className={styles.randomBtn} onClick={handleRandomBtnClick}>
+            <button className={getRandomBtnClass()} onClick={handleRandomBtnClick}>
                 <Image src={shuffleIcon} alt="random" />
             </button>
             <button className={styles.previousBtn} onClick={queueController.resetTime}>
@@ -64,8 +93,8 @@ export const Controls = ({ youtubePlayerRef }: ControlsProps) => {
             <button className={styles.nextBtn} onClick={queueController.playNext}>
                 <Image src={nextIcon} alt="next" />
             </button>
-            <button className={styles.loopBtn} onClick={handleLoopBtnClick}>
-                <Image src={loopBtnIcon} alt="repeat" />
+            <button className={getLoopBtnClass()} onClick={handleLoopBtnClick}>
+                <Image src={getLoopBtnIcon()} alt="repeat" />
             </button>
         </div>
     )

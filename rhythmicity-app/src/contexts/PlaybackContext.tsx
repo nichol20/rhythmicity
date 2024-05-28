@@ -7,7 +7,15 @@ import { Artist } from "@/types/artist";
 import { SearchedAlbum, SearchedArtist, SearchedTrack } from "@/types/search";
 import { Track } from "@/types/track";
 import { getTracksByAlbumId, getTracksByArtistId } from "@/utils/api";
+import { shuffleArray } from "@/utils/array";
 import { Dispatch, ReactNode, RefObject, SetStateAction, createContext, useContext, useEffect, useState } from "react";
+
+export enum PlaybackMode {
+    NORMAL,
+    RANDOM,
+    LOOP,
+    LOOPONE
+}
 
 interface QueueController {
     playNow: (track: Track | SearchedTrack) => void
@@ -27,6 +35,8 @@ interface PlaybackContext {
     setShowQueue: Dispatch<SetStateAction<boolean>>
     currentPlayerState: PlayerState
     setCurrentPlayerState: Dispatch<SetStateAction<PlayerState>>
+    playbackMode: PlaybackMode
+    setPlaybackMode: Dispatch<SetStateAction<PlaybackMode>>
 
     currentBarTime: number
     setCurrentBarTime: Dispatch<SetStateAction<number>>
@@ -63,6 +73,7 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
     const [currentTrack, setCurrentTrack] = useState<Track | SearchedTrack | null>(null)
     const [currentPlayerState, setCurrentPlayerState] = useState<PlayerState>(PlayerState.UNSTARTED)
     const [currentBarTime, setCurrentBarTime] = useState(0)
+    const [playbackMode, setPlaybackMode] = useState<PlaybackMode>(PlaybackMode.NORMAL)
     const [trackDuration, setTrackDuration] = useState(0)
     const [queue, setQueue] = useState<(Track | SearchedTrack)[]>([])
     const [showQueue, setShowQueue] = useState(false)
@@ -131,17 +142,32 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
 
     const playNext = () => {
         setQueue(prev => {
-            const next = prev.slice(1)
+            let next: (Track | SearchedTrack)[] = []
+
+            if (playbackMode === PlaybackMode.NORMAL) {
+                next = prev.slice(1)
+            } else if (playbackMode === PlaybackMode.RANDOM) {
+                next = shuffleArray(prev)
+            } else if (playbackMode === PlaybackMode.LOOP) {
+                next = prev.slice(1)
+                next = [...next, prev[0]]
+            } else if (playbackMode === PlaybackMode.LOOPONE) {
+                next = prev
+            }
+
+            setTrackDuration(0)
+
             if (next[0]) {
                 setCurrentTrack(next[0])
                 return [...next]
             }
 
             setCurrentTrack(null)
-            setTrackDuration(0)
             return []
         })
     }
+
+    // console.log(playbackMode)
 
     return (
         <PlaybackContext.Provider value={{
@@ -150,6 +176,8 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
             setShowQueue,
             currentPlayerState,
             setCurrentPlayerState,
+            playbackMode,
+            setPlaybackMode,
             currentBarTime,
             setCurrentBarTime,
             trackDuration,
