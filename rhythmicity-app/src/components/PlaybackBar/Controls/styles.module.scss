@@ -53,14 +53,15 @@
 }
 
 .controls .loopBtn, .controls .randomBtn {
-
     &.active {
-        @include mixins-green-filter();
+        img {
+            @include mixins-red-filter();
+        }
     }
 
     &.active::before {
         content: "";
-        background-color: #1db954;
+        background-color: #f91f0c;
         border-radius: 50%;
         bottom: -5px;
         display: block;
