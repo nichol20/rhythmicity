@@ -127,14 +127,25 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
 
     const addAlbumToQueue = async (album: Album | SearchedAlbum) => {
         const tracks = await getTracksByAlbumId(album.id)
-        setQueue(prev => [...prev, ...tracks])
+        setQueue(prev => {
+            if (prev.length === 0) {
+                setCurrentTrack(tracks[0])
+            }
+
+            return [...prev, ...tracks]
+        })
     }
 
     const addArtistToQueue = async (artist: Artist | SearchedArtist) => {
         const tracks = await getTracksByArtistId(artist.id)
-        setQueue(prev => [...prev, ...tracks])
-    }
+        setQueue(prev => {
+            if (prev.length === 0) {
+                setCurrentTrack(tracks[0])
+            }
 
+            return [...prev, ...tracks]
+        })
+    }
 
     const cleanQueue = () => {
         setQueue([])

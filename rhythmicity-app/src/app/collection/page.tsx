@@ -18,7 +18,7 @@ export default function CollectionPage() {
     const [popularAlbums, setPopularAlbums] = useState<Album[]>([])
     const [popularArtists, setPopularArtists] = useState<Artist[]>([])
     const [popularTracks, setPopularTracks] = useState<Track[]>([])
-    const { setShowPlaybackBar } = usePlayback()
+    const { setShowPlaybackBar, queueController } = usePlayback()
 
     useEffect(() => {
         setShowPlaybackBar(true)
@@ -64,6 +64,7 @@ export default function CollectionPage() {
                                 title={album.name}
                                 href={`/albums/${album.id}`}
                                 description={album.genres.join(", ")}
+                                onPlay={() => queueController.addAlbum(album)}
                             />
                         ))}
                     </Carousel>
@@ -79,6 +80,7 @@ export default function CollectionPage() {
                                 title={artist.name}
                                 href={`/artists/${artist.id}`}
                                 description={artist.genres.join(", ")}
+                                onPlay={() => queueController.addArtist(artist)}
                             />
                         ))}
                     </Carousel>
@@ -94,6 +96,7 @@ export default function CollectionPage() {
                                 title={track.spotify.title}
                                 href={`/tracks/${track.id}`}
                                 description={track.genres.join(", ")}
+                                onPlay={() => queueController.addTrack(track)}
                             />
                         ))}
                     </Carousel>

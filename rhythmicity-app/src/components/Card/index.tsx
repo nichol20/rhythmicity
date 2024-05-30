@@ -30,7 +30,7 @@ export const Card = ({
 }: CardProps) => {
     const handlePlay = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();
-        onPlay
+        if (onPlay) onPlay()
     }
 
     return (

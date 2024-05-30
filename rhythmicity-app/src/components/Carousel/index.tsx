@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect, ReactNode, Children, useRef } from 'react'
+import React, { useState, useEffect, ReactNode, Children, useRef, useCallback } from 'react'
 
 import styles from './style.module.scss'
 
@@ -34,7 +34,7 @@ export const Carousel = ({ children, max }: CarouselProps) => {
         }
     }, [max])
 
-    useEffect(() => {
+    useCallback(() => {
         setItems(Children.toArray(children))
     }, [children])
 
