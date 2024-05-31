@@ -10,11 +10,7 @@ import { usePlayback } from '@/contexts/PlaybackContext'
 import styles from '@/styles/Home.module.scss'
 
 export default function Home() {
-  const { setShowPlaybackBar } = usePlayback()
-
-  useEffect(() => {
-    setShowPlaybackBar(false)
-  }, [setShowPlaybackBar])
+  const { } = usePlayback()
 
   return (
     <div className={styles.home}>

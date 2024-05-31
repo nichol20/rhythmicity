@@ -6,7 +6,7 @@ import { SearchedTrack } from "@/types/search";
 import { Track } from "@/types/track";
 import { usePlayback } from "@/contexts/PlaybackContext";
 import { ExplicitSign } from "../ExplicitSign";
-import { deleteIcon, verticalEllipsisIcon } from "@/assets";
+import { deleteIcon, playIcon, verticalEllipsisIcon } from "@/assets";
 import { ClosableComponent } from "../ClosableElement";
 import { RowOptions } from "../RowOptions";
 
@@ -17,7 +17,7 @@ interface QueueTrackRowProps {
 }
 
 export const QueueTrackRow = ({ track }: QueueTrackRowProps) => {
-    const [showOptionsBtn, setShowOptionsBtn] = useState(false)
+    const [isHovered, setIsHovered] = useState(false)
     const { queueController } = usePlayback()
 
     const getImage = (track: SearchedTrack | Track) => {
@@ -37,11 +37,11 @@ export const QueueTrackRow = ({ track }: QueueTrackRowProps) => {
     }
 
     const handleMouseOver = () => {
-        setShowOptionsBtn(true)
+        setIsHovered(true)
     }
 
     const handleMoutseLeave = () => {
-        setShowOptionsBtn(false)
+        setIsHovered(false)
     }
 
     const deleteTrack = () => {
@@ -56,13 +56,18 @@ export const QueueTrackRow = ({ track }: QueueTrackRowProps) => {
         >
             <div className={styles.info}>
                 <div className={styles.imgBox}>
-                    <Image
-                        src={getImage(track)}
-                        alt={getName(track)}
-                        width={48}
-                        height={48}
-                        onClick={() => queueController.skipTo(track.id)}
-                    />
+                    {isHovered ? (
+                        <button className={styles.playBtn} onClick={() => queueController.skipTo(track.id)}>
+                            <Image src={playIcon} alt="play" className={styles.playIcon} />
+                        </button>
+                    ) : (
+                        <Image
+                            src={getImage(track)}
+                            alt={getName(track)}
+                            width={48}
+                            height={48}
+                        />
+                    )}
                 </div>
                 <div className={styles.description}>
                     <Link href={`/tracks/${track.id}`} className={styles.name}>{getName(track)}</Link>
@@ -73,7 +78,7 @@ export const QueueTrackRow = ({ track }: QueueTrackRowProps) => {
                 </div>
             </div>
             <RowOptions
-                showBtn={showOptionsBtn}
+                showBtn={isHovered}
                 options={[
                     {
                         action: deleteTrack,

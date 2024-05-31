@@ -18,7 +18,7 @@ interface ArtistPageProps {
 }
 
 export default function ArtistPage({ params }: ArtistPageProps) {
-    const { } = usePlayback(true)
+    const { } = usePlayback()
     const [artist, setArtist] = useState<Artist>()
     const [tracks, setTracks] = useState<Track[]>()
 

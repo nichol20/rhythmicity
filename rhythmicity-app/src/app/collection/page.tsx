@@ -18,11 +18,7 @@ export default function CollectionPage() {
     const [popularAlbums, setPopularAlbums] = useState<Album[]>([])
     const [popularArtists, setPopularArtists] = useState<Artist[]>([])
     const [popularTracks, setPopularTracks] = useState<Track[]>([])
-    const { setShowPlaybackBar, queueController } = usePlayback()
-
-    useEffect(() => {
-        setShowPlaybackBar(true)
-    }, [setShowPlaybackBar])
+    const { queueController } = usePlayback()
 
     useEffect(() => {
         const fetchData = async () => {

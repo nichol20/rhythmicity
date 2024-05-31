@@ -16,7 +16,7 @@ interface TrackPageProps {
 }
 
 export default function TrackPage({ params }: TrackPageProps) {
-    const { } = usePlayback(true)
+    const { } = usePlayback()
     const [track, setTrack] = useState<Track>()
     const [tracks, setTracks] = useState<Track[]>()
 

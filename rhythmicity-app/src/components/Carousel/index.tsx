@@ -34,7 +34,7 @@ export const Carousel = ({ children, max }: CarouselProps) => {
         }
     }, [max])
 
-    useCallback(() => {
+    useEffect(() => {
         setItems(Children.toArray(children))
     }, [children])
 

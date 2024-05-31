@@ -30,8 +30,6 @@ interface QueueController {
 }
 
 interface PlaybackContext {
-    showPlaybackBar: boolean
-    setShowPlaybackBar: Dispatch<SetStateAction<boolean>>
     setShowQueue: Dispatch<SetStateAction<boolean>>
     currentPlayerState: PlayerState
     setCurrentPlayerState: Dispatch<SetStateAction<PlayerState>>
@@ -56,20 +54,9 @@ interface PlaybackProviderProps {
 
 export const PlaybackContext = createContext({} as PlaybackContext)
 
-export const usePlayback = (showPlaybackBar: boolean = false) => {
-    const context = useContext(PlaybackContext)
-
-    useEffect(() => {
-        if (showPlaybackBar) {
-            context.setShowPlaybackBar(true)
-        }
-    }, [showPlaybackBar, context])
-
-    return context
-}
+export const usePlayback = () => useContext(PlaybackContext)
 
 export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
-    const [showPlaybackBar, setShowPlaybackBar] = useState(false)
     const [currentTrack, setCurrentTrack] = useState<Track | SearchedTrack | null>(null)
     const [currentPlayerState, setCurrentPlayerState] = useState<PlayerState>(PlayerState.UNSTARTED)
     const [currentBarTime, setCurrentBarTime] = useState(0)
@@ -182,8 +169,6 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
 
     return (
         <PlaybackContext.Provider value={{
-            showPlaybackBar,
-            setShowPlaybackBar,
             setShowQueue,
             currentPlayerState,
             setCurrentPlayerState,
@@ -210,12 +195,8 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
             }
         }}>
             {children}
-            {showPlaybackBar &&
-                <>
-                    <PlaybackBar track={currentTrack} />
-                    {showQueue && <Queue tracks={queue} close={() => setShowQueue(false)} />}
-                </>}
-
+            <PlaybackBar track={currentTrack} />
+            {showQueue && <Queue tracks={queue} close={() => setShowQueue(false)} />}
         </PlaybackContext.Provider>
     )
 }

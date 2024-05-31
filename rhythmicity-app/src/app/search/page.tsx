@@ -17,7 +17,7 @@ export default function SearchPage() {
     const router = useRouter()
     const pathname = usePathname()
     const searchParams = useSearchParams()
-    const { } = usePlayback(true)
+    const { } = usePlayback()
     const searchQuery = searchParams.get('q') || ""
     const kindParam = searchParams.get("kind") || "all"
     const [searchResponse, setSearchResponse] = useState<SearchResponse>({ albums: [], artists: [], tracks: [], bestResult: null })

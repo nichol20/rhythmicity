@@ -18,7 +18,7 @@ interface AlbumPageProps {
 }
 
 export default function AlbumPage({ params }: AlbumPageProps) {
-    const { } = usePlayback(true)
+    const { } = usePlayback()
     const [album, setAlbum] = useState<Album>()
     const [tracks, setTracks] = useState<Track[]>()
 
