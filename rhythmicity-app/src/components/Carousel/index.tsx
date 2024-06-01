@@ -28,14 +28,19 @@ export const Carousel = ({ children, max }: CarouselProps) => {
 
         calculateVisibleItems()
         window.addEventListener('resize', calculateVisibleItems)
-
         return () => {
             window.removeEventListener('resize', calculateVisibleItems)
         }
     }, [max])
 
     useEffect(() => {
-        setItems(Children.toArray(children))
+        setItems(prev => {
+            if (prev.length === 0) {
+                return Children.toArray(children)
+            }
+
+            return prev
+        })
     }, [children])
 
     useEffect(() => {
