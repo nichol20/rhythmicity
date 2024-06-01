@@ -58,7 +58,7 @@ export const PlaybackBar = ({ track }: PlaybackBarProps) => {
     const getAlbumName = () => {
         if (track) {
             if ("youtube" in track) {
-                return "Album"
+                return track.album.name
             }
 
             return track.album.name

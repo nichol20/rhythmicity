@@ -60,7 +60,7 @@ export default function CollectionPage() {
                                 title={album.name}
                                 href={`/albums/${album.id}`}
                                 description={album.genres.join(", ")}
-                                onPlay={() => queueController.addAlbum(album)}
+                                onPlay={() => queueController.playAlbum(album)}
                             />
                         ))}
                     </Carousel>
@@ -76,7 +76,7 @@ export default function CollectionPage() {
                                 title={artist.name}
                                 href={`/artists/${artist.id}`}
                                 description={artist.genres.join(", ")}
-                                onPlay={() => queueController.addArtist(artist)}
+                                onPlay={() => queueController.playArtist(artist)}
                             />
                         ))}
                     </Carousel>
@@ -92,7 +92,7 @@ export default function CollectionPage() {
                                 title={track.spotify.title}
                                 href={`/tracks/${track.id}`}
                                 description={track.genres.join(", ")}
-                                onPlay={() => queueController.addTrack(track)}
+                                onPlay={() => queueController.playNow(track)}
                             />
                         ))}
                     </Carousel>

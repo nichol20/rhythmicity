@@ -26,7 +26,9 @@ interface QueueController {
     clean: () => void
     addTrack: (track: Track | SearchedTrack) => void
     addAlbum: (album: Album | SearchedAlbum) => Promise<void>
+    playAlbum: (album: Album | SearchedAlbum) => Promise<void>
     addArtist: (artist: Artist | SearchedArtist) => Promise<void>
+    playArtist: (artist: Artist | SearchedArtist) => Promise<void>
 }
 
 interface PlaybackContext {
@@ -123,6 +125,12 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
         })
     }
 
+    const playAlbum = async (album: Album | SearchedAlbum) => {
+        const tracks = await getTracksByAlbumId(album.id)
+        setCurrentTrack(tracks[0])
+        setQueue(tracks)
+    }
+
     const addArtistToQueue = async (artist: Artist | SearchedArtist) => {
         const tracks = await getTracksByArtistId(artist.id)
         setQueue(prev => {
@@ -132,6 +140,12 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
 
             return [...prev, ...tracks]
         })
+    }
+
+    const playArtist = async (artist: Artist | SearchedArtist) => {
+        const tracks = await getTracksByArtistId(artist.id)
+        setCurrentTrack(tracks[0])
+        setQueue(tracks)
     }
 
     const cleanQueue = () => {
@@ -165,8 +179,6 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
         })
     }
 
-    // console.log(playbackMode)
-
     return (
         <PlaybackContext.Provider value={{
             setShowQueue,
@@ -191,7 +203,9 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
                 clean: cleanQueue,
                 addTrack: addTrackToQueue,
                 addAlbum: addAlbumToQueue,
-                addArtist: addArtistToQueue
+                playAlbum,
+                addArtist: addArtistToQueue,
+                playArtist
             }
         }}>
             {children}

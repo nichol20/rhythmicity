@@ -14,9 +14,9 @@ export const MainResults = ({ bestResult, tracks }: MainResultsProps) => {
     const { queueController } = usePlayback()
 
     const handlePlay = (obj: SearchedTrack | SearchedAlbum | SearchedArtist) => {
-        if (obj.type === "track") {
-            queueController.addTrack(obj)
-        }
+        if (obj.type === "track") queueController.playNow(obj)
+        else if (obj.type === "artist") queueController.playArtist(obj)
+        else queueController.playAlbum(obj)
     }
 
     return (
