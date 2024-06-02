@@ -1,7 +1,9 @@
-import { closeIcon } from '@/assets'
-import styles from './style.module.scss'
 import Image from 'next/image'
+
+import { closeIcon } from '@/assets'
 import { ClosableComponent } from '../ClosableElement'
+
+import styles from './style.module.scss'
 
 interface ModalProps {
     className?: string

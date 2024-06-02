@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import styles from './style.module.scss'
+
+import { Track } from '@/types/track'
+import { SearchedTrack } from '@/types/search'
+import { playback } from '@/utils/api'
 import { YouTubePlayerRef, YouTubePlayer, PlayerEvent, PlayerState } from '../YoutubePlayer'
 import { TimeBar } from './TimeBar'
 import { Controls } from './Controls/index'
 import { Options } from './Options'
 import { usePlayback } from '@/contexts/PlaybackContext'
-import { Track } from '@/types/track'
-import { SearchedTrack } from '@/types/search'
-import { playback } from '@/utils/api'
+
+import styles from './style.module.scss'
 
 interface PlaybackBarProps {
     track?: Track | SearchedTrack | null

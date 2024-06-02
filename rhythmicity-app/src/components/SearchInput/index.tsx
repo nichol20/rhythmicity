@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
-
-import styles from './style.module.scss'
+import React, { useState } from "react";
 import Image from "next/image";
+
 import { closeIcon, searchIcon } from "@/assets";
 import { useDebounce } from "@/hooks/useDebounce";
+
+import styles from './style.module.scss'
 
 interface SearchInputProps {
     onChange: (value: string) => void

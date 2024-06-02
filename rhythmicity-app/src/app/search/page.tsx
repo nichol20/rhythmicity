@@ -1,23 +1,22 @@
 'use client'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
+import { useCallback, useState } from 'react'
 
+import { QueryKind, SearchResponse, search } from '@/utils/api'
 import { Header } from '@/components/Header'
 import { SearchInput } from '@/components/SearchInput'
-import { usePlayback } from '@/contexts/PlaybackContext'
-
-import styles from '@/styles/Search.module.scss'
-import { useCallback, useState } from 'react'
-import { QueryKind, SearchResponse, search } from '@/utils/api'
 import { ResultCards } from '@/components/SearchResults/ResultCards'
 import { MainResults } from '@/components/SearchResults/MainResults'
+
+import styles from '@/styles/Search.module.scss'
+
 const kinds = ['all', 'tracks', 'artists', 'albums']
 
 export default function SearchPage() {
     const router = useRouter()
     const pathname = usePathname()
     const searchParams = useSearchParams()
-    const { } = usePlayback()
     const searchQuery = searchParams.get('q') || ""
     const kindParam = searchParams.get("kind") || "all"
     const [searchResponse, setSearchResponse] = useState<SearchResponse>({ albums: [], artists: [], tracks: [], bestResult: null })

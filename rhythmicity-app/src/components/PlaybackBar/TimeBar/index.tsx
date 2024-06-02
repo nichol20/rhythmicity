@@ -1,9 +1,10 @@
 import { ChangeEvent, useEffect, useState } from 'react'
-import styles from './style.module.scss'
+
 import { secondsToMinutes } from '@/utils/conversion'
 import { Slider } from '@/components/Slider'
 import { usePlayback } from '@/contexts/PlaybackContext'
 
+import styles from './style.module.scss'
 
 export const TimeBar = () => {
     const {

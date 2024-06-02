@@ -1,8 +1,10 @@
 import { ReactNode } from 'react'
-import styles from './style.module.scss'
-import { TrackRow } from './TrackRow'
 import Image from 'next/image'
+
+import { TrackRow } from './TrackRow'
 import { watchIcon } from '@/assets'
+
+import styles from './style.module.scss'
 
 export interface TrackListProps {
     children: ReactNode

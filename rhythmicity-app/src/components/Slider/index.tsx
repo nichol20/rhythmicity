@@ -1,4 +1,5 @@
 import { ChangeEvent } from 'react'
+
 import styles from './style.module.scss'
 
 interface SliderProps {

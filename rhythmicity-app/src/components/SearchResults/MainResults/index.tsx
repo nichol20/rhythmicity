@@ -1,9 +1,10 @@
-import styles from './style.module.scss'
+import { msToMinutes } from '@/utils/conversion'
+import { usePlayback } from '@/contexts/PlaybackContext'
 import { BestResultCard } from '../BestResultCard'
 import { BestResult, SearchedAlbum, SearchedArtist, SearchedTrack } from '@/types/search'
 import { TrackRow } from '@/components/TrackList'
-import { msToMinutes } from '@/utils/conversion'
-import { usePlayback } from '@/contexts/PlaybackContext'
+
+import styles from './style.module.scss'
 
 export interface MainResultsProps {
     bestResult?: BestResult | null

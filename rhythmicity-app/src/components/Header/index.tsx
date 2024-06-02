@@ -1,11 +1,12 @@
 'use client'
-import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-
-import styles from './style.module.scss'
 import { usePathname } from 'next/navigation'
 import Image from 'next/image'
+import React, { useEffect, useState } from 'react'
+
 import { logo, searchIcon } from '@/assets'
+
+import styles from './style.module.scss'
 
 export const Header = () => {
   const pathname = usePathname()

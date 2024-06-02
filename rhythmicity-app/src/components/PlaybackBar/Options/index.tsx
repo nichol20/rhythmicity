@@ -3,10 +3,11 @@ import Image from 'next/image'
 
 import { YouTubePlayerRef } from '@/components/YoutubePlayer'
 import { Volume } from './Volume'
-import styles from './style.module.scss'
 import { LyricsBtn } from './LyricsBtn'
 import { queueIcon } from '@/assets'
 import { usePlayback } from '@/contexts/PlaybackContext'
+
+import styles from './style.module.scss'
 
 interface ControlsProps {
     youtubePlayerRef: RefObject<YouTubePlayerRef>

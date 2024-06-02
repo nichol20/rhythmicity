@@ -1,13 +1,15 @@
-import Image, { StaticImageData } from 'next/image'
-import styles from './style.module.scss'
-import { useState } from 'react'
-import { addListIcon, playIcon } from '@/assets'
-import { ExplicitSign } from '../ExplicitSign'
 import Link from 'next/link'
-import { usePlayback } from '@/contexts/PlaybackContext'
+import Image, { StaticImageData } from 'next/image'
+import { useState } from 'react'
+
 import { Track } from '@/types/track'
 import { SearchedTrack } from '@/types/search'
+import { addListIcon, playIcon } from '@/assets'
+import { ExplicitSign } from '../ExplicitSign'
+import { usePlayback } from '@/contexts/PlaybackContext'
 import { RowOptions } from '../RowOptions'
+
+import styles from './style.module.scss'
 
 interface Content {
     id: string

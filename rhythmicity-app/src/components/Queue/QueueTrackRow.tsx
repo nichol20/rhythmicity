@@ -6,8 +6,7 @@ import { SearchedTrack } from "@/types/search";
 import { Track } from "@/types/track";
 import { usePlayback } from "@/contexts/PlaybackContext";
 import { ExplicitSign } from "../ExplicitSign";
-import { deleteIcon, playIcon, verticalEllipsisIcon } from "@/assets";
-import { ClosableComponent } from "../ClosableElement";
+import { deleteIcon, playIcon, } from "@/assets";
 import { RowOptions } from "../RowOptions";
 
 import styles from './style.module.scss'

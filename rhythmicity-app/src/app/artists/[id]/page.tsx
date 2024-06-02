@@ -1,16 +1,16 @@
 "use client"
-import Image from 'next/image'
-import styles from '../../../styles/Artist.module.scss'
-import { TrackList, TrackRow } from '@/components/TrackList'
-import { msToMinutes } from '@/utils/conversion'
-import { usePlayback } from '@/contexts/PlaybackContext'
-import { Header } from '@/components/Header'
-import { Banner } from '@/components/Banner'
 import { useEffect, useState } from 'react'
+
 import { getArtist, getTracksByArtistId } from '@/utils/api'
+import { msToMinutes } from '@/utils/conversion'
 import { Artist } from '@/types/artist'
 import { Track } from '@/types/track'
+import { usePlayback } from '@/contexts/PlaybackContext'
+import { TrackList, TrackRow } from '@/components/TrackList'
+import { Header } from '@/components/Header'
+import { Banner } from '@/components/Banner'
 
+import styles from '../../../styles/Artist.module.scss'
 interface ArtistPageProps {
     params: {
         id: string

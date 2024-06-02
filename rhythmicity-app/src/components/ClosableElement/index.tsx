@@ -1,6 +1,5 @@
 import React, { ReactNode, useEffect, useRef } from "react"
 
-
 interface ClosabeComponentProps {
     children: ReactNode
     isOpen: boolean

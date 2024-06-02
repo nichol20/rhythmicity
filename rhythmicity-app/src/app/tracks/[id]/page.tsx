@@ -1,13 +1,14 @@
 "use client"
-import styles from '../../../styles/Track.module.scss'
-import { TrackList, TrackRow } from '@/components/TrackList'
+import { useEffect, useState } from 'react'
+
+import { getTrack, getTracksByAlbumId } from '@/utils/api'
 import { msToMinutes } from '@/utils/conversion'
-import { usePlayback } from '@/contexts/PlaybackContext'
+import { Track } from '@/types/track'
+import { TrackList, TrackRow } from '@/components/TrackList'
 import { Header } from '@/components/Header'
 import { Banner } from '@/components/Banner'
-import { useEffect, useState } from 'react'
-import { Track } from '@/types/track'
-import { getTrack, getTracksByAlbumId } from '@/utils/api'
+
+import styles from '../../../styles/Track.module.scss'
 
 interface TrackPageProps {
     params: {
@@ -16,7 +17,6 @@ interface TrackPageProps {
 }
 
 export default function TrackPage({ params }: TrackPageProps) {
-    const { } = usePlayback()
     const [track, setTrack] = useState<Track>()
     const [tracks, setTracks] = useState<Track[]>()
 

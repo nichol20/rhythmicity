@@ -1,9 +1,10 @@
 import { useState } from "react"
+import Image from "next/image"
+
 import { ClosableComponent } from "../ClosableElement"
+import { verticalEllipsisIcon } from "@/assets"
 
 import styles from './style.module.scss'
-import Image from "next/image"
-import { verticalEllipsisIcon } from "@/assets"
 
 interface RowOptionsProps {
     options: {

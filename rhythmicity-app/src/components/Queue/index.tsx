@@ -1,8 +1,9 @@
+import { Track } from '@/types/track'
 import { SearchedTrack } from '@/types/search'
 import { Modal } from '../Modal'
-import styles from './style.module.scss'
-import { Track } from '@/types/track'
 import { QueueTrackRow } from './QueueTrackRow'
+
+import styles from './style.module.scss'
 
 interface QueueProps {
     tracks: (SearchedTrack | Track)[]

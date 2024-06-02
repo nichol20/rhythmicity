@@ -2,15 +2,15 @@
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
 
+import { getPopularAlbums, getPopularArtists, getPopularTracks } from '@/utils/api'
+import { Album } from '@/types/album'
+import { Artist } from '@/types/artist'
+import { Track } from '@/types/track'
 import { collectionBackground } from '@/assets'
 import { Card } from '@/components/Card'
 import { Carousel } from '@/components/Carousel'
 import { Header } from '@/components/Header'
 import { usePlayback } from '@/contexts/PlaybackContext'
-import { Album } from '@/types/album'
-import { Artist } from '@/types/artist'
-import { Track } from '@/types/track'
-import { getPopularAlbums, getPopularArtists, getPopularTracks } from '@/utils/api'
 
 import styles from '@/styles/Collection.module.scss'
 

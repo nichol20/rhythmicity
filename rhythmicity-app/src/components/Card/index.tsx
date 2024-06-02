@@ -1,9 +1,11 @@
 'use client'
-import React, { useState } from 'react';
-import styles from './style.module.scss'
-import Image, { StaticImageData } from 'next/image';
-import { playIcon } from '@/assets';
+import React from 'react';
 import Link from 'next/link';
+import Image, { StaticImageData } from 'next/image';
+
+import { playIcon } from '@/assets';
+
+import styles from './style.module.scss'
 
 interface CardProps {
     image: StaticImageData | string

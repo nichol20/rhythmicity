@@ -1,17 +1,13 @@
 'use client'
-import { useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import { homeBackground } from '@/assets'
 import { Header } from '@/components/Header'
-import { usePlayback } from '@/contexts/PlaybackContext'
 
 import styles from '@/styles/Home.module.scss'
 
 export default function Home() {
-  const { } = usePlayback()
-
   return (
     <div className={styles.home}>
       <Header />

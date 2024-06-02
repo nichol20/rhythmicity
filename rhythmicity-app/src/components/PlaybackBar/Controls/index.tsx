@@ -1,11 +1,11 @@
-import { MouseEvent, RefObject, useState } from 'react'
+import { RefObject, useState } from 'react'
 import Image from 'next/image'
 
 import { nextIcon, pauseIcon, playIcon, shuffleIcon, repeatIcon, repeatOneIcon } from '@/assets'
 import { PlayerState, YouTubePlayerRef } from '@/components/YoutubePlayer'
+import { PlaybackMode, usePlayback } from '@/contexts/PlaybackContext'
 
 import styles from './styles.module.scss'
-import { PlaybackMode, usePlayback } from '@/contexts/PlaybackContext'
 
 interface ControlsProps {
     youtubePlayerRef: RefObject<YouTubePlayerRef>

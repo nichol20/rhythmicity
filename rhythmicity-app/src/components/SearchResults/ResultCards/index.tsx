@@ -1,6 +1,7 @@
 import { SearchedAlbum, SearchedArtist } from '@/types/search'
-import styles from './style.module.scss'
 import { Card } from '@/components/Card'
+
+import styles from './style.module.scss'
 
 export interface ResultCardsProps {
     results: SearchedArtist[] | SearchedAlbum[]

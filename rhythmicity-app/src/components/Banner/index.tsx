@@ -1,8 +1,6 @@
-
 import Image from 'next/image'
+
 import styles from './style.module.scss'
-import { ReactNode } from 'react'
-import { metadata } from '@/app/layout'
 
 interface BannerProps {
     picture: string

@@ -1,15 +1,16 @@
 "use client"
-import Image from 'next/image'
-import styles from '../../../styles/Album.module.scss'
-import { TrackList, TrackRow } from '@/components/TrackList'
+import { useEffect, useState } from 'react'
+
+import { getAlbum, getTracksByAlbumId } from '@/utils/api'
 import { msToMinutes } from '@/utils/conversion'
+import { Album } from '@/types/album'
+import { Track } from '@/types/track'
 import { usePlayback } from '@/contexts/PlaybackContext'
+import { TrackList, TrackRow } from '@/components/TrackList'
 import { Header } from '@/components/Header'
 import { Banner } from '@/components/Banner'
-import { useEffect, useState } from 'react'
-import { Album } from '@/types/album'
-import { getAlbum, getTracksByAlbumId } from '@/utils/api'
-import { Track } from '@/types/track'
+
+import styles from '../../../styles/Album.module.scss'
 
 interface AlbumPageProps {
     params: {
