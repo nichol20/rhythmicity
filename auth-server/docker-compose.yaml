@@ -1,0 +1,132 @@
+version: "3.8"
+
+services:
+  setup:
+    image: postgres:16-alpine
+    volumes:
+      - certs:/etc/ssl/certs
+    command: >
+      bash -c '
+        if [ ! -f /etc/ssl/certs/root.key ]; then
+          echo "Downloading openssl";
+          apk add --no-cache openssl;
+
+          echo "Creating CA";
+
+          cd /etc/ssl/certs;
+          openssl genrsa -out root.key 2048;
+          openssl req -new -x509 -days 365 -subj "/CN=PostgresCa" -key root.key -out root.crt;
+
+          echo "Creating server cert";
+
+          echo -ne \
+          "[req]\n"\
+          "distinguished_name = req_distinguished_name\n"\
+          "x509_extensions = v3_req\n"\
+          "\n"\
+          "[req_distinguished_name]\n"\
+          "\n"\
+          "[v3_req]\n"\
+          "keyUsage = critical, digitalSignature, keyEncipherment\n"\
+          "extendedKeyUsage = serverAuth\n"\
+          "subjectAltName = @alt_names\n"\
+          "\n"\
+          "[alt_names]\n"\
+          "DNS.1 = localhost\n"\
+          "DNS.2 = 127.0.0.1\n"\
+          "DNS.3 = db\n"\
+          > /etc/ssl/certs/openssl.cnf;
+
+          openssl genrsa -out server.key 2048;
+          openssl req -new -key server.key -subj "/CN=PostgreServer" -text -out server.csr;
+          openssl x509 -req -in server.csr -text -days 365 -CA root.crt -CAkey root.key -CAcreateserial -out server.crt -extfile /etc/ssl/certs/openssl.cnf -extensions v3_req;
+
+          echo "Creating client cert";
+
+          openssl genrsa -out client.key 2048;
+          openssl req -new -key client.key -subj "/CN=postgres" -out client.csr;
+          openssl x509 -req -in client.csr -CA root.crt -CAkey root.key -CAcreateserial -days 365 -text -out client.crt;
+          
+          chown -R postgres:postgres /etc/ssl/certs;
+        fi;
+
+        echo "All done!";
+        sleep 100;
+      '
+    healthcheck:
+      test: ["CMD-SHELL", "[ -f /etc/ssl/certs/client.crt ]"]
+      interval: 1s
+      timeout: 5s
+      retries: 20
+
+  db:
+    depends_on:
+      setup:
+        condition: service_healthy
+    image: postgres:16-alpine
+    command:
+      - postgres
+      - -c
+      - ssl=on
+      - -c
+      - ssl_cert_file=/etc/ssl/certs/server.crt
+      - -c
+      - ssl_ca_file=/etc/ssl/certs/root.crt
+      - -c
+      - ssl_key_file=/etc/ssl/certs/server.key
+      - -c
+      - password_encryption=scram-sha-256
+      - -c
+      - listen_addresses=*
+      - -c
+      - hba_file=/var/lib/postgresql/pg_hba.conf
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      PGUSER: ${DB_USER}
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+      - certs:/etc/ssl/certs
+      - ./internal/db/pg_hba.conf:/var/lib/postgresql/pg_hba.conf
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+
+  auth-server:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "50053:50051"
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_NAME: ${DB_NAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_ROOT_CERT: ${DB_ROOT_CERT}
+      DB_SSL_KEY: ${DB_SSL_KEY}
+      DB_SSL_CERT: ${DB_SSL_CERT}
+    volumes:
+      - certs:/app/internal/db/certs
+      - .:/app
+    deploy:
+      resources:
+        limits:
+          cpus: "0.4"
+          memory: "0.6GB"
+
+volumes:
+  postgres-db:
+    driver: local
+  certs:
+    driver: local
