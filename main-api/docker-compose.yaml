@@ -85,8 +85,6 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
       PGUSER: ${DB_USER}
-    ports:
-      - "5432:5432"
     volumes:
       - postgres-db:/var/lib/postgresql/data
       - certs:/etc/ssl/certs
