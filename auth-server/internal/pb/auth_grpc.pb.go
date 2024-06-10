@@ -27,7 +27,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthClient interface {
-	SignUp(ctx context.Context, in *SignUpMessage, opts ...grpc.CallOption) (*TokenResponse, error)
+	SignUp(ctx context.Context, in *SignUpMessage, opts ...grpc.CallOption) (*User, error)
 	SignIn(ctx context.Context, in *SignInMessage, opts ...grpc.CallOption) (*TokenResponse, error)
 }
 
@@ -39,8 +39,8 @@ func NewAuthClient(cc grpc.ClientConnInterface) AuthClient {
 	return &authClient{cc}
 }
 
-func (c *authClient) SignUp(ctx context.Context, in *SignUpMessage, opts ...grpc.CallOption) (*TokenResponse, error) {
-	out := new(TokenResponse)
+func (c *authClient) SignUp(ctx context.Context, in *SignUpMessage, opts ...grpc.CallOption) (*User, error) {
+	out := new(User)
 	err := c.cc.Invoke(ctx, Auth_SignUp_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -61,7 +61,7 @@ func (c *authClient) SignIn(ctx context.Context, in *SignInMessage, opts ...grpc
 // All implementations must embed UnimplementedAuthServer
 // for forward compatibility
 type AuthServer interface {
-	SignUp(context.Context, *SignUpMessage) (*TokenResponse, error)
+	SignUp(context.Context, *SignUpMessage) (*User, error)
 	SignIn(context.Context, *SignInMessage) (*TokenResponse, error)
 	mustEmbedUnimplementedAuthServer()
 }
@@ -70,7 +70,7 @@ type AuthServer interface {
 type UnimplementedAuthServer struct {
 }
 
-func (UnimplementedAuthServer) SignUp(context.Context, *SignUpMessage) (*TokenResponse, error) {
+func (UnimplementedAuthServer) SignUp(context.Context, *SignUpMessage) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SignUp not implemented")
 }
 func (UnimplementedAuthServer) SignIn(context.Context, *SignInMessage) (*TokenResponse, error) {
