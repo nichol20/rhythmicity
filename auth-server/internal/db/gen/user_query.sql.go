@@ -9,6 +9,17 @@ import (
 	"context"
 )
 
+const checkIfEmailExists = `-- name: CheckIfEmailExists :one
+SELECT EXISTS(SELECT 1 FROM users WHERE email = $1) AS emailExists
+`
+
+func (q *Queries) CheckIfEmailExists(ctx context.Context, email string) (bool, error) {
+	row := q.db.QueryRowContext(ctx, checkIfEmailExists, email)
+	var emailexists bool
+	err := row.Scan(&emailexists)
+	return emailexists, err
+}
+
 const createUser = `-- name: CreateUser :one
 INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id, username, email, password
 `
