@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log/slog"
 	"os"
 	"time"
@@ -59,7 +60,7 @@ func (s *AuthService) SignUp(ctx context.Context, req *pb.SignUpMessage) (*pb.Us
 	}, nil
 }
 
-func (s *AuthService) SignIn(ctx context.Context, req *pb.SignInMessage) (*pb.TokenResponse, error) {
+func (s *AuthService) SignIn(ctx context.Context, req *pb.SignInMessage) (*pb.TokenMessage, error) {
 	if req.Email == "" || req.Password == "" {
 		return nil, status.Errorf(codes.InvalidArgument, domain.ErrBadRequest.Error())
 	}
@@ -89,7 +90,46 @@ func (s *AuthService) SignIn(ctx context.Context, req *pb.SignInMessage) (*pb.To
 		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
 
-	return &pb.TokenResponse{
+	return &pb.TokenMessage{
 		Token: tokenStr,
 	}, nil
+}
+
+func (s *AuthService) ValidateToken(ctx context.Context, req *pb.TokenMessage) (*pb.ValidateTokenResponse, error) {
+	token, err := jwt.Parse(req.Token, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+
+		return []byte(os.Getenv("JWT_SECRET")), nil
+	})
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "invalid token")
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		if float64(time.Now().Unix()) > claims["exp"].(float64) {
+			return nil, status.Errorf(codes.Unauthenticated, "authentication token is expired")
+		}
+
+		user, err := s.UserRepository.GetUser(ctx, int32(claims["sub"].(float64)))
+		if err != nil {
+			if errors.Is(err, domain.ErrNotFound) {
+				return nil, status.Errorf(codes.Unauthenticated, "invalid token")
+			}
+
+			slog.Error(err.Error())
+			return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
+		}
+
+		return &pb.ValidateTokenResponse{
+			User: &pb.User{
+				Id:       user.ID,
+				Email:    user.Email,
+				Username: user.Username,
+			},
+		}, nil
+	}
+
+	return nil, status.Errorf(codes.Unauthenticated, "invalid token")
 }

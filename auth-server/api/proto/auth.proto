@@ -21,11 +21,16 @@ message SignInMessage {
     string password = 2;
 }
 
-message TokenResponse {
+message TokenMessage {
     string token = 1;
+}
+
+message ValidateTokenResponse {
+    User user = 1;
 }
 
 service Auth {
     rpc SignUp(SignUpMessage) returns (User){};
-    rpc SignIn(SignInMessage) returns (TokenResponse){};
+    rpc SignIn(SignInMessage) returns (TokenMessage){};
+    rpc ValidateToken(TokenMessage) returns (ValidateTokenResponse){};
 }

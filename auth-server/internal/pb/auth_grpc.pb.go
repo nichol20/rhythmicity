@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Auth_SignUp_FullMethodName = "/rhythmicity.auth_server.Auth/SignUp"
-	Auth_SignIn_FullMethodName = "/rhythmicity.auth_server.Auth/SignIn"
+	Auth_SignUp_FullMethodName        = "/rhythmicity.auth_server.Auth/SignUp"
+	Auth_SignIn_FullMethodName        = "/rhythmicity.auth_server.Auth/SignIn"
+	Auth_ValidateToken_FullMethodName = "/rhythmicity.auth_server.Auth/ValidateToken"
 )
 
 // AuthClient is the client API for Auth service.
@@ -28,7 +29,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthClient interface {
 	SignUp(ctx context.Context, in *SignUpMessage, opts ...grpc.CallOption) (*User, error)
-	SignIn(ctx context.Context, in *SignInMessage, opts ...grpc.CallOption) (*TokenResponse, error)
+	SignIn(ctx context.Context, in *SignInMessage, opts ...grpc.CallOption) (*TokenMessage, error)
+	ValidateToken(ctx context.Context, in *TokenMessage, opts ...grpc.CallOption) (*ValidateTokenResponse, error)
 }
 
 type authClient struct {
@@ -48,9 +50,18 @@ func (c *authClient) SignUp(ctx context.Context, in *SignUpMessage, opts ...grpc
 	return out, nil
 }
 
-func (c *authClient) SignIn(ctx context.Context, in *SignInMessage, opts ...grpc.CallOption) (*TokenResponse, error) {
-	out := new(TokenResponse)
+func (c *authClient) SignIn(ctx context.Context, in *SignInMessage, opts ...grpc.CallOption) (*TokenMessage, error) {
+	out := new(TokenMessage)
 	err := c.cc.Invoke(ctx, Auth_SignIn_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authClient) ValidateToken(ctx context.Context, in *TokenMessage, opts ...grpc.CallOption) (*ValidateTokenResponse, error) {
+	out := new(ValidateTokenResponse)
+	err := c.cc.Invoke(ctx, Auth_ValidateToken_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +73,8 @@ func (c *authClient) SignIn(ctx context.Context, in *SignInMessage, opts ...grpc
 // for forward compatibility
 type AuthServer interface {
 	SignUp(context.Context, *SignUpMessage) (*User, error)
-	SignIn(context.Context, *SignInMessage) (*TokenResponse, error)
+	SignIn(context.Context, *SignInMessage) (*TokenMessage, error)
+	ValidateToken(context.Context, *TokenMessage) (*ValidateTokenResponse, error)
 	mustEmbedUnimplementedAuthServer()
 }
 
@@ -73,8 +85,11 @@ type UnimplementedAuthServer struct {
 func (UnimplementedAuthServer) SignUp(context.Context, *SignUpMessage) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SignUp not implemented")
 }
-func (UnimplementedAuthServer) SignIn(context.Context, *SignInMessage) (*TokenResponse, error) {
+func (UnimplementedAuthServer) SignIn(context.Context, *SignInMessage) (*TokenMessage, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SignIn not implemented")
+}
+func (UnimplementedAuthServer) ValidateToken(context.Context, *TokenMessage) (*ValidateTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidateToken not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}
 
@@ -125,6 +140,24 @@ func _Auth_SignIn_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Auth_ValidateToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TokenMessage)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).ValidateToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_ValidateToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).ValidateToken(ctx, req.(*TokenMessage))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Auth_ServiceDesc is the grpc.ServiceDesc for Auth service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -139,6 +172,10 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SignIn",
 			Handler:    _Auth_SignIn_Handler,
+		},
+		{
+			MethodName: "ValidateToken",
+			Handler:    _Auth_ValidateToken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
