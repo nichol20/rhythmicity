@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package rhythmicity.auth_server;
+
+option go_package = "github.com/nichol20/rhythmicity/auth-server/internal/pb";
+
+message User {
+    int32 id = 1;
+    string email = 2;
+    string username = 3;
+}
+
+message SignUpMessage {
+    string username = 1;
+    string email = 2;
+    string password = 3;
+}
+
+message SignInMessage {
+    string email = 1;
+    string password = 2;
+}
+
+message TokenMessage {
+    string token = 1;
+}
+
+message ValidateTokenResponse {
+    User user = 1;
+}
+
+service Auth {
+    rpc SignUp(SignUpMessage) returns (User){};
+    rpc SignIn(SignInMessage) returns (TokenMessage){};
+    rpc ValidateToken(TokenMessage) returns (ValidateTokenResponse){};
+}
