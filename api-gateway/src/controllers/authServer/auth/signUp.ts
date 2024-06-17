@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { BadRequestError, InternalServerError } from "../../../helpers/apiError";
+import { BadRequestError, ConflictError, InternalServerError } from "../../../helpers/apiError";
 import { authClient } from "../../../servers/authServer";
 import { status } from "@grpc/grpc-js";
 import { signUpSchema } from "../../../validators/authServer/auth";
@@ -13,7 +13,7 @@ export default function signUp(req: Request, res: Response, next: NextFunction) 
     authClient.SignUp(value, (err, value) => {
         if (err) {
             if (err.code === status.ALREADY_EXISTS) {
-                return next(new BadRequestError(err.message))
+                return next(new ConflictError(err.message))
             }
 
             console.error("Error invoking SignUp: " + err.message)
