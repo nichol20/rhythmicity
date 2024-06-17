@@ -3,6 +3,7 @@ import mainApiTrackRouter from "./routes/mainApi/track";
 import mainApiArtistRouter from "./routes/mainApi/artist";
 import mainApiAlbumRouter from "./routes/mainApi/album";
 import searchApiSearchRouter from "./routes/searchApi/search";
+import authServerAuthRouter from "./routes/authServer/auth"
 import acceptOnlyNginx from "./middlewares/acceptOnlyNginx";
 import cors from "cors";
 import "dotenv/config";
@@ -18,6 +19,8 @@ const corsOptions: cors.CorsOptions = {
 app.use(cors(corsOptions));
 app.use(acceptOnlyNginx);
 app.use(express.json());
+
+app.use(authServerAuthRouter);
 app.use(mainApiTrackRouter);
 app.use(mainApiArtistRouter);
 app.use(mainApiAlbumRouter);
