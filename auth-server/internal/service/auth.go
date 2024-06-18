@@ -103,15 +103,16 @@ func (s *AuthService) ValidateToken(ctx context.Context, req *pb.TokenMessage) (
 
 		return []byte(os.Getenv("JWT_SECRET")), nil
 	})
+
 	if err != nil {
+		if errors.Is(err, jwt.ErrTokenExpired) {
+			return nil, status.Errorf(codes.Unauthenticated, "authentication token is expired")
+		}
+
 		return nil, status.Errorf(codes.Unauthenticated, "invalid token")
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		if float64(time.Now().Unix()) > claims["exp"].(float64) {
-			return nil, status.Errorf(codes.Unauthenticated, "authentication token is expired")
-		}
-
 		user, err := s.UserRepository.GetUser(ctx, int32(claims["sub"].(float64)))
 		if err != nil {
 			if errors.Is(err, domain.ErrNotFound) {
