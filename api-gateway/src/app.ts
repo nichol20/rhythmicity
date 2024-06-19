@@ -1,12 +1,14 @@
 import express from "express";
+import cors from "cors";
+import cookieParser from 'cookie-parser'
+import "dotenv/config";
+
 import mainApiTrackRouter from "./routes/mainApi/track";
 import mainApiArtistRouter from "./routes/mainApi/artist";
 import mainApiAlbumRouter from "./routes/mainApi/album";
 import searchApiSearchRouter from "./routes/searchApi/search";
 import authServerAuthRouter from "./routes/authServer/auth"
 import acceptOnlyNginx from "./middlewares/acceptOnlyNginx";
-import cors from "cors";
-import "dotenv/config";
 import { errorHandler } from "./middlewares/errorHandler";
 
 const app = express();
@@ -17,9 +19,10 @@ const corsOptions: cors.CorsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(acceptOnlyNginx);
 app.use(express.json());
+app.use(cookieParser())
 
+app.use(acceptOnlyNginx);
 app.use(authServerAuthRouter);
 app.use(mainApiTrackRouter);
 app.use(mainApiArtistRouter);
