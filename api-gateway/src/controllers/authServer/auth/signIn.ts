@@ -20,6 +20,12 @@ export default function signIn(req: Request, res: Response, next: NextFunction) 
             return next(new InternalServerError())
         }
 
-        return res.status(200).json(value)
+        // session cookie
+        res.cookie('jwt', value?.token, {
+            httpOnly: true,
+            sameSite: 'none',
+            secure: true
+        })
+        return res.status(200).json()
     })
 }

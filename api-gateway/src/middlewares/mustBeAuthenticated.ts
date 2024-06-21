@@ -4,13 +4,9 @@ import { status } from "@grpc/grpc-js";
 import { ForbiddenError, InternalServerError, UnauthorizedError } from "../helpers/apiError";
 
 export const mustBeAuthenticated = (req: Request, res: Response, next: NextFunction) => {
-    const authorizationHeader = req.headers.authorization
+    if (!req.cookies?.jwt) throw new UnauthorizedError("a token is required to access this route")
 
-    if (!authorizationHeader) throw new UnauthorizedError("a token is required to access this route")
-
-    const [, token] = authorizationHeader.split(' ')
-
-    authClient.ValidateToken({ token }, (err, value) => {
+    authClient.ValidateToken({ token: req.cookies.jwt }, (err, value) => {
         if (err) {
             if (err.code === status.UNAUTHENTICATED) {
                 return next(new ForbiddenError(err.message))
