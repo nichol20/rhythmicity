@@ -2,7 +2,26 @@ import { Album } from "@/types/album"
 import { Artist } from "@/types/artist"
 import { BestResult, SearchedAlbum, SearchedArtist, SearchedTrack } from "@/types/search"
 import { Track } from "@/types/track"
+import { User } from "@/types/user"
 import { https } from "@/utils/http"
+
+interface SignUpArgs {
+    username: string
+    email: string
+    password: string
+}
+
+export const signUp = async (args: SignUpArgs): Promise<User> => {
+    const res = await https.post<User>("sign-up", args)
+    return res.data
+}
+
+export const signIn = (email: string, password: string): void => {
+    https.post("/sign-in", {
+        email,
+        password
+    }, { withCredentials: true })
+}
 
 export const getPopularAlbums = async (): Promise<Album[]> => {
     const res = await https.get<Album[]>("/popular/albums")
