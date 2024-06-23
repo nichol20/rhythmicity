@@ -1,5 +1,6 @@
 import axios from 'axios'
 
 export const https = axios.create({
-    baseURL: 'https://localhost'
+    baseURL: 'https://localhost',
+    withCredentials: true
 })

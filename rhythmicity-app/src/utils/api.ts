@@ -20,7 +20,7 @@ export const signIn = (email: string, password: string): void => {
     https.post("/sign-in", {
         email,
         password
-    }, { withCredentials: true })
+    })
 }
 
 export const getPopularAlbums = async (): Promise<Album[]> => {
