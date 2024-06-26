@@ -1,0 +1,102 @@
+@use '.' as *;
+
+.signInPage {
+    width: 100%;
+    min-height: 100vh;
+    background: $colors-primary-bg;
+    @include mixins-display-flex();
+}
+
+.signInContainer {
+    background-color: $colors-secondary-bg;
+    padding: 10px;
+    border-radius: 6px;
+    @include mixins-display-flex();
+}
+
+.signInForm {
+    @include mixins-display-flex(flex-start);
+    flex-direction: column;
+    gap: 15px;
+}
+
+.field {
+    @include mixins-display-flex(flex-start, flex-start);
+    flex-direction: column;   
+    color: $colors-primary-txt;
+    gap: 5px;
+
+    > label {
+        text-transform: capitalize;
+    }
+}
+
+.fieldInput {
+    width: 324px;
+    height: 48px;
+    padding: 12px 16px;
+    box-shadow: inset 0 0 0 1px #878787;
+    border-radius: 4px;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    color: $colors-primary-txt;
+    transition: box-shadow 100ms ease-in-out 0ms;
+
+    &:hover {
+        box-shadow: inset 0 0 0 2px white;
+    }
+
+    &:focus {
+        box-shadow: inset 0 0 0 3px white;
+    }
+}
+
+.passwordInputBox {
+    position: relative;
+
+    .showPasswordBtn {
+        position: absolute;
+        height: 100%;
+        top: 0;
+        right: 0;
+        padding: 14px;
+        background-color: transparent;
+
+        > img {
+            width: 100%;
+            height: 100%;
+            @include mixins-white-filter();
+        }
+    }
+
+    .fieldInput {
+        padding-right: 48px;
+    }
+}
+
+.submitBtn {
+    border-radius: 20px;
+    width: 100%;
+    background-color: $colors-primary-btn-bg;
+    margin-top: 10px;
+    font-size: 1em;
+    padding: 8px;
+    text-transform: capitalize;
+    color: $colors-primary-txt;
+    transition: background 150ms ease-in-out;
+
+    &:hover {
+        background-color: $colors-primary-btn-bg-hover;
+    }
+}
+
+.registerLinkBox {
+    font-size: .875em;
+    color: $colors-secondary-txt;
+
+    .link {
+        color: $colors-highlighted-txt;
+        text-decoration: underline;
+    }
+}

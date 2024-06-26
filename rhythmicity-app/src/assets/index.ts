@@ -9,6 +9,8 @@ export { default as watchIcon } from "./images/watch.svg";
 export { default as verticalEllipsisIcon } from "./images/vertical-ellipsis.svg"
 export { default as deleteIcon } from './images/delete.svg'
 export { default as addListIcon } from './images/add-list.png'
+export { default as eyeIcon } from './images/eye.png'
+export { default as blockedEyeIcon } from './images/blocked-eye.png'
 
 // Player controls
 export { default as playIcon } from "./images/play.svg";
