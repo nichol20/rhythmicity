@@ -1,49 +1,31 @@
 'use client'
 
-import { blockedEyeIcon, eyeIcon } from '@/assets'
-import styles from '@/styles/SignIn.module.scss'
-import Image from 'next/image'
-import Link from 'next/link'
 import { useState } from 'react'
+import Link from 'next/link'
+
+import { PasswordInput } from '@/components/PasswordInput'
+
+import styles from '@/styles/SignIn.module.scss'
 
 export default function SignInPage() {
-    const [showPassword, setShowPassword] = useState(false)
 
     return (
         <div className={styles.signInPage}>
             <div className={styles.signInContainer}>
                 <form className={styles.signInForm} action="">
                     <div className={styles.field}>
-                        <label htmlFor="username">user</label>
+                        <label htmlFor="email">email</label>
                         <input
                             className={styles.fieldInput}
-                            type="text"
-                            name='username'
+                            type="email"
+                            name='email'
                             spellCheck={false}
-                            id='username'
+                            id='email'
                         />
                     </div>
                     <div className={styles.field}>
                         <label htmlFor="password">password</label>
-                        <div className={styles.passwordInputBox}>
-                            <input
-                                className={styles.fieldInput}
-                                type={showPassword ? "text" : "password"}
-                                name='password'
-                                spellCheck={false}
-                                id='password'
-                            />
-                            <button
-                                className={styles.showPasswordBtn}
-                                onClick={() => setShowPassword(prev => !prev)}
-                                type='button'
-                            >
-                                <Image
-                                    src={showPassword ? eyeIcon : blockedEyeIcon}
-                                    alt={showPassword ? "eye" : "blocked eye"}
-                                />
-                            </button>
-                        </div>
+                        <PasswordInput id='password' name='password' className={styles.fieldInput} />
                     </div>
                     <button type='submit' className={styles.submitBtn}>sign in</button>
                     <span className={styles.registerLinkBox}>
