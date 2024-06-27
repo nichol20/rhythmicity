@@ -1,0 +1,66 @@
+@use '.' as *;
+
+.signUpPage {
+    width: 100%;
+    min-height: 100vh;
+    background: $colors-primary-bg;
+    @include mixins-display-flex();
+}
+
+.signUpContainer {
+    background-color: $colors-secondary-bg;
+    padding: 10px;
+    border-radius: 6px;
+    @include mixins-display-flex();
+}
+
+.signUpForm {
+    @include mixins-display-flex(flex-start);
+    flex-direction: column;
+    gap: 15px;
+}
+
+.field {
+    @include mixins-display-flex(flex-start, flex-start);
+    flex-direction: column;   
+    color: $colors-primary-txt;
+    gap: 5px;
+
+    > label {
+        text-transform: capitalize;
+    }
+}
+
+.fieldInput {
+    @include mixins-primary-input();
+
+    img {
+        @include mixins-white-filter();
+    }
+}
+
+.submitBtn {
+    border-radius: 20px;
+    width: 100%;
+    background-color: $colors-primary-btn-bg;
+    margin-top: 10px;
+    font-size: 1em;
+    padding: 8px;
+    text-transform: capitalize;
+    color: $colors-primary-txt;
+    transition: background 150ms ease-in-out;
+
+    &:hover {
+        background-color: $colors-primary-btn-bg-hover;
+    }
+}
+
+.registerLinkBox {
+    font-size: .875em;
+    color: $colors-secondary-txt;
+
+    .link {
+        color: $colors-highlighted-txt;
+        text-decoration: underline;
+    }
+}
