@@ -3,7 +3,7 @@
 .playbackBar {
     width: 100%;
     height: 90px;
-    background-color: $colors-primary-bg;
+    background-color: transparent;
 }
 
 .content {
@@ -12,7 +12,7 @@
     left: 0;
     width: 100%;
     height: 80px;
-    background-color: rgb(17, 17, 17);
+    background-color: $colors-primary-bg;
     @include mixins-display-flex();
     z-index: 1000;
 }

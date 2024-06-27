@@ -8,7 +8,7 @@ import { SearchedAlbum, SearchedArtist, SearchedTrack } from "@/types/search";
 import { Track } from "@/types/track";
 import { getTracksByAlbumId, getTracksByArtistId } from "@/utils/api";
 import { shuffleArray } from "@/utils/array";
-import { Dispatch, ReactNode, RefObject, SetStateAction, createContext, useContext, useEffect, useState } from "react";
+import React, { Dispatch, ReactNode, RefObject, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 
 export enum PlaybackMode {
     NORMAL,
@@ -32,6 +32,8 @@ interface QueueController {
 }
 
 interface PlaybackContext {
+    showPlaybackBar: boolean
+    setShowPlaybackBar: Dispatch<SetStateAction<boolean>>
     setShowQueue: Dispatch<SetStateAction<boolean>>
     currentPlayerState: PlayerState
     setCurrentPlayerState: Dispatch<SetStateAction<PlayerState>>
@@ -56,7 +58,17 @@ interface PlaybackProviderProps {
 
 export const PlaybackContext = createContext({} as PlaybackContext)
 
-export const usePlayback = () => useContext(PlaybackContext)
+export const usePlayback = (showPlaybackBar: boolean = false) => {
+    const context = useContext(PlaybackContext)
+
+    useEffect(() => {
+        if (showPlaybackBar) {
+            context.setShowPlaybackBar(true)
+        }
+    }, [showPlaybackBar, context])
+
+    return context
+}
 
 export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
     const [currentTrack, setCurrentTrack] = useState<Track | SearchedTrack | null>(null)
@@ -67,6 +79,7 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
     const [queue, setQueue] = useState<(Track | SearchedTrack)[]>([])
     const [showQueue, setShowQueue] = useState(false)
     const [playerRef, setPlayerRef] = useState<RefObject<YouTubePlayerRef> | null>(null)
+    const [showPlaybackBar, setShowPlaybackBar] = useState(false)
 
     const playNow = (track: Track | SearchedTrack) => {
         setCurrentTrack(track)
@@ -181,6 +194,8 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
 
     return (
         <PlaybackContext.Provider value={{
+            showPlaybackBar,
+            setShowPlaybackBar,
             setShowQueue,
             currentPlayerState,
             setCurrentPlayerState,
@@ -209,8 +224,14 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
             }
         }}>
             {children}
-            <PlaybackBar track={currentTrack} />
-            {showQueue && <Queue tracks={queue} close={() => setShowQueue(false)} />}
+            {
+                showPlaybackBar && (
+                    <React.Fragment>
+                        <PlaybackBar track={currentTrack} />
+                        {showQueue && <Queue tracks={queue} close={() => setShowQueue(false)} />}
+                    </React.Fragment>
+                )
+            }
         </PlaybackContext.Provider>
     )
 }

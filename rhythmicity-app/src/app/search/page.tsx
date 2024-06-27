@@ -10,6 +10,7 @@ import { ResultCards } from '@/components/SearchResults/ResultCards'
 import { MainResults } from '@/components/SearchResults/MainResults'
 
 import styles from '@/styles/Search.module.scss'
+import { usePlayback } from '@/contexts/PlaybackContext'
 
 const kinds = ['all', 'tracks', 'artists', 'albums']
 
@@ -20,6 +21,7 @@ export default function SearchPage() {
     const searchQuery = searchParams.get('q') || ""
     const kindParam = searchParams.get("kind") || "all"
     const [searchResponse, setSearchResponse] = useState<SearchResponse>({ albums: [], artists: [], tracks: [], bestResult: null })
+    const { } = usePlayback(true)
 
     const getKind = useCallback((): QueryKind => {
         switch (kindParam) {

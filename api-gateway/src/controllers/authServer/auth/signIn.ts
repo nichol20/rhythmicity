@@ -24,8 +24,8 @@ export default function signIn(req: Request, res: Response, next: NextFunction) 
         res.cookie('jwt', value?.token, {
             httpOnly: true,
             sameSite: 'none',
-            secure: true
+            secure: true,
         })
-        return res.status(200).json()
+        return res.status(200).send()
     })
 }
