@@ -11,6 +11,7 @@ export interface ProtoGrpcType {
   rhythmicity: {
     auth_server: {
       Auth: SubtypeConstructor<typeof grpc.Client, _rhythmicity_auth_server_AuthClient> & { service: _rhythmicity_auth_server_AuthDefinition }
+      SigInResponse: MessageTypeDefinition
       SignInMessage: MessageTypeDefinition
       SignUpMessage: MessageTypeDefinition
       TokenMessage: MessageTypeDefinition

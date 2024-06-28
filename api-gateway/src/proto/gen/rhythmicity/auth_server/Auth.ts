@@ -2,6 +2,7 @@
 
 import type * as grpc from '@grpc/grpc-js'
 import type { MethodDefinition } from '@grpc/proto-loader'
+import type { SigInResponse as _rhythmicity_auth_server_SigInResponse, SigInResponse__Output as _rhythmicity_auth_server_SigInResponse__Output } from '../../rhythmicity/auth_server/SigInResponse';
 import type { SignInMessage as _rhythmicity_auth_server_SignInMessage, SignInMessage__Output as _rhythmicity_auth_server_SignInMessage__Output } from '../../rhythmicity/auth_server/SignInMessage';
 import type { SignUpMessage as _rhythmicity_auth_server_SignUpMessage, SignUpMessage__Output as _rhythmicity_auth_server_SignUpMessage__Output } from '../../rhythmicity/auth_server/SignUpMessage';
 import type { TokenMessage as _rhythmicity_auth_server_TokenMessage, TokenMessage__Output as _rhythmicity_auth_server_TokenMessage__Output } from '../../rhythmicity/auth_server/TokenMessage';
@@ -9,14 +10,14 @@ import type { User as _rhythmicity_auth_server_User, User__Output as _rhythmicit
 import type { ValidateTokenResponse as _rhythmicity_auth_server_ValidateTokenResponse, ValidateTokenResponse__Output as _rhythmicity_auth_server_ValidateTokenResponse__Output } from '../../rhythmicity/auth_server/ValidateTokenResponse';
 
 export interface AuthClient extends grpc.Client {
-  SignIn(argument: _rhythmicity_auth_server_SignInMessage, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_auth_server_TokenMessage__Output>): grpc.ClientUnaryCall;
-  SignIn(argument: _rhythmicity_auth_server_SignInMessage, metadata: grpc.Metadata, callback: grpc.requestCallback<_rhythmicity_auth_server_TokenMessage__Output>): grpc.ClientUnaryCall;
-  SignIn(argument: _rhythmicity_auth_server_SignInMessage, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_auth_server_TokenMessage__Output>): grpc.ClientUnaryCall;
-  SignIn(argument: _rhythmicity_auth_server_SignInMessage, callback: grpc.requestCallback<_rhythmicity_auth_server_TokenMessage__Output>): grpc.ClientUnaryCall;
-  signIn(argument: _rhythmicity_auth_server_SignInMessage, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_auth_server_TokenMessage__Output>): grpc.ClientUnaryCall;
-  signIn(argument: _rhythmicity_auth_server_SignInMessage, metadata: grpc.Metadata, callback: grpc.requestCallback<_rhythmicity_auth_server_TokenMessage__Output>): grpc.ClientUnaryCall;
-  signIn(argument: _rhythmicity_auth_server_SignInMessage, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_auth_server_TokenMessage__Output>): grpc.ClientUnaryCall;
-  signIn(argument: _rhythmicity_auth_server_SignInMessage, callback: grpc.requestCallback<_rhythmicity_auth_server_TokenMessage__Output>): grpc.ClientUnaryCall;
+  SignIn(argument: _rhythmicity_auth_server_SignInMessage, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_auth_server_SigInResponse__Output>): grpc.ClientUnaryCall;
+  SignIn(argument: _rhythmicity_auth_server_SignInMessage, metadata: grpc.Metadata, callback: grpc.requestCallback<_rhythmicity_auth_server_SigInResponse__Output>): grpc.ClientUnaryCall;
+  SignIn(argument: _rhythmicity_auth_server_SignInMessage, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_auth_server_SigInResponse__Output>): grpc.ClientUnaryCall;
+  SignIn(argument: _rhythmicity_auth_server_SignInMessage, callback: grpc.requestCallback<_rhythmicity_auth_server_SigInResponse__Output>): grpc.ClientUnaryCall;
+  signIn(argument: _rhythmicity_auth_server_SignInMessage, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_auth_server_SigInResponse__Output>): grpc.ClientUnaryCall;
+  signIn(argument: _rhythmicity_auth_server_SignInMessage, metadata: grpc.Metadata, callback: grpc.requestCallback<_rhythmicity_auth_server_SigInResponse__Output>): grpc.ClientUnaryCall;
+  signIn(argument: _rhythmicity_auth_server_SignInMessage, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_auth_server_SigInResponse__Output>): grpc.ClientUnaryCall;
+  signIn(argument: _rhythmicity_auth_server_SignInMessage, callback: grpc.requestCallback<_rhythmicity_auth_server_SigInResponse__Output>): grpc.ClientUnaryCall;
   
   SignUp(argument: _rhythmicity_auth_server_SignUpMessage, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_rhythmicity_auth_server_User__Output>): grpc.ClientUnaryCall;
   SignUp(argument: _rhythmicity_auth_server_SignUpMessage, metadata: grpc.Metadata, callback: grpc.requestCallback<_rhythmicity_auth_server_User__Output>): grpc.ClientUnaryCall;
@@ -39,7 +40,7 @@ export interface AuthClient extends grpc.Client {
 }
 
 export interface AuthHandlers extends grpc.UntypedServiceImplementation {
-  SignIn: grpc.handleUnaryCall<_rhythmicity_auth_server_SignInMessage__Output, _rhythmicity_auth_server_TokenMessage>;
+  SignIn: grpc.handleUnaryCall<_rhythmicity_auth_server_SignInMessage__Output, _rhythmicity_auth_server_SigInResponse>;
   
   SignUp: grpc.handleUnaryCall<_rhythmicity_auth_server_SignUpMessage__Output, _rhythmicity_auth_server_User>;
   
@@ -48,7 +49,7 @@ export interface AuthHandlers extends grpc.UntypedServiceImplementation {
 }
 
 export interface AuthDefinition extends grpc.ServiceDefinition {
-  SignIn: MethodDefinition<_rhythmicity_auth_server_SignInMessage, _rhythmicity_auth_server_TokenMessage, _rhythmicity_auth_server_SignInMessage__Output, _rhythmicity_auth_server_TokenMessage__Output>
+  SignIn: MethodDefinition<_rhythmicity_auth_server_SignInMessage, _rhythmicity_auth_server_SigInResponse, _rhythmicity_auth_server_SignInMessage__Output, _rhythmicity_auth_server_SigInResponse__Output>
   SignUp: MethodDefinition<_rhythmicity_auth_server_SignUpMessage, _rhythmicity_auth_server_User, _rhythmicity_auth_server_SignUpMessage__Output, _rhythmicity_auth_server_User__Output>
   ValidateToken: MethodDefinition<_rhythmicity_auth_server_TokenMessage, _rhythmicity_auth_server_ValidateTokenResponse, _rhythmicity_auth_server_TokenMessage__Output, _rhythmicity_auth_server_ValidateTokenResponse__Output>
 }

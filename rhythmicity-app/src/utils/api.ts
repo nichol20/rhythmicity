@@ -16,11 +16,9 @@ export const signUp = async (args: SignUpArgs): Promise<User> => {
     return res.data
 }
 
-export const signIn = (email: string, password: string): void => {
-    https.post("/sign-in", {
-        email,
-        password
-    })
+export const signIn = async (email: string, password: string): Promise<User> => {
+    const res = await https.post<User>("/sign-in", { email, password })
+    return res.data
 }
 
 export const getPopularAlbums = async (): Promise<Album[]> => {

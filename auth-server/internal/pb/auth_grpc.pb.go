@@ -29,7 +29,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthClient interface {
 	SignUp(ctx context.Context, in *SignUpMessage, opts ...grpc.CallOption) (*User, error)
-	SignIn(ctx context.Context, in *SignInMessage, opts ...grpc.CallOption) (*TokenMessage, error)
+	SignIn(ctx context.Context, in *SignInMessage, opts ...grpc.CallOption) (*SigInResponse, error)
 	ValidateToken(ctx context.Context, in *TokenMessage, opts ...grpc.CallOption) (*ValidateTokenResponse, error)
 }
 
@@ -50,8 +50,8 @@ func (c *authClient) SignUp(ctx context.Context, in *SignUpMessage, opts ...grpc
 	return out, nil
 }
 
-func (c *authClient) SignIn(ctx context.Context, in *SignInMessage, opts ...grpc.CallOption) (*TokenMessage, error) {
-	out := new(TokenMessage)
+func (c *authClient) SignIn(ctx context.Context, in *SignInMessage, opts ...grpc.CallOption) (*SigInResponse, error) {
+	out := new(SigInResponse)
 	err := c.cc.Invoke(ctx, Auth_SignIn_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -73,7 +73,7 @@ func (c *authClient) ValidateToken(ctx context.Context, in *TokenMessage, opts .
 // for forward compatibility
 type AuthServer interface {
 	SignUp(context.Context, *SignUpMessage) (*User, error)
-	SignIn(context.Context, *SignInMessage) (*TokenMessage, error)
+	SignIn(context.Context, *SignInMessage) (*SigInResponse, error)
 	ValidateToken(context.Context, *TokenMessage) (*ValidateTokenResponse, error)
 	mustEmbedUnimplementedAuthServer()
 }
@@ -85,7 +85,7 @@ type UnimplementedAuthServer struct {
 func (UnimplementedAuthServer) SignUp(context.Context, *SignUpMessage) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SignUp not implemented")
 }
-func (UnimplementedAuthServer) SignIn(context.Context, *SignInMessage) (*TokenMessage, error) {
+func (UnimplementedAuthServer) SignIn(context.Context, *SignInMessage) (*SigInResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SignIn not implemented")
 }
 func (UnimplementedAuthServer) ValidateToken(context.Context, *TokenMessage) (*ValidateTokenResponse, error) {

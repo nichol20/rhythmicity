@@ -60,7 +60,7 @@ func (s *AuthService) SignUp(ctx context.Context, req *pb.SignUpMessage) (*pb.Us
 	}, nil
 }
 
-func (s *AuthService) SignIn(ctx context.Context, req *pb.SignInMessage) (*pb.TokenMessage, error) {
+func (s *AuthService) SignIn(ctx context.Context, req *pb.SignInMessage) (*pb.SigInResponse, error) {
 	if req.Email == "" || req.Password == "" {
 		return nil, status.Errorf(codes.InvalidArgument, domain.ErrBadRequest.Error())
 	}
@@ -90,8 +90,13 @@ func (s *AuthService) SignIn(ctx context.Context, req *pb.SignInMessage) (*pb.To
 		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
 
-	return &pb.TokenMessage{
+	return &pb.SigInResponse{
 		Token: tokenStr,
+		User: &pb.User{
+			Id:       user.ID,
+			Email:    user.Email,
+			Username: user.Username,
+		},
 	}, nil
 }
 

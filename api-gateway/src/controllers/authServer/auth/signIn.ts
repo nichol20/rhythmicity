@@ -26,6 +26,6 @@ export default function signIn(req: Request, res: Response, next: NextFunction) 
             sameSite: 'none',
             secure: true,
         })
-        return res.status(200).send()
+        return res.status(200).json(value?.user)
     })
 }
