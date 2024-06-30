@@ -1,3 +1,4 @@
+import { AuthProvider } from '@/contexts/AuthContext'
 import { PlaybackProvider } from '@/contexts/PlaybackContext'
 import '@/styles/globals.scss'
 
@@ -14,9 +15,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <PlaybackProvider>
-          {children}
-        </PlaybackProvider>
+        <AuthProvider>
+          <PlaybackProvider>
+            {children}
+          </PlaybackProvider>
+        </AuthProvider>
       </body>
     </html>
   )

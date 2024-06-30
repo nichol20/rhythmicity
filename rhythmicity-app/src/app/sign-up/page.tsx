@@ -1,13 +1,20 @@
 'use client'
 
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { useState } from 'react'
 
+import { useAuth } from '@/contexts/AuthContext'
 import { PasswordInput } from '@/components/PasswordInput'
 
 import styles from '@/styles/SignUp.module.scss'
 
 export default function SignUpPage() {
+    const { user } = useAuth()
+
+    if (user) {
+        redirect("/")
+    }
 
     return (
         <div className={styles.signUpPage}>
