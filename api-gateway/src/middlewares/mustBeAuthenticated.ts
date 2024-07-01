@@ -16,6 +16,8 @@ export const mustBeAuthenticated = (req: Request, res: Response, next: NextFunct
             return next(new InternalServerError())
         }
 
+        req.user = value?.user
+
         return next()
     })
 }
