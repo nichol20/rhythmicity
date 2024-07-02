@@ -11,6 +11,7 @@ import { Card } from '@/components/Card'
 import { Carousel } from '@/components/Carousel'
 import { Header } from '@/components/Header'
 import { usePlayback } from '@/contexts/PlaybackContext'
+import { useHTTPSPrivate } from '@/hooks/useHTTPSPrivate'
 
 import styles from '@/styles/Collection.module.scss'
 
@@ -20,6 +21,7 @@ export default function CollectionPage() {
     const [popularTracks, setPopularTracks] = useState<Track[]>([])
     const { queueController } = usePlayback(true)
 
+    useHTTPSPrivate()
     useEffect(() => {
         const fetchData = async () => {
             const albums = await getPopularAlbums()

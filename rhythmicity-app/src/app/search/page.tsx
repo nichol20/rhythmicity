@@ -8,9 +8,10 @@ import { Header } from '@/components/Header'
 import { SearchInput } from '@/components/SearchInput'
 import { ResultCards } from '@/components/SearchResults/ResultCards'
 import { MainResults } from '@/components/SearchResults/MainResults'
+import { usePlayback } from '@/contexts/PlaybackContext'
+import { useHTTPSPrivate } from '@/hooks/useHTTPSPrivate'
 
 import styles from '@/styles/Search.module.scss'
-import { usePlayback } from '@/contexts/PlaybackContext'
 
 const kinds = ['all', 'tracks', 'artists', 'albums']
 
@@ -23,6 +24,7 @@ export default function SearchPage() {
     const [searchResponse, setSearchResponse] = useState<SearchResponse>({ albums: [], artists: [], tracks: [], bestResult: null })
     const { } = usePlayback(true)
 
+    useHTTPSPrivate()
     const getKind = useCallback((): QueryKind => {
         switch (kindParam) {
             case "albums":

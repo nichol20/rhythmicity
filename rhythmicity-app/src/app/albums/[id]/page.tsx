@@ -11,6 +11,7 @@ import { Header } from '@/components/Header'
 import { Banner } from '@/components/Banner'
 
 import styles from '../../../styles/Album.module.scss'
+import { useHTTPSPrivate } from '@/hooks/useHTTPSPrivate'
 
 interface AlbumPageProps {
     params: {
@@ -23,6 +24,7 @@ export default function AlbumPage({ params }: AlbumPageProps) {
     const [album, setAlbum] = useState<Album>()
     const [tracks, setTracks] = useState<Track[]>()
 
+    useHTTPSPrivate()
     useEffect(() => {
         const setData = async () => {
             const a = await getAlbum(params.id)

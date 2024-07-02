@@ -21,6 +21,11 @@ export const signIn = async (email: string, password: string): Promise<User> => 
     return res.data
 }
 
+export const getUser = async (): Promise<User> => {
+    const res = await https.get<User>("/get-user")
+    return res.data
+}
+
 export const getPopularAlbums = async (): Promise<Album[]> => {
     const res = await https.get<Album[]>("/popular/albums")
     return res.data

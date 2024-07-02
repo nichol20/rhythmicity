@@ -7,6 +7,7 @@ import { Track } from '@/types/track'
 import { TrackList, TrackRow } from '@/components/TrackList'
 import { Header } from '@/components/Header'
 import { Banner } from '@/components/Banner'
+import { useHTTPSPrivate } from '@/hooks/useHTTPSPrivate'
 
 import styles from '../../../styles/Track.module.scss'
 
@@ -20,6 +21,7 @@ export default function TrackPage({ params }: TrackPageProps) {
     const [track, setTrack] = useState<Track>()
     const [tracks, setTracks] = useState<Track[]>()
 
+    useHTTPSPrivate()
     useEffect(() => {
         const setData = async () => {
             const t = await getTrack(params.id)

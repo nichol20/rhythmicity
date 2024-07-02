@@ -1,5 +1,5 @@
 'use client'
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 import { User } from "../types/user";
 import * as api from '@/utils/api'
@@ -20,6 +20,7 @@ export const useAuth = () => useContext(AuthContext)
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
     const [user, setUser] = useState<User | null>(null)
+    const [isLoading, setIsLoading] = useState(true)
 
     const signIn = async (email: string, password: string) => {
         const user = await api.signIn(email, password)
@@ -35,6 +36,24 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUser(user)
     }
 
+    useEffect(() => {
+        const refreshUser = async () => {
+            try {
+                const user = await api.getUser()
+                setUser(user)
+            }
+            catch (err) {
+                console.error(err)
+            }
+            finally {
+                setIsLoading(false)
+            }
+        }
+
+        refreshUser()
+    }, [])
+
+    if (isLoading) return <>Loading...</>
 
     return (
         <AuthContext.Provider value={{ user, signIn, signUp }}>
