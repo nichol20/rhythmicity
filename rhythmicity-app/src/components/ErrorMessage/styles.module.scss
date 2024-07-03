@@ -1,0 +1,16 @@
+@use '../../styles/' as *;
+
+.errorMessage {
+    @include mixins-display-flex();
+    gap: 5px;
+
+    > img {
+        width: 16px;
+        height: 16px;
+    }
+
+    > span {
+        color: $colors-text-error;
+        font-size: .8em;
+    }
+}

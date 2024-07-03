@@ -11,9 +11,10 @@ interface PasswordInputProps {
     id?: string
     name?: string
     className?: string
+    onChange?: () => void
 }
 
-export const PasswordInput = ({ id, name, className }: PasswordInputProps) => {
+export const PasswordInput = ({ id, name, className, onChange }: PasswordInputProps) => {
     const [showPassword, setShowPassword] = useState(false)
 
     return (
@@ -24,6 +25,7 @@ export const PasswordInput = ({ id, name, className }: PasswordInputProps) => {
                 name={name}
                 spellCheck={false}
                 id={id}
+                onChange={onChange}
             />
             <button
                 className={styles.showPasswordBtn}
