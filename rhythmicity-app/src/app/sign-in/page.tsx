@@ -1,8 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { PasswordInput } from '@/components/PasswordInput'
@@ -12,10 +11,16 @@ import styles from '@/styles/SignIn.module.scss'
 import { ErrorMessage } from '@/components/ErrorMessage'
 
 export default function SignInPage() {
-    const { user, signIn } = useAuth()
     const [emptyFieldError, setEmptyFieldError] = useState(false)
     const [invalidCredentials, setInvalidCredentials] = useState(false)
+    const { user, signIn } = useAuth()
     const router = useRouter()
+
+    useEffect(() => {
+        if (user) {
+            router.push("/")
+        }
+    }, [user, router])
 
     const resetErrors = () => {
         setEmptyFieldError(false)
@@ -47,10 +52,6 @@ export default function SignInPage() {
                 return
             }
         }
-    }
-
-    if (user) {
-        redirect("/")
     }
 
     return (
