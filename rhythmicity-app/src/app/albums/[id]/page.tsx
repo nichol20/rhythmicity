@@ -9,9 +9,9 @@ import { usePlayback } from '@/contexts/PlaybackContext'
 import { TrackList, TrackRow } from '@/components/TrackList'
 import { Header } from '@/components/Header'
 import { Banner } from '@/components/Banner'
+import withAuth from '@/hoc/withAuth'
 
 import styles from '../../../styles/Album.module.scss'
-import { useHTTPSPrivate } from '@/hooks/useHTTPSPrivate'
 
 interface AlbumPageProps {
     params: {
@@ -19,12 +19,11 @@ interface AlbumPageProps {
     }
 }
 
-export default function AlbumPage({ params }: AlbumPageProps) {
+function AlbumPage({ params }: AlbumPageProps) {
     const { } = usePlayback(true)
     const [album, setAlbum] = useState<Album>()
     const [tracks, setTracks] = useState<Track[]>()
 
-    useHTTPSPrivate()
     useEffect(() => {
         const setData = async () => {
             const a = await getAlbum(params.id)
@@ -89,3 +88,5 @@ export default function AlbumPage({ params }: AlbumPageProps) {
         </div>
     )
 }
+
+export default withAuth(AlbumPage)

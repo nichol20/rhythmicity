@@ -9,7 +9,7 @@ import { usePlayback } from '@/contexts/PlaybackContext'
 import { TrackList, TrackRow } from '@/components/TrackList'
 import { Header } from '@/components/Header'
 import { Banner } from '@/components/Banner'
-import { useHTTPSPrivate } from '@/hooks/useHTTPSPrivate'
+import withAuth from '@/hoc/withAuth'
 
 import styles from '../../../styles/Artist.module.scss'
 interface ArtistPageProps {
@@ -18,19 +18,17 @@ interface ArtistPageProps {
     }
 }
 
-export default function ArtistPage({ params }: ArtistPageProps) {
+function ArtistPage({ params }: ArtistPageProps) {
     const { } = usePlayback(true)
     const [artist, setArtist] = useState<Artist>()
     const [tracks, setTracks] = useState<Track[]>()
 
-    useHTTPSPrivate()
     useEffect(() => {
         const setData = async () => {
             const a = await getArtist(params.id)
             setArtist(a)
             const ts = await getTracksByArtistId(params.id)
             setTracks(ts)
-
         }
         setData()
     }, [params.id])
@@ -65,3 +63,5 @@ export default function ArtistPage({ params }: ArtistPageProps) {
         </div>
     )
 }
+
+export default withAuth(ArtistPage)

@@ -9,13 +9,13 @@ import { SearchInput } from '@/components/SearchInput'
 import { ResultCards } from '@/components/SearchResults/ResultCards'
 import { MainResults } from '@/components/SearchResults/MainResults'
 import { usePlayback } from '@/contexts/PlaybackContext'
-import { useHTTPSPrivate } from '@/hooks/useHTTPSPrivate'
+import withAuth from '@/hoc/withAuth'
 
 import styles from '@/styles/Search.module.scss'
 
 const kinds = ['all', 'tracks', 'artists', 'albums']
 
-export default function SearchPage() {
+function SearchPage() {
     const router = useRouter()
     const pathname = usePathname()
     const searchParams = useSearchParams()
@@ -24,7 +24,6 @@ export default function SearchPage() {
     const [searchResponse, setSearchResponse] = useState<SearchResponse>({ albums: [], artists: [], tracks: [], bestResult: null })
     const { } = usePlayback(true)
 
-    useHTTPSPrivate()
     const getKind = useCallback((): QueryKind => {
         switch (kindParam) {
             case "albums":
@@ -87,3 +86,5 @@ export default function SearchPage() {
         </div>
     )
 }
+
+export default withAuth(SearchPage)

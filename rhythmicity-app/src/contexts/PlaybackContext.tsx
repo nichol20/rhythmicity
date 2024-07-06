@@ -1,4 +1,6 @@
 'use client'
+import React, { Dispatch, ReactNode, RefObject, SetStateAction, createContext, useContext, useEffect, useState } from "react";
+
 import { PlaybackBar } from "@/components/PlaybackBar";
 import { Queue } from "@/components/Queue";
 import { PlayerState, YouTubePlayerRef } from "@/components/YoutubePlayer";
@@ -7,8 +9,8 @@ import { Artist } from "@/types/artist";
 import { SearchedAlbum, SearchedArtist, SearchedTrack } from "@/types/search";
 import { Track } from "@/types/track";
 import { getTracksByAlbumId, getTracksByArtistId } from "@/utils/api";
+import { useAuth } from "./AuthContext";
 import { shuffleArray } from "@/utils/array";
-import React, { Dispatch, ReactNode, RefObject, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 
 export enum PlaybackMode {
     NORMAL,
@@ -71,6 +73,7 @@ export const usePlayback = (showPlaybackBar: boolean = false) => {
 }
 
 export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
+    const { user } = useAuth()
     const [currentTrack, setCurrentTrack] = useState<Track | SearchedTrack | null>(null)
     const [currentPlayerState, setCurrentPlayerState] = useState<PlayerState>(PlayerState.UNSTARTED)
     const [currentBarTime, setCurrentBarTime] = useState(0)
@@ -225,7 +228,7 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
         }}>
             {children}
             {
-                showPlaybackBar && (
+                showPlaybackBar && user && (
                     <React.Fragment>
                         <PlaybackBar track={currentTrack} />
                         {showQueue && <Queue tracks={queue} close={() => setShowQueue(false)} />}
