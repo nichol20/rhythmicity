@@ -4,11 +4,13 @@ import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 
+import { useAuth } from '@/contexts/AuthContext'
 import { logo, searchIcon } from '@/assets'
 
 import styles from './style.module.scss'
 
 export const Header = () => {
+  const { user } = useAuth()
   const pathname = usePathname()
   const [scrollPos, setScrollPos] = useState(0)
   const [visible, setVisible] = useState(true)
@@ -44,11 +46,21 @@ export const Header = () => {
         </Link>
         <div className={styles.linkList}>
           <Link href="/" className={getLinkClass('/')}>home</Link>
-          <Link href="/collection" className={getLinkClass('/collection')}>collection</Link>
-          <Link href="/search" className={styles.search}>
-            search
-            <Image src={searchIcon} alt="search" className={styles.icon} />
-          </Link>
+          {user && (
+            <>
+              <Link href="/collection" className={getLinkClass('/collection')}>collection</Link>
+              <Link href="/search" className={styles.search}>
+                search
+                <Image src={searchIcon} alt="search" className={styles.icon} />
+              </Link>
+            </>
+          )}
+          {!user && (
+            <>
+              <Link href="/sign-in">sign in</Link>
+              <Link href="/sign-up">sign up</Link>
+            </>
+          )}
         </div>
       </div>
     </header>
