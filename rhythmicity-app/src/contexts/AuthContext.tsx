@@ -6,8 +6,9 @@ import * as api from '@/utils/api'
 
 interface AuthContext {
     user: User | null
-    signIn: (email: string, password: string) => Promise<void>,
-    signUp: (username: string, email: string, password: string) => Promise<void>,
+    signIn: (email: string, password: string) => Promise<void>
+    signUp: (username: string, email: string, password: string) => Promise<void>
+    signOut: () => void
 }
 
 interface AuthProviderProps {
@@ -36,6 +37,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUser(user)
     }
 
+    const signOut = () => {
+        setUser(null)
+        api.signOut()
+    }
+
     useEffect(() => {
         const refreshUser = async () => {
             try {
@@ -56,7 +62,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     if (isLoading) return <>Loading...</>
 
     return (
-        <AuthContext.Provider value={{ user, signIn, signUp }}>
+        <AuthContext.Provider value={{ user, signIn, signUp, signOut }}>
             {children}
         </AuthContext.Provider>
     )

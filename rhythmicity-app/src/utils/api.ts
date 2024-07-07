@@ -21,6 +21,10 @@ export const signIn = async (email: string, password: string): Promise<User> => 
     return res.data
 }
 
+export const signOut = (): Promise<void> => {
+    return https.get("/sign-out")
+}
+
 export const getUser = async (): Promise<User> => {
     const res = await https.get<User>("/get-user")
     return res.data

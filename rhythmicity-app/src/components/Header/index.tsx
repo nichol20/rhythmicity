@@ -10,7 +10,7 @@ import { logo, searchIcon } from '@/assets'
 import styles from './style.module.scss'
 
 export const Header = () => {
-  const { user } = useAuth()
+  const { user, signOut } = useAuth()
   const pathname = usePathname()
   const [scrollPos, setScrollPos] = useState(0)
   const [visible, setVisible] = useState(true)
@@ -53,6 +53,7 @@ export const Header = () => {
                 search
                 <Image src={searchIcon} alt="search" className={styles.icon} />
               </Link>
+              <Link href="/sign-in" onClick={signOut}>sign out</Link>
             </>
           )}
           {!user && (
