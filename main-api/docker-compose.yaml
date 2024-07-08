@@ -100,10 +100,28 @@ services:
           cpus: "0.5"
           memory: 512M
 
+  redis:
+    image: redis:${REDIS_VERSION}
+    command: redis-server --save 60 10 --loglevel warning
+    volumes:
+      - redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: "0.3"
+          memory: 400M
+
   main-api:
     build: .
     depends_on:
       db:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     ports:
       - "50052:50051"
@@ -127,6 +145,8 @@ services:
 
 volumes:
   postgres-db:
+    driver: local
+  redis:
     driver: local
   certs:
     driver: local
