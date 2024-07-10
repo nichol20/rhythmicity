@@ -31,7 +31,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TrackClient interface {
-	Playback(ctx context.Context, in *RequestById, opts ...grpc.CallOption) (*PlaybackResponse, error)
+	Playback(ctx context.Context, in *PlaybackRequest, opts ...grpc.CallOption) (*PlaybackResponse, error)
 	GetPopularTracks(ctx context.Context, in *GetPopularTracksRequest, opts ...grpc.CallOption) (*MultipleTracks, error)
 	GetTrack(ctx context.Context, in *RequestById, opts ...grpc.CallOption) (*TrackMessage, error)
 	GetSeveralTracks(ctx context.Context, in *RequestByIds, opts ...grpc.CallOption) (*MultipleTracks, error)
@@ -47,7 +47,7 @@ func NewTrackClient(cc grpc.ClientConnInterface) TrackClient {
 	return &trackClient{cc}
 }
 
-func (c *trackClient) Playback(ctx context.Context, in *RequestById, opts ...grpc.CallOption) (*PlaybackResponse, error) {
+func (c *trackClient) Playback(ctx context.Context, in *PlaybackRequest, opts ...grpc.CallOption) (*PlaybackResponse, error) {
 	out := new(PlaybackResponse)
 	err := c.cc.Invoke(ctx, Track_Playback_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -105,7 +105,7 @@ func (c *trackClient) GetTracksByAlbumId(ctx context.Context, in *GetTracksByAlb
 // All implementations must embed UnimplementedTrackServer
 // for forward compatibility
 type TrackServer interface {
-	Playback(context.Context, *RequestById) (*PlaybackResponse, error)
+	Playback(context.Context, *PlaybackRequest) (*PlaybackResponse, error)
 	GetPopularTracks(context.Context, *GetPopularTracksRequest) (*MultipleTracks, error)
 	GetTrack(context.Context, *RequestById) (*TrackMessage, error)
 	GetSeveralTracks(context.Context, *RequestByIds) (*MultipleTracks, error)
@@ -118,7 +118,7 @@ type TrackServer interface {
 type UnimplementedTrackServer struct {
 }
 
-func (UnimplementedTrackServer) Playback(context.Context, *RequestById) (*PlaybackResponse, error) {
+func (UnimplementedTrackServer) Playback(context.Context, *PlaybackRequest) (*PlaybackResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Playback not implemented")
 }
 func (UnimplementedTrackServer) GetPopularTracks(context.Context, *GetPopularTracksRequest) (*MultipleTracks, error) {
@@ -150,7 +150,7 @@ func RegisterTrackServer(s grpc.ServiceRegistrar, srv TrackServer) {
 }
 
 func _Track_Playback_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RequestById)
+	in := new(PlaybackRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -162,7 +162,7 @@ func _Track_Playback_Handler(srv interface{}, ctx context.Context, dec func(inte
 		FullMethod: Track_Playback_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TrackServer).Playback(ctx, req.(*RequestById))
+		return srv.(TrackServer).Playback(ctx, req.(*PlaybackRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

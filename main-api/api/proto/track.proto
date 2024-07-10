@@ -52,6 +52,11 @@ message TrackMessage {
     repeated SimplifiedArtist artists = 10;
 }
 
+message PlaybackRequest {
+    string trackId = 1;
+    string userId = 2;
+}
+
 message PlaybackResponse {
     string youtubeId = 1;
 }
@@ -78,7 +83,7 @@ message MultipleTracks {
 }
 
 service Track {
-    rpc Playback(RequestById) returns (PlaybackResponse){};
+    rpc Playback(PlaybackRequest) returns (PlaybackResponse){};
     rpc GetPopularTracks(GetPopularTracksRequest) returns (MultipleTracks){};
     rpc GetTrack(RequestById) returns (TrackMessage){};
     rpc GetSeveralTracks(RequestByIds) returns (MultipleTracks){};
