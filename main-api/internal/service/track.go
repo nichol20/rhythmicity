@@ -3,18 +3,23 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log/slog"
+	"time"
 
 	"github.com/nichol20/rhythmicity/main-api/internal/domain"
 	"github.com/nichol20/rhythmicity/main-api/internal/pb"
+	"github.com/nichol20/rhythmicity/main-api/internal/redis"
 	"github.com/nichol20/rhythmicity/main-api/internal/repository"
 	"github.com/nichol20/rhythmicity/main-api/internal/utils"
+	redisPackage "github.com/redis/go-redis/v9"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 type TrackRepositoryInterface interface {
 	GetYoutubeId(ctx context.Context, id string) (string, error)
+	IncrementPlayCount(ctx context.Context, trackID string) error
 	GetPopularTracks(ctx context.Context, arg repository.GetPopularTracksParams) ([]domain.Track, error)
 	GetTrack(ctx context.Context, trackId string) (*domain.Track, error)
 	GetSeveralTracks(ctx context.Context, trackIDs []string) ([]domain.Track, error)
@@ -29,8 +34,8 @@ type TrackGRPCService struct {
 	pb.UnimplementedTrackServer
 }
 
-func (s *TrackGRPCService) Playback(ctx context.Context, req *pb.RequestById) (*pb.PlaybackResponse, error) {
-	youtubeId, err := s.TrackRepository.GetYoutubeId(ctx, req.Id)
+func (s *TrackGRPCService) Playback(ctx context.Context, req *pb.PlaybackRequest) (*pb.PlaybackResponse, error) {
+	youtubeId, err := s.TrackRepository.GetYoutubeId(ctx, req.TrackId)
 	if err != nil {
 		if errors.Is(err, domain.ErrNotFound) {
 			return nil, status.Errorf(codes.NotFound, "track not found")
@@ -38,6 +43,18 @@ func (s *TrackGRPCService) Playback(ctx context.Context, req *pb.RequestById) (*
 
 		slog.Error(err.Error())
 		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
+	}
+
+	key := fmt.Sprintf("%s:%s", req.UserId, req.TrackId)
+
+	_, err = redis.Client.Get(ctx, key)
+	if err != nil {
+		if errors.Is(redisPackage.Nil, err) {
+			redis.Client.Set(ctx, key, 1, time.Hour*24)
+			s.TrackRepository.IncrementPlayCount(ctx, req.TrackId)
+		} else {
+			slog.Error(err.Error())
+		}
 	}
 
 	return &pb.PlaybackResponse{
