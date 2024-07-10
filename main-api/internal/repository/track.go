@@ -30,6 +30,15 @@ func (r *TrackRepository) GetYoutubeId(ctx context.Context, trackID string) (str
 	return youtebeId, r.handleError(err)
 }
 
+func (r *TrackRepository) IncrementPlayCount(ctx context.Context, trackID string) error {
+	uuid, err := uuid.Parse(trackID)
+	if err != nil {
+		return domain.ErrNotFound
+	}
+	err = r.queries.IncrementPlayCount(ctx, uuid)
+	return err
+}
+
 type GetPopularTracksParams struct {
 	Limit  uint32
 	Offset uint32

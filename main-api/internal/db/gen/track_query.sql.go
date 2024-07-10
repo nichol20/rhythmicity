@@ -538,3 +538,12 @@ func (q *Queries) GetTracksByArtistId(ctx context.Context, arg GetTracksByArtist
 	}
 	return items, nil
 }
+
+const incrementPlayCount = `-- name: IncrementPlayCount :exec
+UPDATE tracks SET playCount = playCount + 1 WHERE id = $1
+`
+
+func (q *Queries) IncrementPlayCount(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.ExecContext(ctx, incrementPlayCount, id)
+	return err
+}
