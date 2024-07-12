@@ -1,0 +1,21 @@
+services:
+  rabbitmq:
+    image: rabbitmq:${RABBITMQ_VERSION}
+    hostname: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    env_file:
+      - .env
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq/
+      - rabbitmq_log:/var/log/rabbitmq/
+    deploy:
+      resources:
+        limits:
+          cpus: "0.3"
+          memory: 500M
+
+volumes:
+  rabbitmq_data:
+  rabbitmq_log:
