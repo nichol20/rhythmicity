@@ -9,9 +9,11 @@ import (
 
 	"github.com/nichol20/rhythmicity/main-api/internal/domain"
 	"github.com/nichol20/rhythmicity/main-api/internal/pb"
+	"github.com/nichol20/rhythmicity/main-api/internal/rabbitmq"
 	"github.com/nichol20/rhythmicity/main-api/internal/redis"
 	"github.com/nichol20/rhythmicity/main-api/internal/repository"
 	"github.com/nichol20/rhythmicity/main-api/internal/utils"
+	amqp "github.com/rabbitmq/amqp091-go"
 	redisPackage "github.com/redis/go-redis/v9"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -52,6 +54,16 @@ func (s *TrackGRPCService) Playback(ctx context.Context, req *pb.PlaybackRequest
 		if errors.Is(redisPackage.Nil, err) {
 			redis.Client.Set(ctx, key, 1, time.Hour*24)
 			s.TrackRepository.IncrementPlayCount(ctx, req.TrackId)
+			rabbitmq.Client.Channel.PublishWithContext(
+				ctx,                          // context
+				"",                           // exchange
+				rabbitmq.PlayCountQueue.Name, // routing key
+				false,                        // mandatory
+				false,                        // immediate
+				amqp.Publishing{
+					ContentType: "text/plain",
+					Body:        []byte("+1"),
+				})
 		} else {
 			slog.Error(err.Error())
 		}

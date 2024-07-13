@@ -10,6 +10,7 @@ import (
 
 	database "github.com/nichol20/rhythmicity/main-api/internal/db"
 	"github.com/nichol20/rhythmicity/main-api/internal/pb"
+	"github.com/nichol20/rhythmicity/main-api/internal/rabbitmq"
 	"github.com/nichol20/rhythmicity/main-api/internal/redis"
 	"github.com/nichol20/rhythmicity/main-api/internal/repository"
 	"github.com/nichol20/rhythmicity/main-api/internal/service"
@@ -21,6 +22,7 @@ func main() {
 	port := 50051
 	grpcServer := grpc.NewServer()
 
+	// REDIS SETUP
 	redisDB, err := strconv.Atoi(os.Getenv("REDIS_DB"))
 	if err != nil {
 		log.Fatalf("invalid redis db: %v", err)
@@ -30,6 +32,20 @@ func main() {
 		log.Fatalf("Could not connect to Redis: %v", err)
 	}
 
+	// RABBITMQ SETUP
+	fmt.Println(os.Getenv("RABBITMQ_URL"))
+	err = rabbitmq.StartRabbitMQClient(os.Getenv("RABBITMQ_URL"))
+	if err != nil {
+		log.Fatalf("Could not connect to Rabbitmq: %v", err)
+	}
+	defer rabbitmq.Client.Close()
+
+	err = rabbitmq.Client.DeclarePlayCountQueue()
+	if err != nil {
+		log.Fatalf("Could not declare play count queue: %v", err)
+	}
+
+	// GRPC SERVER SETUP
 	trackRepository := repository.NewTrackRepository(db)
 	artistRepository := repository.NewArtistRepository(db)
 	albumRepository := repository.NewAlbumRepository(db)

@@ -129,6 +129,8 @@ services:
     volumes:
       - certs:/app/internal/db/certs
       - .:/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     deploy:
       resources:
         limits:
