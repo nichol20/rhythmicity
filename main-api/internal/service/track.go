@@ -62,7 +62,7 @@ func (s *TrackGRPCService) Playback(ctx context.Context, req *pb.PlaybackRequest
 				false,                        // immediate
 				amqp.Publishing{
 					ContentType: "text/plain",
-					Body:        []byte("+1"),
+					Body:        []byte(req.TrackId),
 				})
 		} else {
 			slog.Error(err.Error())
