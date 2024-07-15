@@ -3,11 +3,14 @@ package main
 import (
 	"fmt"
 	"log"
+	"log/slog"
 	"net"
+	"os"
 
 	"github.com/joho/godotenv"
 	"github.com/nichol20/rhythmicity/search-api/internal/db"
 	"github.com/nichol20/rhythmicity/search-api/internal/pb"
+	"github.com/nichol20/rhythmicity/search-api/internal/rabbitmq"
 	"github.com/nichol20/rhythmicity/search-api/internal/repository"
 	"github.com/nichol20/rhythmicity/search-api/internal/service"
 	"google.golang.org/grpc"
@@ -19,6 +22,37 @@ func main() {
 	client := db.ConnectWithElasticsearch()
 	grpcServer := grpc.NewServer()
 
+	// RABBITMQ SETUP
+	err := rabbitmq.StartRabbitMQClient(os.Getenv("RABBITMQ_URL"))
+	if err != nil {
+		log.Fatalf("Could not connect to Rabbitmq: %v", err)
+	}
+	defer rabbitmq.Client.Close()
+
+	err = rabbitmq.Client.DeclarePlayCountQueue()
+	if err != nil {
+		log.Fatalf("Could not declare play count queue: %v", err)
+	}
+
+	msgs, err := rabbitmq.Client.ConsumeFromPlayCountQueue()
+	if err != nil {
+		log.Fatalf("Failed to register consumer to play count queue: %v", err)
+	}
+
+	trackRepository := repository.TrackRepository{
+		ESClient: client,
+	}
+
+	go func() {
+		for d := range msgs {
+			err = trackRepository.UpdatePlayCount(string(d.Body))
+			if err != nil {
+				slog.Error(err.Error())
+			}
+		}
+	}()
+
+	// GRPC SERVER SETUP
 	searchRepository := repository.SearchRepository{
 		ESClient: client,
 	}
