@@ -24,7 +24,7 @@
           }
         }
       },
-      "duration_ms": { "type": "integer" },
+      "durationMs": { "type": "integer" },
       "explicit": { "type": "boolean" },
       "genres": { "type": "keyword" },
       "id": { "type": "keyword" },
@@ -38,7 +38,7 @@
       },
       "lyrics": { "type": "text" },
       "name": { "type": "text" },
-      "play_count": { "type": "integer" },
+      "playCount": { "type": "integer" },
       "styles": { "type": "keyword" },
       "type": { "type": "keyword" }
     }
