@@ -167,12 +167,12 @@ services:
         condition: service_healthy
     ports:
       - "50051:50051"
-    environment:
-      ELASTIC_USER: ${ELASTIC_USER}
-      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+    env_file: .env
     volumes:
       - certs:/app/internal/db/certs
       - .:/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     deploy:
       resources:
         limits:
