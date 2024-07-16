@@ -33,7 +33,6 @@ func main() {
 	}
 
 	// RABBITMQ SETUP
-	fmt.Println(os.Getenv("RABBITMQ_URL"))
 	err = rabbitmq.StartRabbitMQClient(os.Getenv("RABBITMQ_URL"))
 	if err != nil {
 		log.Fatalf("Could not connect to Rabbitmq: %v", err)

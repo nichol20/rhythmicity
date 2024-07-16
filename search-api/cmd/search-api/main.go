@@ -7,7 +7,6 @@ import (
 	"net"
 	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/nichol20/rhythmicity/search-api/internal/db"
 	"github.com/nichol20/rhythmicity/search-api/internal/pb"
 	"github.com/nichol20/rhythmicity/search-api/internal/rabbitmq"
@@ -17,7 +16,6 @@ import (
 )
 
 func main() {
-	godotenv.Load()
 	port := 50051
 	client := db.ConnectWithElasticsearch()
 	grpcServer := grpc.NewServer()

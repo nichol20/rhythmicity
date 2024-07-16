@@ -35,7 +35,6 @@ export const Controls = ({ youtubePlayerRef }: ControlsProps) => {
     }
 
     const handleRandomBtnClick = () => {
-        console.log(playbackMode)
         if (playbackMode === PlaybackMode.RANDOM) {
             setPlaybackMode(PlaybackMode.NORMAL)
             return

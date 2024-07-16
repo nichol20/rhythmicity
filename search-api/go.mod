@@ -4,7 +4,6 @@ go 1.21.5
 
 require (
 	github.com/elastic/go-elasticsearch/v8 v8.11.1
-	github.com/joho/godotenv v1.5.1
 	github.com/rabbitmq/amqp091-go v1.10.0
 	google.golang.org/grpc v1.60.0
 	google.golang.org/protobuf v1.31.0

@@ -48,7 +48,6 @@ function AlbumPage({ params }: AlbumPageProps) {
     const formatDate = () => {
         if (album?.spotify.releaseDate) {
             const date = new Date(album.spotify.releaseDate)
-            console.log(date.toDateString())
             return `${date.getMonth()}-${date.getDate()}-${date.getFullYear()}`
         }
 

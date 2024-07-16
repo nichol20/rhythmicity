@@ -14,13 +14,11 @@ import (
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/elastic/go-elasticsearch/v8/esapi"
 	"github.com/elastic/go-elasticsearch/v8/esutil"
-	"github.com/joho/godotenv"
 	"github.com/nichol20/rhythmicity/search-api/internal/db"
 	"github.com/nichol20/rhythmicity/search-api/internal/domain"
 )
 
 func main() {
-	godotenv.Load()
 	client := db.ConnectWithElasticsearch()
 	ctx := context.Background()
 
