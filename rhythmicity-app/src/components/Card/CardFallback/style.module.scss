@@ -1,0 +1,20 @@
+@use '../../../styles/' as *;
+
+.card {
+    padding: 12px;
+    width: 100%;
+    min-width: 170px;
+    max-width: 200px;
+    height: 260px;
+    flex-grow: 1;
+    background-color: #212121;
+}
+
+.card[data-kind="big"] {
+    min-width: 300px;
+    max-width: 360px;
+    height: 214px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #181818;
+}
