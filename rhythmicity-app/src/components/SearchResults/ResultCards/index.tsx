@@ -9,9 +9,10 @@ export interface ResultCardsProps {
     title: string
     showFallback?: boolean
     hrefBasePath: string
+    isArtist?: boolean
 }
 
-export const ResultCards = ({ results, title, showFallback, hrefBasePath }: ResultCardsProps) => {
+export const ResultCards = ({ results, title, showFallback, hrefBasePath, isArtist }: ResultCardsProps) => {
     const CardList = () => {
         if (showFallback) {
             return Array(5).fill("").map((_, i) => {
@@ -28,6 +29,7 @@ export const ResultCards = ({ results, title, showFallback, hrefBasePath }: Resu
                         image={result.images[0].url}
                         description={result.name}
                         href={`${hrefBasePath}/${result.id}`}
+                        isArtist={isArtist}
                         isPlayable
                     />
                 )

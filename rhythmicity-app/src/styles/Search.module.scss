@@ -42,26 +42,8 @@
     gap: 20px;
 }
 
-.mainResults {
-    @include mixins-display-flex(center, flex-start);
-    gap: 10px;
-    max-width: 1200px;
-    width: 100%;
-}
-
-section .title {
-    margin-bottom: 10px;
-    font-size: 1.2em;
-    color: $colors-primary-txt;
-    font-weight: 800;
-}
-
-.bestResultBox {
-    @include mixins-display-flex(flex-start, flex-start);
-    flex-direction: column;
-    flex: 1;
-}
-
-.tracksBox {
-    flex: 1;
+.albumResults, .artistResults {
+    display: grid;
+    grid-gap: 10px; 
+    grid-template-columns: repeat(5, minmax(0, 1fr));
 }

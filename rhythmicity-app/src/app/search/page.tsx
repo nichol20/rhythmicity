@@ -12,6 +12,9 @@ import { usePlayback } from '@/contexts/PlaybackContext'
 import withAuth from '@/hoc/withAuth'
 
 import styles from '@/styles/Search.module.scss'
+import { TrackList, TrackRow } from '@/components/TrackList'
+import { msToMinutes } from '@/utils/conversion'
+import { Card } from '@/components/Card'
 
 const kinds = ['all', 'tracks', 'artists', 'albums']
 
@@ -64,6 +67,81 @@ function SearchPage() {
         return kindParam === kind ? styles.active : ""
     }
 
+    const Results = () => {
+        const kind = getKind()
+        if (kind === QueryKind.ALL) {
+            return (
+                <>
+                    <MainResults bestResult={searchResponse.bestResult} tracks={searchResponse.tracks} showFallback={isLoading} />
+                    <ResultCards
+                        results={searchResponse.albums}
+                        title='Albums'
+                        hrefBasePath='/albums'
+                        showFallback={isLoading}
+                    />
+                    <ResultCards
+                        results={searchResponse.artists}
+                        title='Artists'
+                        hrefBasePath='/artists'
+                        showFallback={isLoading}
+                        isArtist
+                    />
+                </>
+            )
+        }
+        else if (kind === QueryKind.TRACKS) {
+            return (
+                <TrackList>
+                    {searchResponse.tracks.map((t, i) => (
+                        <TrackRow
+                            key={t.id}
+                            album={t.album}
+                            artists={t.artists}
+                            explicit={t.explicit}
+                            image={t.images[0].url}
+                            index={i + 1}
+                            time={msToMinutes(t.durationMs)}
+                            track={t}
+                        />
+                    ))}
+                </TrackList>
+            )
+        }
+        else if (kind === QueryKind.ALBUMS) {
+            return (
+                <div className={styles.albumResults}>
+                    {searchResponse.albums.map(a => (
+                        <Card
+                            key={a.id}
+                            title={a.name}
+                            image={a.images[0].url}
+                            description={a.name}
+                            href={`/albums/${a.id}`}
+                            isPlayable
+                        />
+                    ))}
+                </div>
+            )
+        }
+        else if (kind === QueryKind.ARTISTS) {
+            return (
+                <div className={styles.artistResults}>
+                    {searchResponse.artists.map(a => (
+                        <Card
+                            key={a.id}
+                            title={a.name}
+                            image={a.images[0].url}
+                            description={a.name}
+                            href={`/artists/${a.id}`}
+                            isArtist
+                            isPlayable
+                        />
+                    ))}
+                </div>
+            )
+        }
+    }
+
     return (
         <div className={styles.searchPage}>
             <Header />
@@ -80,19 +158,7 @@ function SearchPage() {
                 </div>
 
                 <div className={styles.results}>
-                    <MainResults bestResult={searchResponse.bestResult} tracks={searchResponse.tracks} showFallback={isLoading} />
-                    <ResultCards
-                        results={searchResponse.albums}
-                        title='Albums'
-                        hrefBasePath='/albums'
-                        showFallback={isLoading}
-                    />
-                    <ResultCards
-                        results={searchResponse.artists}
-                        title='Artists'
-                        hrefBasePath='/artists'
-                        showFallback={isLoading}
-                    />
+                    <Results />
                 </div>
             </div>
         </div>
