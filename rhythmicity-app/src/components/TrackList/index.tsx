@@ -2,6 +2,7 @@ import { ReactNode } from 'react'
 import Image from 'next/image'
 
 import { TrackRow } from './TrackRow'
+import { TrackRowFallback } from './TrackRowFallback'
 import { watchIcon } from '@/assets'
 
 import styles from './style.module.scss'
@@ -36,5 +37,6 @@ const TrackList = ({ children }: TrackListProps) => {
 
 export {
     TrackList,
-    TrackRow
+    TrackRow,
+    TrackRowFallback
 }

@@ -16,7 +16,6 @@ export const SearchInput = function SearchInput({ onChange, defaultValue = "", d
     const [value, setValue] = useState(defaultValue)
     const [isEmpty, setIsEmpty] = useState(true)
 
-
     const handleChange = (query: string) => {
         setValue(query)
         setIsEmpty(query === "")

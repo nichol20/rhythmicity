@@ -8,12 +8,12 @@ section .title {
 }
 
 .resultsBox {
+    max-width: 1200px;
     width: 100%;
 
     .results {
         display: grid;
         grid-gap: 10px; 
-        // grid-template-columns: repeat(var(--column-count), minmax(0, 1fr));
         grid-template-columns: repeat(5, minmax(0, 1fr));
     }
 }

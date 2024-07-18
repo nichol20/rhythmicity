@@ -22,6 +22,7 @@ function SearchPage() {
     const searchQuery = searchParams.get('q') || ""
     const kindParam = searchParams.get("kind") || "all"
     const [searchResponse, setSearchResponse] = useState<SearchResponse>({ albums: [], artists: [], tracks: [], bestResult: null })
+    const [isLoading, setIsLoading] = useState(true)
     const { } = usePlayback(true)
 
     const getKind = useCallback((): QueryKind => {
@@ -50,6 +51,7 @@ function SearchPage() {
             params.delete("q")
         }
         router.replace(`${pathname}?${params.toString()}`)
+        setIsLoading(false)
     }, [getKind, pathname, router, searchParams])
 
     const handleKindSelection = (kind: string) => {
@@ -78,9 +80,19 @@ function SearchPage() {
                 </div>
 
                 <div className={styles.results}>
-                    <MainResults bestResult={searchResponse.bestResult} tracks={searchResponse.tracks} />
-                    <ResultCards results={searchResponse.albums} title='Albums' />
-                    <ResultCards results={searchResponse.artists} title='Artists' />
+                    <MainResults bestResult={searchResponse.bestResult} tracks={searchResponse.tracks} showFallback={isLoading} />
+                    <ResultCards
+                        results={searchResponse.albums}
+                        title='Albums'
+                        hrefBasePath='/albums'
+                        showFallback={isLoading}
+                    />
+                    <ResultCards
+                        results={searchResponse.artists}
+                        title='Artists'
+                        hrefBasePath='/artists'
+                        showFallback={isLoading}
+                    />
                 </div>
             </div>
         </div>

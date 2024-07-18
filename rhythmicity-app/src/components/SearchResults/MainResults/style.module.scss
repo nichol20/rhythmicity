@@ -22,4 +22,11 @@ section .title {
 
 .tracksBox {
     flex: 1;
+
+    .tracks {
+        @include mixins-display-flex();
+        flex-direction: column;
+        width: 100%;
+        gap: 3px;
+    }
 }

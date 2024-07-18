@@ -24,6 +24,13 @@ export const BestResultCard = ({ bestResult, onPlay }: BestResultProps) => {
         return bestResult[bestResult.type]?.genres ?? []
     }
 
+    const getHref = (): string => {
+        if (bestResult.type === "album") return `/albums/${bestResult.album.id}`
+        else if (bestResult.type === "artist") return `/artists/${bestResult.artist.id}`
+        else if (bestResult.type === "track") return `/albums/${bestResult.track.id}`
+        else return "#"
+    }
+
     const handlePlay = () => {
         if (bestResult) {
             const br = bestResult[bestResult.type]
@@ -40,6 +47,7 @@ export const BestResultCard = ({ bestResult, onPlay }: BestResultProps) => {
             title={getTitle()}
             onPlay={handlePlay}
             isArtist={false}
+            href={getHref()}
             isPlayable
             kind='big'
         />
