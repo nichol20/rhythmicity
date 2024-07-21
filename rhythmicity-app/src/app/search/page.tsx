@@ -93,16 +93,7 @@ function SearchPage() {
             return (
                 <TrackList>
                     {searchResponse.tracks.map((t, i) => (
-                        <TrackRow
-                            key={t.id}
-                            album={t.album}
-                            artists={t.artists}
-                            explicit={t.explicit}
-                            image={t.images[0].url}
-                            index={i + 1}
-                            time={msToMinutes(t.durationMs)}
-                            track={t}
-                        />
+                        <TrackRow key={t.id} index={i + 1} track={t} />
                     ))}
                 </TrackList>
             )

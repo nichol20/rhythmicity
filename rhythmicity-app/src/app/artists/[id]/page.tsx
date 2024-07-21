@@ -48,16 +48,7 @@ function ArtistPage({ params }: ArtistPageProps) {
             <div className={styles.tracks}>
                 <TrackList>
                     {tracks?.map((t, i) =>
-                        <TrackRow
-                            key={t.id}
-                            index={i + 1}
-                            album={t.album}
-                            artists={t.artists}
-                            explicit={t.explicit}
-                            track={t}
-                            image={t.spotify.albumImages[0].url}
-                            time={msToMinutes(t.youtube.durationMs)}
-                        />)}
+                        <TrackRow key={t.id} index={i + 1} track={t} />)}
                 </TrackList>
             </div>
         </div>

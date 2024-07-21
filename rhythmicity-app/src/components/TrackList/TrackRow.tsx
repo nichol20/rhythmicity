@@ -10,23 +10,14 @@ import { usePlayback } from '@/contexts/PlaybackContext'
 import { RowOptions } from '../RowOptions'
 
 import styles from './style.module.scss'
-
-interface Content {
-    id: string
-    name: string
-}
+import { msToMinutes } from '@/utils/conversion'
 
 export interface TrackRowProps {
     index: number
     track: Track | SearchedTrack
-    album: Content
-    time: string
-    artists: Content[]
-    image: string | StaticImageData
-    explicit: boolean
 }
 
-export const TrackRow = ({ album, artists, index, image, explicit, time, track }: TrackRowProps) => {
+export const TrackRow = ({ index, track }: TrackRowProps) => {
     const [isHovered, setIsHovered] = useState(false)
     const { queueController } = usePlayback()
 
@@ -37,6 +28,16 @@ export const TrackRow = ({ album, artists, index, image, explicit, time, track }
     const getTrackTitle = () => {
         if ("spotify" in track) return track.spotify.title
         return track.name
+    }
+
+    const getImage = () => {
+        if ("spotify" in track) return track.spotify.albumImages[0].url
+        return track.images[0].url
+    }
+
+    const getDuration = () => {
+        if ("youtube" in track) return msToMinutes(track.youtube.durationMs)
+        return msToMinutes(track.durationMs)
     }
 
     return (
@@ -56,15 +57,15 @@ export const TrackRow = ({ album, artists, index, image, explicit, time, track }
             </div>
             <div className={`${styles.titleRow} ${styles.row}`}>
                 <div className={styles.content}>
-                    <Image src={image} alt={getTrackTitle()} width={40} height={40} />
+                    <Image src={getImage()} alt={getTrackTitle()} width={40} height={40} />
                     <div className={styles.infoBox}>
                         <Link href={`/tracks/${track.id}`} className={styles.title}>{getTrackTitle()}</Link>
                         <span className={styles.description}>
-                            {explicit ? (
+                            {track.explicit ? (
                                 <ExplicitSign />
                             ) : null}
                             <span className={styles.artists}>
-                                {artists.map(a =>
+                                {track.artists.map(a =>
                                     <Link
                                         key={a.id}
                                         href={`/artists/${a.id}`}
@@ -77,10 +78,10 @@ export const TrackRow = ({ album, artists, index, image, explicit, time, track }
                 </div>
             </div>
             <div className={`${styles.albumRow} ${styles.row}`}>
-                <Link href={`/albums/${album.id}`} className={styles.content}>{album.name}</Link>
+                <Link href={`/albums/${track.album.id}`} className={styles.content}>{track.album.name}</Link>
             </div>
             <div className={`${styles.timeRow} ${styles.row}`}>
-                <span className={styles.content}>{time}</span>
+                <span className={styles.content}>{getDuration()}</span>
                 <div className={styles.options}>
                     <RowOptions
                         showBtn={isHovered}
