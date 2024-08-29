@@ -4,8 +4,8 @@ SELECT EXISTS(SELECT 1 FROM tracks WHERE id = $1) AS idExists;
 -- name: GetTrackYoutubeId :one
 SELECT y.youtubeId FROM tracks t INNER JOIN track_data_youtube y ON t.youtubeDataId = y.id WHERE t.id = $1;
 
--- name: IncrementPlayCount :exec
-UPDATE tracks SET playCount = playCount + 1 WHERE id = $1;
+-- name: IncrementPlayCount :one
+UPDATE tracks SET playCount = playCount + 1 WHERE id = $1 RETURNING playCount;
 
 -- name: GetPopularTracks :many
 SELECT 

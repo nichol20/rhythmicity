@@ -13,6 +13,8 @@ type RedisClient struct {
 
 var Client *RedisClient
 
+const Nil = redis.Nil
+
 func StartRedisClient(addr, password string, db int) error {
 	var ctx = context.Background()
 

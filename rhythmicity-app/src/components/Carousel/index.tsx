@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect, ReactNode, Children, useRef, useCallback } from 'react'
+import React, { useState, useEffect, ReactNode, Children, useRef } from 'react'
 
 import styles from './style.module.scss'
 
@@ -34,13 +34,18 @@ export const Carousel = ({ children, max }: CarouselProps) => {
     }, [max])
 
     useEffect(() => {
+        const newItems = Children.toArray(children)
         setItems(prev => {
-            if (prev.length === 0) {
-                return Children.toArray(children)
+            let isDifferent = newItems.length !== prev.length
+            if (typeof prev[0] === "object") {
+                isDifferent = newItems.some((item, i) => (item as React.JSX.Element).key !== (prev[i] as React.JSX.Element).key)
+            } else {
+                isDifferent = newItems.some((item, i) => item !== prev[i])
             }
-
+            if (isDifferent) return newItems
             return prev
         })
+
     }, [children])
 
     useEffect(() => {

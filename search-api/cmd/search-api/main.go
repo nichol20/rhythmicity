@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"log/slog"
@@ -8,6 +9,7 @@ import (
 	"os"
 
 	"github.com/nichol20/rhythmicity/search-api/internal/db"
+	"github.com/nichol20/rhythmicity/search-api/internal/domain"
 	"github.com/nichol20/rhythmicity/search-api/internal/pb"
 	"github.com/nichol20/rhythmicity/search-api/internal/rabbitmq"
 	"github.com/nichol20/rhythmicity/search-api/internal/repository"
@@ -43,9 +45,16 @@ func main() {
 
 	go func() {
 		for d := range msgs {
-			err = trackRepository.UpdatePlayCount(string(d.Body))
+			var message domain.RabbitmqUpdatePlayCountMessage
+			err = json.Unmarshal(d.Body, &message)
 			if err != nil {
 				slog.Error(err.Error())
+			}
+			if err == nil {
+				err = trackRepository.UpdatePlayCount(message.ID, message.PlayCount)
+				if err != nil {
+					slog.Error(err.Error())
+				}
 			}
 		}
 	}()

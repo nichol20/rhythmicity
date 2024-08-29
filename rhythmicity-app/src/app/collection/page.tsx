@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import Image from 'next/image'
 
 import { getPopularAlbums, getPopularArtists, getPopularTracks } from '@/utils/api'
@@ -11,6 +11,7 @@ import { Card } from '@/components/Card'
 import { Carousel } from '@/components/Carousel'
 import { Header } from '@/components/Header'
 import { usePlayback } from '@/contexts/PlaybackContext'
+import { CardFallback } from '@/components/Card/CardFallback'
 import withAuth from '@/hoc/withAuth'
 
 import styles from '@/styles/Collection.module.scss'
@@ -19,6 +20,7 @@ function CollectionPage() {
     const [popularAlbums, setPopularAlbums] = useState<Album[]>([])
     const [popularArtists, setPopularArtists] = useState<Artist[]>([])
     const [popularTracks, setPopularTracks] = useState<Track[]>([])
+    const [isLoading, setIsLoading] = useState(true)
     const { queueController } = usePlayback(true)
 
     useEffect(() => {
@@ -29,9 +31,63 @@ function CollectionPage() {
             setPopularArtists(artists)
             const tracks = await getPopularTracks()
             setPopularTracks(tracks)
+            setIsLoading(false)
         }
         fetchData()
     }, [])
+
+    const fallbackList = () => {
+        return Array(10).fill("").map((_, i) => {
+            return <CardFallback key={i} kind="normal" />
+        })
+    }
+
+    const albumList = () => {
+        if (isLoading) return fallbackList()
+        return popularAlbums.map(album => {
+            return (
+                <Card
+                    key={album.id}
+                    image={album.spotify.images[0].url}
+                    isPlayable
+                    title={album.name}
+                    href={`/albums/${album.id}`}
+                    description={album.genres.join(", ")}
+                    onPlay={() => queueController.playAlbum(album)}
+                />
+            )
+        })
+    }
+
+    const artistList = () => {
+        if (isLoading) return fallbackList()
+        return popularArtists.map(artist => (
+            <Card
+                key={artist.id}
+                image={artist.spotify.images[0].url}
+                isPlayable
+                title={artist.name}
+                href={`/artists/${artist.id}`}
+                description={artist.genres.join(", ")}
+                onPlay={() => queueController.playArtist(artist)}
+            />
+        ))
+    }
+
+    const trackList = () => {
+        if (isLoading) return fallbackList()
+        return popularTracks.map(track => (
+            <Card
+                key={track.id}
+                image={track.spotify.albumImages[0].url}
+                isPlayable
+                title={track.spotify.title}
+                href={`/tracks/${track.id}`}
+                description={track.genres.join(", ")}
+                onPlay={() => queueController.playNow(track)}
+            />
+        ))
+    }
 
     return (
         <div className={styles.collectionPage}>
@@ -53,49 +109,19 @@ function CollectionPage() {
                 <section className={styles.section}>
                     <h3 className={styles.collectionTitle}>Popular Albums</h3>
                     <Carousel max={10}>
-                        {popularAlbums.map(album => (
-                            <Card
-                                key={album.id}
-                                image={album.spotify.images[0].url}
-                                isPlayable
-                                title={album.name}
-                                href={`/albums/${album.id}`}
-                                description={album.genres.join(", ")}
-                                onPlay={() => queueController.playAlbum(album)}
-                            />
-                        ))}
+                        {albumList()}
                     </Carousel>
                 </section>
                 <section className={styles.section}>
                     <h3 className={styles.collectionTitle}>Popular Artists</h3>
                     <Carousel max={10}>
-                        {popularArtists.map(artist => (
-                            <Card
-                                key={artist.id}
-                                image={artist.spotify.images[0].url}
-                                isPlayable
-                                title={artist.name}
-                                href={`/artists/${artist.id}`}
-                                description={artist.genres.join(", ")}
-                                onPlay={() => queueController.playArtist(artist)}
-                            />
-                        ))}
+                        {artistList()}
                     </Carousel>
                 </section>
                 <section className={styles.section}>
                     <h3 className={styles.collectionTitle}>Popular Tracks</h3>
                     <Carousel max={10}>
-                        {popularTracks.map(track => (
-                            <Card
-                                key={track.id}
-                                image={track.spotify.albumImages[0].url}
-                                isPlayable
-                                title={track.spotify.title}
-                                href={`/tracks/${track.id}`}
-                                description={track.genres.join(", ")}
-                                onPlay={() => queueController.playNow(track)}
-                            />
-                        ))}
+                        {trackList()}
                     </Carousel>
                 </section>
 

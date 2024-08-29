@@ -1,5 +1,6 @@
+"use client"
 import Link from 'next/link'
-import Image, { StaticImageData } from 'next/image'
+import Image from 'next/image'
 import { useState } from 'react'
 
 import { Track } from '@/types/track'
@@ -31,8 +32,8 @@ export const TrackRow = ({ index, track }: TrackRowProps) => {
     }
 
     const getImage = () => {
-        if ("spotify" in track) return track.spotify.albumImages[0].url
-        return track.images[0].url
+        if ("spotify" in track) return track.spotify.albumImages[0]?.url
+        return track.images[0]?.url
     }
 
     const getDuration = () => {

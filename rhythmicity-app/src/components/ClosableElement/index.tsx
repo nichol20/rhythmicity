@@ -17,10 +17,10 @@ export const ClosableComponent = ({ children, isOpen, close, className }: Closab
             }
         }
 
-        document.addEventListener('click', handleClickOutside)
+        document.addEventListener('mousedown', handleClickOutside)
 
         return () => {
-            document.removeEventListener('click', handleClickOutside)
+            document.removeEventListener('mousedown', handleClickOutside)
         }
     }, [close])
 

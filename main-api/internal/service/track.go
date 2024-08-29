@@ -2,11 +2,13 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log/slog"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/nichol20/rhythmicity/main-api/internal/domain"
 	"github.com/nichol20/rhythmicity/main-api/internal/pb"
 	"github.com/nichol20/rhythmicity/main-api/internal/rabbitmq"
@@ -14,14 +16,13 @@ import (
 	"github.com/nichol20/rhythmicity/main-api/internal/repository"
 	"github.com/nichol20/rhythmicity/main-api/internal/utils"
 	amqp "github.com/rabbitmq/amqp091-go"
-	redisPackage "github.com/redis/go-redis/v9"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 type TrackRepositoryInterface interface {
 	GetYoutubeId(ctx context.Context, id string) (string, error)
-	IncrementPlayCount(ctx context.Context, trackID string) error
+	IncrementPlayCount(ctx context.Context, trackID string) (int64, error)
 	GetPopularTracks(ctx context.Context, arg repository.GetPopularTracksParams) ([]domain.Track, error)
 	GetTrack(ctx context.Context, trackId string) (*domain.Track, error)
 	GetSeveralTracks(ctx context.Context, trackIDs []string) ([]domain.Track, error)
@@ -47,31 +48,58 @@ func (s *TrackGRPCService) Playback(ctx context.Context, req *pb.PlaybackRequest
 		return nil, status.Errorf(codes.Internal, domain.ErrInternalServerError.Error())
 	}
 
-	key := fmt.Sprintf("%s:%s", req.UserId, req.TrackId)
+	if err := s.handlePlayCount(ctx, req.UserId, req.TrackId); err != nil {
+		slog.Error("Failed to handle play count", err)
+	}
 
-	_, err = redis.Client.Get(ctx, key)
-	if err != nil {
-		if errors.Is(redisPackage.Nil, err) {
-			redis.Client.Set(ctx, key, 1, time.Hour*24)
-			s.TrackRepository.IncrementPlayCount(ctx, req.TrackId)
-			rabbitmq.Client.Channel.PublishWithContext(
+	return &pb.PlaybackResponse{
+		YoutubeId: youtubeId,
+	}, nil
+}
+
+func (s *TrackGRPCService) handlePlayCount(ctx context.Context, userId, trackId string) error {
+	key := fmt.Sprintf("%s:%s", userId, trackId)
+
+	if _, err := redis.Client.Get(ctx, key); err != nil {
+		if errors.Is(err, redis.Nil) {
+			if err := redis.Client.Set(ctx, key, 1, time.Hour*24); err != nil {
+				return err
+			}
+
+			playCount, err := s.TrackRepository.IncrementPlayCount(ctx, trackId)
+			if err != nil {
+				return err
+			}
+
+			uuid, err := uuid.Parse(trackId)
+			if err != nil {
+				return err
+			}
+
+			message, err := json.Marshal(domain.RabbitmqUpdatePlayCountMessage{
+				ID:        uuid,
+				PlayCount: uint64(playCount),
+			})
+			if err != nil {
+				return err
+			}
+
+			return rabbitmq.Client.Channel.PublishWithContext(
 				ctx,                          // context
 				"",                           // exchange
 				rabbitmq.PlayCountQueue.Name, // routing key
 				false,                        // mandatory
 				false,                        // immediate
 				amqp.Publishing{
-					ContentType: "text/plain",
-					Body:        []byte(req.TrackId),
-				})
-		} else {
-			slog.Error(err.Error())
+					ContentType: "application/json",
+					Body:        message,
+				},
+			)
 		}
+		return err
 	}
 
-	return &pb.PlaybackResponse{
-		YoutubeId: youtubeId,
-	}, nil
+	return nil
 }
 
 func (s *TrackGRPCService) GetPopularTracks(ctx context.Context, req *pb.GetPopularTracksRequest) (*pb.MultipleTracks, error) {
