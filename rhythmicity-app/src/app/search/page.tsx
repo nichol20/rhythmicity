@@ -1,22 +1,24 @@
 'use client'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useRouter } from 'next/navigation'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import axios, { CancelTokenSource } from 'axios'
 
+import withAuth from '@/hoc/withAuth'
 import { QueryKind, SearchResponse, search } from '@/utils/api'
 import { Header } from '@/components/Header'
 import { SearchInput } from '@/components/SearchInput'
 import { ResultCards } from '@/components/SearchResults/ResultCards'
 import { MainResults } from '@/components/SearchResults/MainResults'
 import { usePlayback } from '@/contexts/PlaybackContext'
-import withAuth from '@/hoc/withAuth'
+import { TrackList, TrackRow } from '@/components/TrackList'
+import { Card } from '@/components/Card'
+import { useInfiniteScrolling } from '@/hooks/useInfiniteScroll'
 
 import styles from '@/styles/Search.module.scss'
-import { TrackList, TrackRow } from '@/components/TrackList'
-import { msToMinutes } from '@/utils/conversion'
-import { Card } from '@/components/Card'
 
-const kinds = ['all', 'tracks', 'artists', 'albums']
+const KINDS = ['all', 'tracks', 'artists', 'albums']
+const SEARCH_LIMIT = 20
 
 function SearchPage() {
     const router = useRouter()
@@ -24,12 +26,19 @@ function SearchPage() {
     const searchParams = useSearchParams()
     const searchQuery = searchParams.get('q') || ""
     const kindParam = searchParams.get("kind") || "all"
-    const [searchResponse, setSearchResponse] = useState<SearchResponse>({ albums: [], artists: [], tracks: [], bestResult: null })
+    const [searchResponse, setSearchResponse] = useState<SearchResponse>({
+        albums: [],
+        artists: [],
+        tracks: [],
+        bestResult: null
+    })
     const [isLoading, setIsLoading] = useState(true)
-    const { } = usePlayback(true)
+    const [page, setPage] = useState(0)
 
-    const getKind = useCallback((): QueryKind => {
-        switch (kindParam) {
+    usePlayback(true)
+
+    const getKind = (kind: string): QueryKind => {
+        switch (kind) {
             case "albums":
                 return QueryKind.ALBUMS
             case "artists":
@@ -39,28 +48,61 @@ function SearchPage() {
             default:
                 return QueryKind.ALL
         }
-    }, [kindParam])
+    }
 
-    const handleSearch = useCallback(async (query: string) => {
-        const params = new URLSearchParams(searchParams.toString())
-
+    const searchData = async (query: string, page: number, kind: QueryKind, cancelToken?: CancelTokenSource) => {
+        setIsLoading(true)
         const searchRes = await search({
             query: query,
-            kind: getKind()
-        })
-        setSearchResponse(searchRes)
-        params.set("q", query)
-        if (!query) {
-            params.delete("q")
-        }
-        router.replace(`${pathname}?${params.toString()}`)
+            limit: SEARCH_LIMIT,
+            offset: page * SEARCH_LIMIT,
+            kind: kind
+        }, { cancelToken: cancelToken?.token })
         setIsLoading(false)
-    }, [getKind, pathname, router, searchParams])
+        return searchRes
+    }
 
-    const handleKindSelection = (kind: string) => {
+    const fetchData = useCallback(
+        async (cancelToken?: CancelTokenSource) => {
+            const searchRes = await searchData(searchQuery, page, getKind(kindParam), cancelToken)
+            setPage(prev => prev + 1)
+            setSearchResponse(prev => {
+                return {
+                    albums: [...prev.albums, ...searchRes.albums],
+                    artists: [...prev.artists, ...searchRes.artists],
+                    tracks: [...prev.tracks, ...searchRes.tracks],
+                    bestResult: searchRes.bestResult
+                }
+            })
+        }, [searchQuery, kindParam, page])
+
+    const handleEndOfPage = useCallback(() => {
+        if (!isLoading && getKind(kindParam) !== QueryKind.ALL) {
+            fetchData()
+        }
+    }, [isLoading, fetchData, kindParam])
+
+    const handleSearch = useCallback(
+        async (query: string) => {
+            const params = new URLSearchParams(searchParams.toString())
+            params.set("q", query)
+            if (!query) {
+                params.delete("q")
+            }
+            router.replace(`${pathname}?${params.toString()}`)
+            setPage(1)
+            const searchRes = await searchData(query, 0, getKind(kindParam))
+            setSearchResponse(searchRes)
+        }, [pathname, router, searchParams, kindParam]
+    )
+
+    const handleKindSelection = async (kind: string) => {
         const params = new URLSearchParams(searchParams.toString())
         params.set('kind', kind)
+        console.log(kind)
         router.replace(`${pathname}?${params.toString()}`)
+        const searchRes = await searchData(searchQuery, 0, getKind(kind))
+        setSearchResponse(searchRes)
     }
 
     const getKindClass = (kind: string) => {
@@ -68,7 +110,7 @@ function SearchPage() {
     }
 
     const Results = () => {
-        const kind = getKind()
+        const kind = getKind(kindParam)
         if (kind === QueryKind.ALL) {
             return (
                 <>
@@ -105,7 +147,7 @@ function SearchPage() {
                         <Card
                             key={a.id}
                             title={a.name}
-                            image={a.images[0].url}
+                            image={a.images[0]?.url}
                             description={a.name}
                             href={`/albums/${a.id}`}
                             isPlayable
@@ -117,11 +159,11 @@ function SearchPage() {
         else if (kind === QueryKind.ARTISTS) {
             return (
                 <div className={styles.artistResults}>
-                    {searchResponse.artists.map(a => (
+                    {searchResponse.artists.map((a, i) => (
                         <Card
-                            key={a.id}
+                            key={i}
                             title={a.name}
-                            image={a.images[0].url}
+                            image={a.images[0]?.url}
                             description={a.name}
                             href={`/artists/${a.id}`}
                             isArtist
@@ -133,13 +175,36 @@ function SearchPage() {
         }
     }
 
+    useEffect(() => {
+        const cancelToken = axios.CancelToken.source()
+
+        const fetchInitialData = async () => {
+            const searchRes = await searchData(searchQuery, 0, getKind(kindParam), cancelToken)
+            setPage(1)
+            setSearchResponse(searchRes)
+            setIsLoading(false)
+        }
+
+        if (searchResponse.bestResult === null) {
+            fetchInitialData()
+        }
+
+        return () => {
+            cancelToken.cancel()
+        }
+    }, [searchResponse, searchQuery, kindParam])
+
+    useInfiniteScrolling(() => {
+        handleEndOfPage()
+    }, 400)
+
     return (
         <div className={styles.searchPage}>
             <Header />
             <div className={styles.content}>
                 <SearchInput onChange={handleSearch} defaultValue={searchQuery} delay={500} />
                 <div className={styles.kinds}>
-                    {kinds.map((k, i) => (
+                    {KINDS.map((k, i) => (
                         <button
                             key={i}
                             onClick={() => handleKindSelection(k)}

@@ -20,6 +20,7 @@ const Child = ({ handleClick }: { handleClick: () => void }) => {
 export default function Test() {
     const [arr, setArr] = useState<string[]>([])
     const [isLoading, setIsLoading] = useState(true)
+    const [counter, setCounter] = useState(0)
 
     useEffect(() => {
         const fetchArr = async () => {
@@ -41,11 +42,22 @@ export default function Test() {
         return arr.map((n, i) => <li key={i}>{n}</li>)
     }
 
+    const handleClick = () => {
+        let newCounter = 0
+        setCounter(prev => {
+            const newState = prev + 1
+            newCounter = newState
+            return newState
+        })
+        console.log(newCounter)
+    }
+
     return (
         <div>
-            <ul>
+            {/* <ul>
                 <ArrList />
-            </ul>
+            </ul> */}
+            <button onClick={handleClick}>increase counter</button>
         </div>
     )
 }

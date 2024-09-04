@@ -4,6 +4,7 @@ import { BestResult, SearchedAlbum, SearchedArtist, SearchedTrack } from "@/type
 import { Track } from "@/types/track"
 import { User } from "@/types/user"
 import { https } from "@/utils/http"
+import { AxiosRequestConfig } from "axios"
 
 interface SignUpArgs {
     username: string
@@ -97,8 +98,8 @@ export interface SearchOptions {
     filters?: SearchFilters
 }
 
-export const search = async (options: SearchOptions): Promise<SearchResponse> => {
-    const res = await https.post<SearchResponse>("/search", options)
+export const search = async (options: SearchOptions, config?: AxiosRequestConfig<any> | undefined): Promise<SearchResponse> => {
+    const res = await https.post<SearchResponse>("/search", options, config)
     return res.data
 }
 
