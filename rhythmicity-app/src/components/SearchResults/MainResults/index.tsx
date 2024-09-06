@@ -6,6 +6,7 @@ import { TrackRow, TrackRowFallback } from '@/components/TrackList'
 
 import styles from './style.module.scss'
 import { CardFallback } from '@/components/Card/CardFallback'
+import { HighlightedMessage } from '@/components/HighlightedMessage'
 
 export interface MainResultsProps {
     bestResult?: BestResult | null
@@ -29,18 +30,15 @@ export const MainResults = ({ bestResult, tracks, showFallback = false }: MainRe
             })
         }
 
+        if (tracks.length === 0) {
+            return (
+                <HighlightedMessage message='No tracks found' />
+            )
+        }
+
         return tracks.map((track, i) => {
             if (i < 5) {
-                return <TrackRow
-                    key={track.id}
-                    album={track.album}
-                    artists={track.artists}
-                    explicit={track.explicit}
-                    image={track.images[0].url}
-                    index={i + 1}
-                    time={msToMinutes(track.durationMs)}
-                    track={track}
-                />
+                return <TrackRow key={track.id} index={i + 1} track={track} />
             }
         })
     }

@@ -3,21 +3,27 @@ import { Card } from '@/components/Card'
 
 import styles from './style.module.scss'
 import { CardFallback } from '@/components/Card/CardFallback'
+import { HighlightedMessage } from '@/components/HighlightedMessage'
 
 export interface ResultCardsProps {
     results: SearchedArtist[] | SearchedAlbum[]
     title: string
     showFallback?: boolean
     hrefBasePath: string
+    notFoundMessage: string
     isArtist?: boolean
 }
 
-export const ResultCards = ({ results, title, showFallback, hrefBasePath, isArtist }: ResultCardsProps) => {
+export const ResultCards = ({ results, title, showFallback, hrefBasePath, isArtist, notFoundMessage }: ResultCardsProps) => {
     const CardList = () => {
         if (showFallback) {
             return Array(5).fill("").map((_, i) => {
                 return <CardFallback key={i} kind="normal" />
             })
+        }
+
+        if (results.length === 0) {
+            return <HighlightedMessage message={notFoundMessage} />
         }
 
         return results?.map((result, i) => {

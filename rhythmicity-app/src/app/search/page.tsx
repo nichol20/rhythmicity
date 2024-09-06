@@ -8,14 +8,11 @@ import withAuth from '@/hoc/withAuth'
 import { QueryKind, SearchResponse, search } from '@/utils/api'
 import { Header } from '@/components/Header'
 import { SearchInput } from '@/components/SearchInput'
-import { ResultCards } from '@/components/SearchResults/ResultCards'
-import { MainResults } from '@/components/SearchResults/MainResults'
 import { usePlayback } from '@/contexts/PlaybackContext'
-import { TrackList, TrackRow } from '@/components/TrackList'
-import { Card } from '@/components/Card'
 import { useInfiniteScrolling } from '@/hooks/useInfiniteScroll'
 
 import styles from '@/styles/Search.module.scss'
+import { SearchResults } from '@/components/SearchResults'
 
 const KINDS = ['all', 'tracks', 'artists', 'albums']
 const SEARCH_LIMIT = 20
@@ -99,7 +96,6 @@ function SearchPage() {
     const handleKindSelection = async (kind: string) => {
         const params = new URLSearchParams(searchParams.toString())
         params.set('kind', kind)
-        console.log(kind)
         router.replace(`${pathname}?${params.toString()}`)
         const searchRes = await searchData(searchQuery, 0, getKind(kind))
         setSearchResponse(searchRes)
@@ -107,72 +103,6 @@ function SearchPage() {
 
     const getKindClass = (kind: string) => {
         return kindParam === kind ? styles.active : ""
-    }
-
-    const Results = () => {
-        const kind = getKind(kindParam)
-        if (kind === QueryKind.ALL) {
-            return (
-                <>
-                    <MainResults bestResult={searchResponse.bestResult} tracks={searchResponse.tracks} showFallback={isLoading} />
-                    <ResultCards
-                        results={searchResponse.albums}
-                        title='Albums'
-                        hrefBasePath='/albums'
-                        showFallback={isLoading}
-                    />
-                    <ResultCards
-                        results={searchResponse.artists}
-                        title='Artists'
-                        hrefBasePath='/artists'
-                        showFallback={isLoading}
-                        isArtist
-                    />
-                </>
-            )
-        }
-        else if (kind === QueryKind.TRACKS) {
-            return (
-                <TrackList>
-                    {searchResponse.tracks.map((t, i) => (
-                        <TrackRow key={t.id} index={i + 1} track={t} />
-                    ))}
-                </TrackList>
-            )
-        }
-        else if (kind === QueryKind.ALBUMS) {
-            return (
-                <div className={styles.albumResults}>
-                    {searchResponse.albums.map(a => (
-                        <Card
-                            key={a.id}
-                            title={a.name}
-                            image={a.images[0]?.url}
-                            description={a.name}
-                            href={`/albums/${a.id}`}
-                            isPlayable
-                        />
-                    ))}
-                </div>
-            )
-        }
-        else if (kind === QueryKind.ARTISTS) {
-            return (
-                <div className={styles.artistResults}>
-                    {searchResponse.artists.map((a, i) => (
-                        <Card
-                            key={i}
-                            title={a.name}
-                            image={a.images[0]?.url}
-                            description={a.name}
-                            href={`/artists/${a.id}`}
-                            isArtist
-                            isPlayable
-                        />
-                    ))}
-                </div>
-            )
-        }
     }
 
     useEffect(() => {
@@ -214,7 +144,11 @@ function SearchPage() {
                 </div>
 
                 <div className={styles.results}>
-                    <Results />
+                    <SearchResults
+                        kind={getKind(kindParam)}
+                        searchResponse={searchResponse}
+                        showFallback={isLoading}
+                    />
                 </div>
             </div>
         </div>
