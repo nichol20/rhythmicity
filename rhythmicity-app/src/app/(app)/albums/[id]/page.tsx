@@ -5,13 +5,12 @@ import { getAlbum, getTracksByAlbumId } from '@/utils/api'
 import { msToMinutes } from '@/utils/conversion'
 import { Album } from '@/types/album'
 import { Track } from '@/types/track'
-import { usePlayback } from '@/contexts/PlaybackContext'
+import { usePlayback } from '@/contexts/Playback'
 import { TrackList, TrackRow } from '@/components/TrackList'
 import { Header } from '@/components/Header'
 import { Banner } from '@/components/Banner'
-import withAuth from '@/hoc/withAuth'
 
-import styles from '../../../styles/Album.module.scss'
+import styles from '@/styles/Album.module.scss'
 
 interface AlbumPageProps {
     params: {
@@ -19,7 +18,7 @@ interface AlbumPageProps {
     }
 }
 
-function AlbumPage({ params }: AlbumPageProps) {
+export default function AlbumPage({ params }: AlbumPageProps) {
     const { } = usePlayback(true)
     const [album, setAlbum] = useState<Album>()
     const [tracks, setTracks] = useState<Track[]>()
@@ -78,5 +77,3 @@ function AlbumPage({ params }: AlbumPageProps) {
         </div>
     )
 }
-
-export default withAuth(AlbumPage)

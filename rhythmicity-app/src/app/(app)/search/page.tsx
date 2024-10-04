@@ -4,20 +4,19 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import axios, { CancelTokenSource } from 'axios'
 
-import withAuth from '@/hoc/withAuth'
 import { QueryKind, SearchResponse, search } from '@/utils/api'
 import { Header } from '@/components/Header'
 import { SearchInput } from '@/components/SearchInput'
-import { usePlayback } from '@/contexts/PlaybackContext'
+import { usePlayback } from '@/contexts/Playback'
 import { useInfiniteScrolling } from '@/hooks/useInfiniteScroll'
+import { SearchResults } from '@/components/SearchResults'
 
 import styles from '@/styles/Search.module.scss'
-import { SearchResults } from '@/components/SearchResults'
 
 const KINDS = ['all', 'tracks', 'artists', 'albums']
 const SEARCH_LIMIT = 20
 
-function SearchPage() {
+export default function SearchPage() {
     const router = useRouter()
     const pathname = usePathname()
     const searchParams = useSearchParams()
@@ -154,5 +153,3 @@ function SearchPage() {
         </div>
     )
 }
-
-export default withAuth(SearchPage)

@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 import { lyricsIcon } from '@/assets'
 import { Modal } from '@/components/Modal'
-import { usePlayback } from '@/contexts/PlaybackContext'
+import { usePlayback } from '@/contexts/Playback'
 
 import styles from './style.module.scss'
 

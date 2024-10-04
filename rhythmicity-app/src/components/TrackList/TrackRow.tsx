@@ -7,7 +7,7 @@ import { Track } from '@/types/track'
 import { SearchedTrack } from '@/types/search'
 import { addListIcon, playIcon } from '@/assets'
 import { ExplicitSign } from '../ExplicitSign'
-import { usePlayback } from '@/contexts/PlaybackContext'
+import { usePlayback } from '@/contexts/Playback'
 import { RowOptions } from '../RowOptions'
 
 import styles from './style.module.scss'

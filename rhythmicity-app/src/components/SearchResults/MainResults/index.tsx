@@ -1,5 +1,5 @@
 import { msToMinutes } from '@/utils/conversion'
-import { usePlayback } from '@/contexts/PlaybackContext'
+import { usePlayback } from '@/contexts/Playback'
 import { BestResultCard } from '../BestResultCard'
 import { BestResult, SearchedAlbum, SearchedArtist, SearchedTrack } from '@/types/search'
 import { TrackRow, TrackRowFallback } from '@/components/TrackList'

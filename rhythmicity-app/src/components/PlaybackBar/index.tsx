@@ -8,7 +8,7 @@ import { YouTubePlayerRef, YouTubePlayer, PlayerEvent, PlayerState } from '../Yo
 import { TimeBar } from './TimeBar'
 import { Controls } from './Controls/index'
 import { Options } from './Options'
-import { usePlayback } from '@/contexts/PlaybackContext'
+import { usePlayback } from '@/contexts/Playback'
 
 import styles from './style.module.scss'
 

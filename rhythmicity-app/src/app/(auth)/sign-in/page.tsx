@@ -5,10 +5,10 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { PasswordInput } from '@/components/PasswordInput'
-import { useAuth } from '@/contexts/AuthContext'
+import { useAuth } from '@/contexts/Auth'
+import { ErrorMessage } from '@/components/ErrorMessage'
 
 import styles from '@/styles/SignIn.module.scss'
-import { ErrorMessage } from '@/components/ErrorMessage'
 
 export default function SignInPage() {
     const [emptyFieldError, setEmptyFieldError] = useState(false)

@@ -1,5 +1,5 @@
-import { AuthProvider } from '@/contexts/AuthContext'
-import { PlaybackProvider } from '@/contexts/PlaybackContext'
+import { AuthProvider } from '@/contexts/Auth'
+import { PlaybackProvider } from '@/contexts/Playback'
 import '@/styles/globals.scss'
 
 export const metadata = {

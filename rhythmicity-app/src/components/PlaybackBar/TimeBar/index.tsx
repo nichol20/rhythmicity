@@ -2,7 +2,7 @@ import { ChangeEvent, useEffect, useState } from 'react'
 
 import { secondsToMinutes } from '@/utils/conversion'
 import { Slider } from '@/components/Slider'
-import { usePlayback } from '@/contexts/PlaybackContext'
+import { usePlayback } from '@/contexts/Playback'
 
 import styles from './style.module.scss'
 

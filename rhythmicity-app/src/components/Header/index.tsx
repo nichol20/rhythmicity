@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 
-import { useAuth } from '@/contexts/AuthContext'
+import { useAuth } from '@/contexts/Auth'
 import { logo, searchIcon } from '@/assets'
 
 import styles from './style.module.scss'

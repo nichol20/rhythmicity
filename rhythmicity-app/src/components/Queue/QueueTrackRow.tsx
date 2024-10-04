@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { SearchedTrack } from "@/types/search";
 import { Track } from "@/types/track";
-import { usePlayback } from "@/contexts/PlaybackContext";
+import { usePlayback } from "@/contexts/Playback";
 import { ExplicitSign } from "../ExplicitSign";
 import { deleteIcon, playIcon, } from "@/assets";
 import { RowOptions } from "../RowOptions";

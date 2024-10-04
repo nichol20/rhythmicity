@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 import { User } from "../types/user";
 import * as api from '@/utils/api'
+import { https } from "@/utils/http";
 
 interface AuthContext {
     user: User | null
@@ -57,6 +58,23 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
 
         refreshUser()
+    }, [])
+
+    useEffect(() => {
+        const responseIntercept = https.interceptors.response.use(
+            response => response,
+            async error => {
+                console.error(error)
+                if (error?.response?.status === 403 || error?.response?.status === 401) {
+                    window.location.assign("/sign-in")
+                }
+                return Promise.reject(error)
+            }
+        )
+
+        return () => {
+            https.interceptors.response.eject(responseIntercept)
+        }
     }, [])
 
     if (isLoading) return <>Loading...</>

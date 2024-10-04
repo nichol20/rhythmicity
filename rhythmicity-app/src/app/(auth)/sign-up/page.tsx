@@ -4,11 +4,11 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-import { useAuth } from '@/contexts/AuthContext'
+import { useAuth } from '@/contexts/Auth'
 import { PasswordInput } from '@/components/PasswordInput'
+import { ErrorMessage } from '@/components/ErrorMessage'
 
 import styles from '@/styles/SignUp.module.scss'
-import { ErrorMessage } from '@/components/ErrorMessage'
 
 export default function SignUpPage() {
     const { user, signUp } = useAuth()

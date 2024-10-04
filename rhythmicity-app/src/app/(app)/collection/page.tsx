@@ -1,5 +1,5 @@
 'use client'
-import { Suspense, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 
 import { getPopularAlbums, getPopularArtists, getPopularTracks } from '@/utils/api'
@@ -10,13 +10,12 @@ import { collectionBackground } from '@/assets'
 import { Card } from '@/components/Card'
 import { Carousel } from '@/components/Carousel'
 import { Header } from '@/components/Header'
-import { usePlayback } from '@/contexts/PlaybackContext'
+import { usePlayback } from '@/contexts/Playback'
 import { CardFallback } from '@/components/Card/CardFallback'
-import withAuth from '@/hoc/withAuth'
 
 import styles from '@/styles/Collection.module.scss'
 
-function CollectionPage() {
+export default function CollectionPage() {
     const [popularAlbums, setPopularAlbums] = useState<Album[]>([])
     const [popularArtists, setPopularArtists] = useState<Artist[]>([])
     const [popularTracks, setPopularTracks] = useState<Track[]>([])
@@ -129,5 +128,3 @@ function CollectionPage() {
         </div>
     )
 }
-
-export default withAuth(CollectionPage)

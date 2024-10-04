@@ -2,23 +2,21 @@
 import { useEffect, useState } from 'react'
 
 import { getArtist, getTracksByArtistId } from '@/utils/api'
-import { msToMinutes } from '@/utils/conversion'
 import { Artist } from '@/types/artist'
 import { Track } from '@/types/track'
-import { usePlayback } from '@/contexts/PlaybackContext'
+import { usePlayback } from '@/contexts/Playback'
 import { TrackList, TrackRow } from '@/components/TrackList'
 import { Header } from '@/components/Header'
 import { Banner } from '@/components/Banner'
-import withAuth from '@/hoc/withAuth'
 
-import styles from '../../../styles/Artist.module.scss'
+import styles from '@/styles/Artist.module.scss'
 interface ArtistPageProps {
     params: {
         id: string
     }
 }
 
-function ArtistPage({ params }: ArtistPageProps) {
+export default function ArtistPage({ params }: ArtistPageProps) {
     const { } = usePlayback(true)
     const [artist, setArtist] = useState<Artist>()
     const [tracks, setTracks] = useState<Track[]>()
@@ -54,5 +52,3 @@ function ArtistPage({ params }: ArtistPageProps) {
         </div>
     )
 }
-
-export default withAuth(ArtistPage)

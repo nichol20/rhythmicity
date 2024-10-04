@@ -9,7 +9,7 @@ import { Artist } from "@/types/artist";
 import { SearchedAlbum, SearchedArtist, SearchedTrack } from "@/types/search";
 import { Track } from "@/types/track";
 import { getTracksByAlbumId, getTracksByArtistId } from "@/utils/api";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "./Auth";
 import { shuffleArray } from "@/utils/array";
 
 export enum PlaybackMode {

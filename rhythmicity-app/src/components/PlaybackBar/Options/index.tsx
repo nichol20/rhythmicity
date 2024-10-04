@@ -5,7 +5,7 @@ import { YouTubePlayerRef } from '@/components/YoutubePlayer'
 import { Volume } from './Volume'
 import { LyricsBtn } from './LyricsBtn'
 import { queueIcon } from '@/assets'
-import { usePlayback } from '@/contexts/PlaybackContext'
+import { usePlayback } from '@/contexts/Playback'
 
 import styles from './style.module.scss'
 
