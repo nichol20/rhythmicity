@@ -25,19 +25,30 @@ export interface Player {
     getVolume(): number
     cueVideoById(videoId: string, startSeconds: number): void
     loadVideoById(videoId: string, startSeconds: number): void
+    i: {
+        g: (string | Function)[]
+    }
 }
 
-export interface PlayerEvent {
+export interface EventObject {
     target: Player
 }
+
+export type PlayerEvent =
+    | "onReady"
+    | "onStateChange"
+    | "onPlaybackQualityChange"
+    | "onPlaybackRateChange"
+    | "onError"
+    | "onApiChange"
 
 export interface PlayerOptions {
     videoId: string
     height: string
     width: string
     events: {
-        onReady?: (event: PlayerEvent) => void
-        onStateChange?: (event: PlayerEvent) => void
+        onReady?: (event: EventObject) => void
+        onStateChange?: (event: EventObject) => void
     }
 }
 
@@ -52,26 +63,27 @@ declare global {
 }
 
 interface YouTubePlayerProps {
-    videoId: string
     onStateChange: PlayerOptions["events"]["onStateChange"]
 }
 
 export interface YouTubePlayerRef extends Player { }
 
 export const YouTubePlayer = memo(forwardRef<YouTubePlayerRef, YouTubePlayerProps>(
-    function YoutubePlayer({ videoId, onStateChange }, ref) {
+    function YoutubePlayer({ onStateChange }, ref) {
         const playerRef = useRef<Player | null>(null)
         const [isReady, setIsReady] = useState(false)
 
         useEffect(() => {
-            const tag = document.createElement('script')
-            tag.src = 'https://www.youtube.com/iframe_api'
-            const firstScriptTag = document.getElementsByTagName('script')[0]
-            firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag)
+            if (!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
+                const tag = document.createElement('script');
+                tag.src = 'https://www.youtube.com/iframe_api';
+                const firstScriptTag = document.getElementsByTagName('script')[0];
+                firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+            }
 
             window.onYouTubeIframeAPIReady = () => {
                 playerRef.current = new window.YT.Player('player', {
-                    videoId,
+                    videoId: "",
                     width: '0',
                     height: '0',
                     events: {
@@ -82,11 +94,19 @@ export const YouTubePlayer = memo(forwardRef<YouTubePlayerRef, YouTubePlayerProp
                     }
                 })
             }
+        }, [onStateChange])
 
-            return () => {
-                window.onYouTubeIframeAPIReady = null
+
+        useEffect(() => {
+            // manually managing the change of event listeners, because I couldn't find any other way that worked
+            // the g property in the youtube player object contains an array with all added event listeners
+            if (playerRef.current) {
+                const eventIndex = playerRef.current.i.g.indexOf('onStateChange')
+                if (eventIndex !== -1 && onStateChange) {
+                    playerRef.current.i.g[eventIndex + 1] = onStateChange
+                }
             }
-        }, [videoId, onStateChange])
+        }, [onStateChange])
 
         const playVideo = () => playerRef.current!.playVideo()
         const pauseVideo = () => playerRef.current!.pauseVideo()
@@ -115,7 +135,12 @@ export const YouTubePlayer = memo(forwardRef<YouTubePlayerRef, YouTubePlayerProp
             getVolume: isReady ? getVolume : () => 1,
             setVolume: isReady ? setVolume : () => { },
             cueVideoById: isReady ? cueVideoById : () => { },
-            loadVideoById: isReady ? loadVideoById : () => { }
+            loadVideoById: isReady ? loadVideoById : () => { },
+            addEventListener: isReady ? addEventListener : () => { },
+            removeEventListener: isReady ? removeEventListener : () => { },
+            i: {
+                g: []
+            }
         }))
 
         return <div id="player"></div>

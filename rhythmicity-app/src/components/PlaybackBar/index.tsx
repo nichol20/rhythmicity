@@ -1,14 +1,15 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 
 import { Track } from '@/types/track'
 import { SearchedTrack } from '@/types/search'
 import { playback } from '@/utils/api'
-import { YouTubePlayerRef, YouTubePlayer, PlayerEvent, PlayerState } from '../YoutubePlayer'
+import { YouTubePlayerRef, YouTubePlayer, PlayerState, EventObject } from '../YoutubePlayer'
 import { TimeBar } from './TimeBar'
 import { Controls } from './Controls/index'
 import { Options } from './Options'
-import { usePlayback } from '@/contexts/Playback'
+import { PlaybackMode, usePlayback } from '@/contexts/Playback'
+import { getTrackImage, getTrackTitle } from '@/utils/track'
 
 import styles from './style.module.scss'
 
@@ -22,52 +23,18 @@ export const PlaybackBar = ({ track }: PlaybackBarProps) => {
         queueController,
         setCurrentPlayerState,
         setPlayerRef,
-        setTrackDuration
+        setTrackDuration,
     } = usePlayback()
+    const { playNext } = queueController
     const [currentYoutubeId, setCurrentYoutubeId] = useState("")
 
-    const handleStateChange = (event: PlayerEvent) => {
+    const handleStateChange = useCallback((event: EventObject) => {
         setCurrentPlayerState(event.target.getPlayerState())
         if (event.target.getPlayerState() === PlayerState.ENDED) {
-            queueController.playNext()
-        }
-    }
-
-    const getTrackImage = () => {
-        if (track) {
-            if ("youtube" in track) {
-                return track.spotify.albumImages[2]
-            }
-
-            return track.images[2]
+            playNext()
         }
 
-        return null
-    }
-
-    const getTrackName = () => {
-        if (track) {
-            if ("youtube" in track) {
-                return track.spotify.title
-            }
-
-            return track.name
-        }
-
-        return ""
-    }
-
-    const getAlbumName = () => {
-        if (track) {
-            if ("youtube" in track) {
-                return track.album.name
-            }
-
-            return track.album.name
-        }
-
-        return ""
-    }
+    }, [playNext, setCurrentPlayerState])
 
     useEffect(() => {
         const getYoutubeId = async () => {
@@ -108,22 +75,22 @@ export const PlaybackBar = ({ track }: PlaybackBarProps) => {
 
     return (
         <footer className={styles.playbackBar}>
-            <YouTubePlayer videoId={currentYoutubeId} ref={youtubePlayerRef} onStateChange={handleStateChange} />
+            <YouTubePlayer ref={youtubePlayerRef} onStateChange={handleStateChange} />
             <div className={styles.content}>
                 <div className={styles.trackInfo}>
                     {track && (
                         <>
                             <div className={styles.imageBox}>
                                 <Image
-                                    src={getTrackImage()?.url ?? ""}
-                                    width={getTrackImage()?.width}
-                                    height={getTrackImage()?.height}
+                                    src={getTrackImage(track, "small")?.url ?? ""}
+                                    width={getTrackImage(track, "small")?.width}
+                                    height={getTrackImage(track, "small")?.height}
                                     alt=""
                                 />
                             </div>
                             <div className={styles.info}>
-                                <span className={styles.name}>{getTrackName()}</span>
-                                <span className={styles.albumName}>{getAlbumName()}</span>
+                                <span className={styles.name}>{getTrackTitle(track)}</span>
+                                <span className={styles.albumName}>{track.album.name}</span>
                             </div>
                         </>
                     )}

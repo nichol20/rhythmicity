@@ -180,7 +180,8 @@ export const PlaybackProvider = ({ children }: PlaybackProviderProps) => {
                 next = prev.slice(1)
                 next = [...next, prev[0]]
             } else if (playbackMode === PlaybackMode.LOOPONE) {
-                next = prev
+                resetTime()
+                return prev
             }
 
             setTrackDuration(0)

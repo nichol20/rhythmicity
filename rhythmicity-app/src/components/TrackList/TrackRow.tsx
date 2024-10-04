@@ -12,6 +12,7 @@ import { RowOptions } from '../RowOptions'
 
 import styles from './style.module.scss'
 import { msToMinutes } from '@/utils/conversion'
+import { getTrackDuration, getTrackImage, getTrackTitle } from '@/utils/track'
 
 export interface TrackRowProps {
     index: number
@@ -24,21 +25,6 @@ export const TrackRow = ({ index, track }: TrackRowProps) => {
 
     const handlePlay = () => {
         queueController.playNow(track)
-    }
-
-    const getTrackTitle = () => {
-        if ("spotify" in track) return track.spotify.title
-        return track.name
-    }
-
-    const getImage = () => {
-        if ("spotify" in track) return track.spotify.albumImages[0]?.url
-        return track.images[0]?.url
-    }
-
-    const getDuration = () => {
-        if ("youtube" in track) return msToMinutes(track.youtube.durationMs)
-        return msToMinutes(track.durationMs)
     }
 
     return (
@@ -58,9 +44,9 @@ export const TrackRow = ({ index, track }: TrackRowProps) => {
             </div>
             <div className={`${styles.titleRow} ${styles.row}`}>
                 <div className={styles.content}>
-                    <Image src={getImage()} alt={getTrackTitle()} width={40} height={40} />
+                    <Image src={getTrackImage(track, "big")?.url ?? ""} alt={getTrackTitle(track)} width={40} height={40} />
                     <div className={styles.infoBox}>
-                        <Link href={`/tracks/${track.id}`} className={styles.title}>{getTrackTitle()}</Link>
+                        <Link href={`/tracks/${track.id}`} className={styles.title}>{getTrackTitle(track)}</Link>
                         <span className={styles.description}>
                             {track.explicit ? (
                                 <ExplicitSign />
@@ -82,7 +68,7 @@ export const TrackRow = ({ index, track }: TrackRowProps) => {
                 <Link href={`/albums/${track.album.id}`} className={styles.content}>{track.album.name}</Link>
             </div>
             <div className={`${styles.timeRow} ${styles.row}`}>
-                <span className={styles.content}>{getDuration()}</span>
+                <span className={styles.content}>{msToMinutes(getTrackDuration(track))}</span>
                 <div className={styles.options}>
                     <RowOptions
                         showBtn={isHovered}

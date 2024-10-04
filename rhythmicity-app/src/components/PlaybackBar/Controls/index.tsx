@@ -1,4 +1,4 @@
-import { RefObject, useState } from 'react'
+import { RefObject } from 'react'
 import Image from 'next/image'
 
 import { nextIcon, pauseIcon, playIcon, shuffleIcon, repeatIcon, repeatOneIcon } from '@/assets'
@@ -13,7 +13,6 @@ interface ControlsProps {
 
 export const Controls = ({ youtubePlayerRef }: ControlsProps) => {
     const { queueController, currentPlayerState, playbackMode, setPlaybackMode } = usePlayback()
-    const [loopBtnIcon, setLoopBtnIcon] = useState(repeatIcon)
 
     const getPlayBtnIcon = () => {
         if (currentPlayerState === PlayerState.PLAYING || currentPlayerState === PlayerState.BUFFERING) {
@@ -77,6 +76,7 @@ export const Controls = ({ youtubePlayerRef }: ControlsProps) => {
 
         return `${styles.randomBtn}`
     }
+
 
     return (
         <div className={styles.controls}>

@@ -97,10 +97,8 @@ export default function CollectionPage() {
                 <div className={styles.rightSide}>
                     <div className={styles.textBox}>
                         <h1 className={styles.title}>Rhythmicity</h1>
-                        <span className={styles.text}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias quo reiciendis doloremque incidunt, repudiandae perspiciatis facere ratione excepturi fuga distinctio quia sapiente atque cum porro velit asperiores? Neque, vitae nihil.</span>
-                        <button className={styles.btn}>
-                            Something
-                        </button>
+                        <span className={styles.text}>Discover a world of endless music at your fingertips! Dive into millions of tracks from every genre, artist, and era, and let your next favorite song find you. Start your musical journey now!</span>
+                        <a href="/search" className={styles.searchLink}>Search</a>
                     </div>
                 </div>
             </div>
