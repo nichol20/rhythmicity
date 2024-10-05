@@ -170,12 +170,13 @@ services:
           memory: 800M
 
   search-api:
-    build: .
+    build:
+      context: .
+      args:
+        GO_VERSION: ${GO_VERSION}
     depends_on:
       es01:
         condition: service_healthy
-    ports:
-      - "50051:50051"
     env_file: .env
     volumes:
       - certs:/app/internal/db/certs

@@ -4,7 +4,7 @@ import * as grpcLibrary from "@grpc/grpc-js";
 import { ProtoGrpcType } from "../proto/gen/auth";
 
 const protoDir = path.resolve(__dirname, "../proto/authServer");
-const serverUrl = process.env.AUTH_SERVER_URL || "host.docker.internal:50053";
+const serverUrl = process.env.AUTH_SERVER_URL || "auth-server:50051";
 
 const protoFile = `${protoDir}/auth.proto`;
 

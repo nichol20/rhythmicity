@@ -121,14 +121,15 @@ services:
           memory: 400M
 
   main-api:
-    build: .
+    build:
+      context: .
+      args:
+        GO_VERSION: ${GO_VERSION}
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
-    ports:
-      - "50052:50051"
     env_file: .env
     volumes:
       - certs:/app/internal/db/certs

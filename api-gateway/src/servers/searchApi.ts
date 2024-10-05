@@ -4,7 +4,7 @@ import * as grpcLibrary from "@grpc/grpc-js";
 import { ProtoGrpcType } from "../proto/gen/search";
 
 const protoDir = path.resolve(__dirname, "../proto/searchApi");
-const serverUrl = process.env.SEARCH_API_URL || "host.docker.internal:50051";
+const serverUrl = process.env.SEARCH_API_URL || "search-api:50051";
 
 const protoFile = `${protoDir}/search.proto`;
 
