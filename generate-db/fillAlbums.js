@@ -93,13 +93,13 @@ const createData = ({ artistsData, videoData, lyrics, album, track }) => {
 }
 
 const fillAlbums = async () => {
+    const startIndex = args.index ? args.index : 0
     let currentTrack = ""
-    let startIndex = args.index ? args.index : 0
-    let currentIndex = 0
+    let currentIndex = -1
     try {
         await spotify.getAccessToken()
         console.log('spotify access token: ', spotify.accessToken)
-
+        
         for(const album of db.albums) {
             currentIndex++
             if(currentIndex < startIndex) continue
@@ -120,7 +120,6 @@ const fillAlbums = async () => {
                 }
             }
             console.log(`-`.repeat(20))
-
         }
     } catch (error) {
         console.error(error)
