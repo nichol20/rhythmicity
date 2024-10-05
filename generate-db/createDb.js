@@ -2,6 +2,15 @@ const { v4: uuidv4 } = require('uuid')
 const { Database, GoogleCustomSearch, Spotify, Youtube } = require('./models')
 
 require('dotenv').config()
+const args = function() {
+    const args = require('./utils/args').getArgs()
+
+    if(args.genres) {
+        args.genres = typeof args.genres === "string" && args.genres.length > 0 ? args.genres : "hip-hop,electronic"
+    }
+
+    return args
+}()
 
 const db = new Database()
 const spotify = new Spotify({ clientId: process.env.SPOTIFY_CLIENT_ID, clientSecret: process.env.SPOTIFY_CLIENT_SECRET })
@@ -115,9 +124,9 @@ const generateData = async () => {
         console.log('Searching for popular tracks...')
         const popularTracks = await spotify.getPopularTracks({
             limit: 100,
-            seedGenres: "hip-hop,electronic",
+            seedGenres: args.genres,
             minPopularity: 75
-        })    
+        })  
         console.log(`${popularTracks.tracks.length} track(s) found.`)
 
         console.log('Fetching and creating data...')
