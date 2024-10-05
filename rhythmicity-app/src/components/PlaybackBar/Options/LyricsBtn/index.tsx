@@ -11,6 +11,8 @@ export const LyricsBtn = () => {
     const [showLyrics, setShowLyrics] = useState(false)
     const { currentTrack } = usePlayback()
     const lyrics = currentTrack?.lyrics ? currentTrack.lyrics : "We don't have the lyrics to this song. Sorry!"
+    // some lyrics are separated with \n and others with \\n
+    const lyricsArr = lyrics.includes("\\n") ? lyrics.split("\\n") : lyrics.split("\n")
 
     return (
         <div className={styles.container}>
@@ -19,7 +21,7 @@ export const LyricsBtn = () => {
             </button>
             {showLyrics && <Modal close={() => setShowLyrics(false)}>
                 <div className={styles.lyrics}>
-                    {lyrics.split("\\n").map((line, index) => {
+                    {lyricsArr.map((line, index) => {
                         return (
                             <React.Fragment key={index}>
                                 {line}
