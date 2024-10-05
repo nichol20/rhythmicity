@@ -89,6 +89,8 @@ services:
       - postgres-db:/var/lib/postgresql/data
       - certs:/etc/ssl/certs
       - ./internal/db/pg_hba.conf:/var/lib/postgresql/pg_hba.conf
+    networks:
+      - db_net
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
       interval: 10s
@@ -119,6 +121,9 @@ services:
     volumes:
       - certs:/app/internal/db/certs
       - .:/app
+    networks:
+      - api_gateway_net
+      - db_net
     deploy:
       resources:
         limits:
@@ -130,3 +135,9 @@ volumes:
     driver: local
   certs:
     driver: local
+
+networks:
+  api_gateway_net:
+    external: true
+  db_net:
+    driver: bridge

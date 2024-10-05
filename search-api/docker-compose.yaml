@@ -9,15 +9,20 @@ volumes:
     driver: local
 
 networks:
-  default:
-    name: elastic
-    external: false
+  elastic:
+    driver: bridge
+  rabbitmq_net:
+    external: true
+  api_gateway_net:
+    external: true
 
 services:
   setup:
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
+    networks:
+      - elastic
     user: "0"
     command: >
       bash -c '
@@ -84,6 +89,8 @@ services:
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
       - esdata01:/usr/share/elasticsearch/data
+    networks:
+      - elastic
     ports:
       - ${ES_PORT}:9200
     environment:
@@ -133,6 +140,8 @@ services:
     volumes:
       - certs:/usr/share/kibana/config/certs
       - kibanadata:/usr/share/kibana/data
+    networks:
+      - elastic
     ports:
       - ${KIBANA_PORT}:5601
     environment:
@@ -173,6 +182,10 @@ services:
       - .:/app
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    networks:
+      - rabbitmq_net
+      - elastic
+      - api_gateway_net
     deploy:
       resources:
         limits:

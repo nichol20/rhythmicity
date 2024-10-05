@@ -89,6 +89,8 @@ services:
       - postgres-db:/var/lib/postgresql/data
       - certs:/etc/ssl/certs
       - ./internal/db/pg_hba.conf:/var/lib/postgresql/pg_hba.conf
+    networks:
+      - db_net
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
       interval: 10s
@@ -110,6 +112,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - redis_net
     deploy:
       resources:
         limits:
@@ -131,6 +135,11 @@ services:
       - .:/app
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    networks:
+      - rabbitmq_net
+      - redis_net
+      - db_net
+      - api_gateway_net
     deploy:
       resources:
         limits:
@@ -144,3 +153,13 @@ volumes:
     driver: local
   certs:
     driver: local
+
+networks:
+  rabbitmq_net:
+    external: true
+  api_gateway_net:
+    external: true
+  redis_net:
+    driver: bridge
+  db_net:
+    driver: bridge

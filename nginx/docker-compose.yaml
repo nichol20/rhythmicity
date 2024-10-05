@@ -13,6 +13,7 @@ services:
       - 443:443
     networks:
       - nginx_proxy
+      - api_gateway_net
     deploy:
       resources:
         limits:
@@ -21,4 +22,6 @@ services:
 
 networks:
   nginx_proxy:
+    external: true
+  api_gateway_net:
     external: true

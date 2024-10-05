@@ -10,7 +10,8 @@ services:
     volumes:
       - .:/app
     networks:
-      - proxynet
+      - nginx_proxy
+      - api_gateway_net
     extra_hosts:
       - "host.docker.internal:host-gateway"
     deploy:
@@ -20,5 +21,7 @@ services:
           memory: 500M
 
 networks:
-  proxynet:
-    name: nginx_proxy
+  nginx_proxy:
+    external: true
+  api_gateway_net:
+    external: true
