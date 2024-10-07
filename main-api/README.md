@@ -16,7 +16,7 @@ enter the container
 docker compose exec main-api sh
 ```
 
-If this is your first time, run this command to add the data to the database (see [instructions on how to initialize the project](<!-- TODO: Add link -->))
+If this is your first time, run this command to add the data to the database (see [instructions on how to initialize the project](https://github.com/nichol20/rhythmicity/blob/main/README.md#instructions))
 
 ```bash
 go run cmd/setup/main.go
