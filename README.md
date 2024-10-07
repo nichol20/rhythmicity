@@ -4,7 +4,7 @@ This is a music app that I made inspired by a system design video lesson (the vi
 
 # Diagram
 
-<!-- TODO: Add diagram image  -->
+![Rhythmicity diagram](https://github.com/user-attachments/assets/56c4857c-e97a-43ce-a0eb-be431d3f7465)
 
 # Instructions
 
