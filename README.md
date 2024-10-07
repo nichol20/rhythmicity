@@ -18,7 +18,7 @@ To get the entire app up and running:
 make create-net
 ```
 
-- you will need to have the data created by the generator. See the [generator instructions](https://github.com/nichol20/rhythmicity/blob/main/generate-db/README.md#how-to-use). And then you will have to distribute the data to the microservices.
+- you will need to have the data created by the generator. See the [generator instructions](https://github.com/nichol20/rhythmicity/blob/main/generate-db/README.md#how-to-use). And then you will have to distribute the data to the microservices so that they can run their respective scripts and populate the database.
 
 ```bash
 make allocate-data
