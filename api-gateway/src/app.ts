@@ -8,14 +8,13 @@ import mainApiArtistRouter from "./routes/mainApi/artist";
 import mainApiAlbumRouter from "./routes/mainApi/album";
 import searchApiSearchRouter from "./routes/searchApi/search";
 import authServerAuthRouter from "./routes/authServer/auth"
-import acceptOnlyNginx from "./middlewares/acceptOnlyNginx";
 import { errorHandler } from "./middlewares/errorHandler";
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 const corsOptions: cors.CorsOptions = {
-  origin: "http://localhost:3000",
+  origin: "*",
   credentials: true
 };
 
@@ -23,7 +22,6 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser())
 
-app.use(acceptOnlyNginx);
 app.use(authServerAuthRouter);
 app.use(mainApiTrackRouter);
 app.use(mainApiArtistRouter);
