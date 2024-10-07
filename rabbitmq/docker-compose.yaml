@@ -2,9 +2,6 @@ services:
   rabbitmq:
     image: rabbitmq:${RABBITMQ_VERSION}
     hostname: rabbitmq
-    ports:
-      - 5672:5672
-      - 15672:15672
     env_file:
       - .env
     volumes:
