@@ -1,6 +1,7 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 # About
+
 frontend application of the rhythmicity project
 
 # Preview
@@ -11,6 +12,14 @@ frontend application of the rhythmicity project
 <img src="https://github.com/user-attachments/assets/be24e3e6-a791-4b45-9075-e198a4d57fca" width="500" alt="search2" />
 
 # How to run
+
+install the dependencies
+
+```bash
+npm i
+```
+
+run services with compose
 
 ```bash
 docker compose up -d

@@ -26,6 +26,12 @@ The application will search for the first data of a track in the Spotify API and
 
 ## run
 
+install the dependencies
+
+```bash
+npm i
+```
+
 run this command to search for new tracks (I'm looking for tracks with a minimum popularity of 75 according to spotify data, but you can change this within the code).
 
 The command first checks if the track already exists before fetching data from other APIs.
@@ -42,7 +48,13 @@ node createDb.js --genres=eletronic,hip-hop
 
 make sure you don't add spaces between the commas:
 
-node createDb.js --genres="eletronic, hip-hop" X
+X node createDb.js --genres="eletronic, hip-hop" X
+
+You can also use the limit flag to define the number of tracks you want to search (the default and maximum is 100).
+
+```bash
+node createDb.js --limit=10
+```
 
 <hr/>
 <br/>

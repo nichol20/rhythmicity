@@ -5,8 +5,10 @@ require('dotenv').config()
 const args = function() {
     const args = require('./utils/args').getArgs()
 
-    if(args.genres) {
-        args.genres = typeof args.genres === "string" && args.genres.length > 0 ? args.genres : "hip-hop,electronic"
+    if(args.limit) {
+        const value = parseInt(args.limit)
+        if(isNaN(value)) throw new Error("limit flag must be a number.")
+        args.limit = value
     }
 
     return args
@@ -118,13 +120,16 @@ const generateData = async () => {
     let currentTrack = ""
 
     try {
+        const seedGenres = args.genres ? args.genres : "hip-hop,electronic"
+        const limit = args.limit ? args.limit : 100
+
         await spotify.getAccessToken()
         console.log('spotify access token: ', spotify.accessToken)
         
         console.log('Searching for popular tracks...')
         const popularTracks = await spotify.getPopularTracks({
-            limit: 100,
-            seedGenres: args.genres,
+            limit,
+            seedGenres,
             minPopularity: 75
         })  
         console.log(`${popularTracks.tracks.length} track(s) found.`)

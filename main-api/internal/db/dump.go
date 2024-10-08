@@ -24,14 +24,24 @@ func GenerateDump(ds *repository.DataStructure, db *sql.DB) {
 	}
 
 	dirname := filepath.Dir(filename)
-	absPath, err := filepath.Abs(dirname + "/sql/init.sql")
+	initSQLAbsPath, err := filepath.Abs(dirname + "/sql/init.sql")
 	if err != nil {
 		log.Fatalf("Error when converting to absolute path: %s", err)
 	}
 
-	initSQL, err := os.ReadFile(absPath)
+	initSQL, err := os.ReadFile(initSQLAbsPath)
 	if err != nil {
 		log.Fatal("Error reading init.sql file:", err)
+	}
+
+	dropAllSQLAbsPath, err := filepath.Abs(dirname + "/sql/drop_all.sql")
+	if err != nil {
+		log.Fatalf("Error when converting to absolute path: %s", err)
+	}
+
+	dropAllSQL, err := os.ReadFile(dropAllSQLAbsPath)
+	if err != nil {
+		log.Fatal("Error reading drop_all.sql file:", err)
 	}
 
 	tableInsertions := make(map[string]string)
@@ -307,17 +317,20 @@ func GenerateDump(ds *repository.DataStructure, db *sql.DB) {
 
 	dumpSQL = string(initSQL) + "\n\n" + dumpSQL
 
-	absPath, err = filepath.Abs(dirname + "/sql/dump.sql")
+	dumpSQLAbsPath, err := filepath.Abs(dirname + "/sql/dump.sql")
 	if err != nil {
 		log.Fatalf("Error when converting to absolute path: %s", err)
 	}
 
-	err = os.WriteFile(absPath, []byte(dumpSQL), 0644)
+	err = os.WriteFile(dumpSQLAbsPath, []byte(dumpSQL), 0644)
 	if err != nil {
 		fmt.Println("Error writing dump.sql file:", err)
 		return
 	}
 	fmt.Println("Dump file created successfully.")
+
+	// reset database
+	db.Query(string(dropAllSQL))
 
 	_, err = db.Query(dumpSQL)
 	if err != nil {

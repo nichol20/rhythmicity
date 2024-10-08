@@ -1,5 +1,11 @@
 # How to run
 
+install the dependencies
+
+```bash
+npm i
+```
+
 run services with compose
 
 ```bash

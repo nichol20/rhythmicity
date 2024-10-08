@@ -58,6 +58,7 @@ func indexTracks(ctx context.Context, client *elasticsearch.Client) {
 	bulkIndexer.Close(ctx)
 	biStats := bulkIndexer.Stats()
 	fmt.Printf("%s indexed on Elasticsearch: %d \n", indexName, biStats.NumIndexed)
+	fmt.Printf("%s failed to index on Elasticsearch: %d \n", indexName, biStats.NumFailed)
 }
 
 func indexArtists(ctx context.Context, client *elasticsearch.Client) {
@@ -91,6 +92,7 @@ func indexArtists(ctx context.Context, client *elasticsearch.Client) {
 	bulkIndexer.Close(ctx)
 	biStats := bulkIndexer.Stats()
 	fmt.Printf("%s indexed on Elasticsearch: %d \n", indexName, biStats.NumIndexed)
+	fmt.Printf("%s failed to index on Elasticsearch: %d \n", indexName, biStats.NumFailed)
 }
 
 func indexAlbums(ctx context.Context, client *elasticsearch.Client) {
@@ -123,7 +125,9 @@ func indexAlbums(ctx context.Context, client *elasticsearch.Client) {
 
 	bulkIndexer.Close(ctx)
 	biStats := bulkIndexer.Stats()
+
 	fmt.Printf("%s indexed on Elasticsearch: %d \n", indexName, biStats.NumIndexed)
+	fmt.Printf("%s failed to index on Elasticsearch: %d \n", indexName, biStats.NumFailed)
 }
 
 func recreateElasticIndex(client *elasticsearch.Client, indexName string, mapping io.Reader) {

@@ -61,6 +61,13 @@ export default function SearchPage() {
     const fetchData = useCallback(
         async (cancelToken?: CancelTokenSource) => {
             const searchRes = await searchData(searchQuery, page, getKind(kindParam), cancelToken)
+
+            if (
+                searchRes.tracks.length === 0
+                && searchRes.albums.length === 0
+                && searchRes.artists.length === 0
+            ) return // end
+
             setPage(prev => prev + 1)
             setSearchResponse(prev => {
                 return {
@@ -108,10 +115,18 @@ export default function SearchPage() {
         const cancelToken = axios.CancelToken.source()
 
         const fetchInitialData = async () => {
-            const searchRes = await searchData(searchQuery, 0, getKind(kindParam), cancelToken)
-            setPage(1)
-            setSearchResponse(searchRes)
-            setIsLoading(false)
+            try {
+                const searchRes = await searchData(searchQuery, 0, getKind(kindParam), cancelToken)
+                setPage(1)
+                setSearchResponse(searchRes)
+                setIsLoading(false)
+            } catch (error: any) {
+                if (axios.isCancel(error)) {
+                    return console.log("request cancelled")
+                }
+
+                console.log(error)
+            }
         }
 
         if (searchResponse.bestResult === null) {

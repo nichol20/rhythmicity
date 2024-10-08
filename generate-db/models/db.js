@@ -1,10 +1,6 @@
-const fs = require("node:fs/promises")
+const fs = require("node:fs")
+const path = require("node:path")
 const { durationToMilliseconds, handleSpotifyMalformedDate } = require("../utils/conversion")
-const tracks = require('../data/app/tracks.json')
-const artists = require('../data/app/artists.json')
-const albums = require('../data/app/albums.json')
-const genres = require('../data/app/genres.json')
-const styles = require('../data/app/styles.json')
 
 class Database {
     #addedArtistsLen = 0
@@ -12,12 +8,19 @@ class Database {
     #addedTracksLen = 0
 
     constructor() {
-        this.dbPath = './data/app'
-        this.tracks = tracks
-        this.artists = artists
-        this.albums = albums
-        this.genres = genres
-        this.styles = styles
+        this.dbPath = path.resolve(__dirname, "../data/app")
+        fs.mkdirSync(this.dbPath, { recursive: true })
+
+        const loadData = (fileName) => {
+            const filePath = `${this.dbPath}/${fileName}.json`
+            return fs.existsSync(filePath) ? require(filePath) : []
+        }
+        
+        this.tracks = loadData('tracks')
+        this.artists = loadData('artists')
+        this.albums = loadData('albums')
+        this.genres = loadData('genres')
+        this.styles = loadData('styles')
     }
 
     save = async () => {
@@ -29,11 +32,11 @@ class Database {
             const stylesStr = JSON.stringify(this.styles)
         
             await Promise.all([
-                fs.writeFile(`${this.dbPath}/tracks.json`, tracksStr),
-                fs.writeFile(`${this.dbPath}/artists.json`, artistsStr),
-                fs.writeFile(`${this.dbPath}/albums.json`, albumsStr),
-                fs.writeFile(`${this.dbPath}/genres.json`, genresStr),
-                fs.writeFile(`${this.dbPath}/styles.json`, stylesStr),
+                fs.promises.writeFile(`${this.dbPath}/tracks.json`, tracksStr),
+                fs.promises.writeFile(`${this.dbPath}/artists.json`, artistsStr),
+                fs.promises.writeFile(`${this.dbPath}/albums.json`, albumsStr),
+                fs.promises.writeFile(`${this.dbPath}/genres.json`, genresStr),
+                fs.promises.writeFile(`${this.dbPath}/styles.json`, stylesStr),
             ])
 
         } catch (error) {

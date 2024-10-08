@@ -1,8 +1,9 @@
-const fs = require("node:fs/promises")
+const fs = require("node:fs")
+const path = require("node:path")
 const tracks = require('./data/app/tracks.json')
 const artists = require('./data/app/artists.json')
 const albums = require('./data/app/albums.json')
-const docsPath = './data/elastic'
+const docsPath = path.resolve(__dirname, './data/elastic')
 
 const createTrackDocuments = async () => {
     const trackDocs = tracks.map(track => ({
@@ -35,7 +36,7 @@ const createTrackDocuments = async () => {
     }))
 
     const trackDocsStr = JSON.stringify(trackDocs)
-    await fs.writeFile(`${docsPath}/tracks.json`, trackDocsStr)
+    await fs.promises.writeFile(`${docsPath}/tracks.json`, trackDocsStr)
 }
 
 const createArtistDocuments = async () => {
@@ -50,7 +51,7 @@ const createArtistDocuments = async () => {
     }))
 
     const artistDocsStr = JSON.stringify(artistDocs)
-    await fs.writeFile(`${docsPath}/artists.json`, artistDocsStr)
+    await fs.promises.writeFile(`${docsPath}/artists.json`, artistDocsStr)
 }
 
 const createAlbumDocuments = async () => {
@@ -74,10 +75,11 @@ const createAlbumDocuments = async () => {
     }))
 
     const albumsDocsStr = JSON.stringify(albumDocs)
-    await fs.writeFile(`${docsPath}/albums.json`, albumsDocsStr)
+    await fs.promises.writeFile(`${docsPath}/albums.json`, albumsDocsStr)
 }
 
 const createDocs = async () => {
+    fs.mkdirSync(docsPath, { recursive: true })
     await createTrackDocuments()
     await createArtistDocuments()
     await createAlbumDocuments()
