@@ -1,6 +1,6 @@
 # About
 
-This is a music app that I made inspired by a system design video lesson (the video is no longer available). It uses several concepts and technologies, such as golang, typescript, protocol buffers, certificates, message broker, nginx, api-gateway, microservices, caching, docker among others.
+This is a music app I developed, inspired by a system design video lesson (unfortunately, the video is no longer available). The app incorporates various concepts and technologies, including Golang, TypeScript, Protocol Buffers, certificates, message brokers, Nginx, an API gateway, microservices architecture, caching, Docker, and more.
 
 # Diagram
 
