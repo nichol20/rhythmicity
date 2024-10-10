@@ -2,7 +2,9 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 # About
 
-frontend application of the rhythmicity project
+Frontend application of the rhythmicity project.
+
+The app uses the [YouTube iframe API](https://developers.google.com/youtube/iframe_api_reference) to play music in the background.
 
 # Preview
 
