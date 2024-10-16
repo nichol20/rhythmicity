@@ -1,6 +1,7 @@
 # About
 
 Rhythmicity is a music app where users can search for and listen to their favorite songs, follow the lyrics in real time, and control the playback queue with options such as repeat, shuffle, or repeat a single track. In addition to these features, the app handles authentication, data storage, microservices management, and integrates APIs and web scraping techniques to build its own database.
+
 The app incorporates various concepts and technologies, including Golang, TypeScript, Protocol Buffers, certificates, message brokers, Nginx, an API gateway, microservices architecture, caching, Docker, and more.
 
 I developed it inspired by a system design video lesson (unfortunately, the video is no longer available).
